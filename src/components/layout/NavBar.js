@@ -2,7 +2,7 @@ import { AppBar, Toolbar } from "@mui/material";
 
 const NavBar = () => {
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
       <Toolbar>
         Medicare
       </Toolbar>

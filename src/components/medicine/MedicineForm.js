@@ -1,14 +1,14 @@
+import { useState } from "react";
+
 import {
   Box,
   Button,
-  FormControl,
+  FormControl, Grid,
   InputAdornment,
   InputLabel,
-  OutlinedInput, Stack,
-  TextField,
-  Toolbar
+  OutlinedInput,
+  TextField
 } from "@mui/material";
-import { useState } from "react";
 
 const MedicineForm = () => {
   const [name, setName] = useState('');
@@ -27,48 +27,65 @@ const MedicineForm = () => {
     setUnits(event.target.value);
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     const newMedicine = {
       name: name,
       unitPrice: unitPrice,
       units: units
     };
+    const response = await fetch("http://localhost:8080/inventories", {
+      method: 'POST',
+      body: JSON.stringify(newMedicine),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    await response.json();
   };
 
   return (
-    <Box sx={{m: '20px', width: '800px'}}>
-      <Toolbar/>
+    <Box sx={{m: '20px', width: '800px', display: "flex", justifyContent: "center"}}>
       <form onSubmit={submitHandler}>
-        <Stack spacing={3}>
-          <TextField
-            id="name"
-            label="Medicine Name"
-            type="text"
-            variant="outlined"
-            value={name}
-            onChange={nameChangeHandler}
-          />
-          <FormControl>
-            <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
-            <OutlinedInput
-              id="unit-price"
-              startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
-              label="Unit Price"
-              value={unitPrice}
-              onChange={unitPriceChangeHandler}
+        <Grid container direction="column" spacing={3}>
+          <Grid item>
+            <TextField
+              fullWidth
+              id="name"
+              label="Medicine name"
+              type="text"
+              variant="outlined"
+              value={name}
+              onChange={nameChangeHandler}
             />
-          </FormControl>
-          <TextField
-            id="units"
-            label="Units"
-            type="number"
-            variant="outlined"
-            value={units}
-            onChange={unitsChangeHandler}
-          />
-          <Button variant="contained" type="submit">Add</Button>
-        </Stack>
+          </Grid>
+          <Grid item>
+            <FormControl>
+              <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
+              <OutlinedInput
+                id="unit-price"
+                startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
+                label="Unit Price"
+                value={unitPrice}
+                onChange={unitPriceChangeHandler}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <TextField
+              fullWidth
+              id="units"
+              label="Units"
+              type="number"
+              variant="outlined"
+              value={units}
+              onChange={unitsChangeHandler}
+            />
+          </Grid>
+          <Grid item>
+            <Button variant="contained" type="submit">Add</Button>
+          </Grid>
+        </Grid>
       </form>
     </Box>
   );

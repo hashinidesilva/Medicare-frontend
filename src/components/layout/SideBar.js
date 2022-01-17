@@ -1,12 +1,14 @@
-import { Box, Drawer, List, ListItem, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
+
+import { Box, Drawer, List, ListItem, Toolbar } from "@mui/material";
 
 const SideBar = () => {
   return (
     <Drawer
       sx={{
         width: 240,
-        flexShrink: 0,
+        display: "flex", justifyContent: "center", alignItems: "center",
+        // flexShrink: 0,
         '& .MuiDrawer-paper': {
           width: 240,
           boxSizing: 'border-box',
@@ -18,9 +20,8 @@ const SideBar = () => {
       <Toolbar/>
       <Box sx={{overflow: 'auto'}}>
         <List>
-          <ListItem button component={Link} to="/new-patient">Patient Form</ListItem>
-          <ListItem button component={Link} to="/new-medicine">Medicines</ListItem>
-          <ListItem button>Patients</ListItem>
+          <ListItem button component={Link} to="/patients">Patients</ListItem>
+          <ListItem button component={Link} to="/medicines">Medicines</ListItem>
         </List>
       </Box>
     </Drawer>

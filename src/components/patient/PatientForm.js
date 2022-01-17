@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box, Button, Stack, TextField, Toolbar } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
 
 const PatientForm = () => {
   const [name, setName] = useState('');
@@ -21,7 +21,6 @@ const PatientForm = () => {
       age: age
     };
     const response = await fetch("http://localhost:8080/patients", {
-      mode: 'no-cors',
       method: 'POST',
       body: JSON.stringify(newPatient),
       headers: {
@@ -33,15 +32,41 @@ const PatientForm = () => {
   };
 
   return (
-    <Box sx={{margin: '20px', width: '800px'}}>
-      <Toolbar/>
+    <Box sx={{margin: '20px', width: '800px', display: "flex", justifyContent: "center", alignItems: "center"}}>
       <form onSubmit={submitHandler}>
-        <Stack spacing={3}>
-          <TextField id="date" label="Date" type="date" variant="outlined" InputLabelProps={{shrink: true}}/>
-          <TextField id="name" label="Patient Name" type="text" variant="outlined" value={name} onChange={nameChangeHandler}/>
-          <TextField id="age" label="Age" type="number" variant="outlined" value={age} onChange={ageChangeHandler}/>
-          <Button variant="contained" type="submit">Submit</Button>
-        </Stack>
+        <Grid container direction="column" spacing={3}>
+          <Grid item>
+            <TextField
+              id="date"
+              label="Date"
+              type="date"
+              variant="outlined"
+              InputLabelProps={{shrink: true}}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="name"
+              label="Patient name"
+              type="text"
+              variant="outlined"
+              value={name}
+              onChange={nameChangeHandler}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="age"
+              label="Age"
+              type="number"
+              variant="outlined"
+              value={age}
+              onChange={ageChangeHandler}/>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" type="submit">Submit</Button>
+          </Grid>
+        </Grid>
       </form>
     </Box>
   );
