@@ -7,7 +7,8 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  TextField
+  TextField,
+  Typography
 } from "@mui/material";
 
 const MedicineForm = () => {
@@ -34,7 +35,7 @@ const MedicineForm = () => {
       unitPrice: unitPrice,
       units: units
     };
-    const response = await fetch("http://localhost:8080/inventories", {
+    const response = await fetch("http://localhost:8080/medicines", {
       method: 'POST',
       body: JSON.stringify(newMedicine),
       headers: {
@@ -45,48 +46,60 @@ const MedicineForm = () => {
   };
 
   return (
-    <Box sx={{m: '20px', width: '800px', display: "flex", justifyContent: "center"}}>
-      <form onSubmit={submitHandler}>
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <TextField
-              fullWidth
-              id="name"
-              label="Medicine name"
-              type="text"
-              variant="outlined"
-              value={name}
-              onChange={nameChangeHandler}
-            />
-          </Grid>
-          <Grid item>
-            <FormControl>
-              <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
-              <OutlinedInput
-                id="unit-price"
-                startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
-                label="Unit Price"
-                value={unitPrice}
-                onChange={unitPriceChangeHandler}
+    <Box sx={{margin: '20px', width: '75%', border: 1}}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: 'center',
+          width: "100%",
+          height: 70,
+          backgroundColor: 'primary.dark',
+        }}>
+        <Typography mx={2} color="#FFFFFF" variant="h4">Medicine Form</Typography>
+      </Box>
+      <Box sx={{margin: '20px'}}>
+        <form onSubmit={submitHandler}>
+          <Grid container direction="column" spacing={3}>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="name"
+                label="Medicine name"
+                type="text"
+                variant="outlined"
+                value={name}
+                onChange={nameChangeHandler}
               />
-            </FormControl>
+            </Grid>
+            <Grid item>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
+                <OutlinedInput
+                  id="unit-price"
+                  startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
+                  label="Unit Price"
+                  value={unitPrice}
+                  onChange={unitPriceChangeHandler}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="units"
+                label="Units"
+                type="number"
+                variant="outlined"
+                value={units}
+                onChange={unitsChangeHandler}
+              />
+            </Grid>
+            <Grid item>
+              <Button variant="contained" type="submit">Add</Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              fullWidth
-              id="units"
-              label="Units"
-              type="number"
-              variant="outlined"
-              value={units}
-              onChange={unitsChangeHandler}
-            />
-          </Grid>
-          <Grid item>
-            <Button variant="contained" type="submit">Add</Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Box>
     </Box>
   );
 };

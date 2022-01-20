@@ -21,7 +21,7 @@ const MedicineTable = () => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/inventories",
+    const response = await axios.get("http://localhost:8080/medicines",
       {
         params: {medicineName: searchText === '' ? null : searchText}
       });

@@ -5,6 +5,7 @@ import Layout from "./components/layout/Layout";
 import MedicineForm from "./components/medicine/MedicineForm";
 import MedicineTable from "./components/medicine/MedicineTable";
 import PatientsTable from "./components/patient/PatientsTable";
+import PrescriptionTable from "./components/patient/PrescriptionTable";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="medicines" element={<MedicineTable/>}/>
         <Route path="new-patient" element={<PatientForm/>}/>
         <Route path="new-medicine" element={<MedicineForm/>}/>
+        <Route path="prescriptions" element={<PrescriptionTable/>}/>
       </Routes>
     </Layout>
   );

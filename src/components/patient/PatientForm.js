@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 
 const PatientForm = () => {
   const [name, setName] = useState('');
@@ -32,42 +32,57 @@ const PatientForm = () => {
   };
 
   return (
-    <Box sx={{margin: '20px', width: '800px', display: "flex", justifyContent: "center", alignItems: "center"}}>
-      <form onSubmit={submitHandler}>
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <TextField
-              id="date"
-              label="Date"
-              type="date"
-              variant="outlined"
-              InputLabelProps={{shrink: true}}
-            />
+    <Box sx={{margin: '20px', width: '75%', border: 1}}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: 'center',
+          width: "100%",
+          height: 70,
+          backgroundColor: 'primary.dark',
+        }}>
+        <Typography mx={2} color="#FFFFFF" variant="h4">Patient Form</Typography>
+      </Box>
+      <Box sx={{margin: '20px'}}>
+        <form onSubmit={submitHandler}>
+          <Grid container direction="column" spacing={3} sx={{flexGrow: 1}}>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="date"
+                label="Date"
+                type="date"
+                variant="outlined"
+                InputLabelProps={{shrink: true}}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="name"
+                label="Patient name"
+                type="text"
+                variant="outlined"
+                value={name}
+                onChange={nameChangeHandler}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="age"
+                label="Age"
+                type="number"
+                variant="outlined"
+                value={age}
+                onChange={ageChangeHandler}/>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" type="submit">Submit</Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              id="name"
-              label="Patient name"
-              type="text"
-              variant="outlined"
-              value={name}
-              onChange={nameChangeHandler}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="age"
-              label="Age"
-              type="number"
-              variant="outlined"
-              value={age}
-              onChange={ageChangeHandler}/>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" type="submit">Submit</Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Box>
     </Box>
   );
 };
