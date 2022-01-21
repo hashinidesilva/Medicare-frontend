@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
-  Box, Button, Grid, InputAdornment,
-  Paper,
+  Box, Button, Grid, IconButton, InputAdornment,
+  Paper, Stack,
   Table,
   TableBody,
   TableCell,
@@ -15,10 +15,14 @@ import {
 import axios from "axios";
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import PatientForm from "./PatientForm";
 
 const PatientsTable = () => {
   const [patients, setPatients] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState({});
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/patients",
@@ -54,27 +58,40 @@ const PatientsTable = () => {
           <Button variant="contained" startIcon={<AddIcon/>} component={Link} to="/new-patient">Add Patient</Button>
         </Grid>
         <Grid item>
-          <TableContainer component={Paper}>
-            <Table sx={{minWidth: 650}} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="right">Age</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {patients.map((patient) => (
-                  <TableRow
-                    key={patient.name}
-                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                  >
-                    <TableCell component="th" scope="row">{patient.name}</TableCell>
-                    <TableCell align="right">{patient.age}</TableCell>
+          <Stack direction="row" spacing={3} justifyContent={"space-between"}>
+            <TableContainer component={Paper}>
+              <Table sx={{minWidth: 100}} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="right">Age</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {patients.map((patient) => (
+                    <TableRow
+                      key={patient.name}
+                      sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                    >
+                      <TableCell component="th" scope="row">{patient.name}</TableCell>
+                      <TableCell align="right">{patient.age}</TableCell>
+                      <TableCell align="right" width={'10px'}>
+                        <IconButton onClick={() => {
+                          setIsEditing(true);
+                          setSelectedPatient(patient);
+                        }}>
+                          <EditIcon/>
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {isEditing && (
+              <PatientForm patient={selectedPatient}/>
+            )}
+          </Stack>
         </Grid>
       </Grid>
     </Box>

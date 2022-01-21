@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 
-const PatientForm = () => {
-  const [name, setName] = useState('');
-  const [age, setAge] = useState(0);
+const PatientForm = (props) => {
+  const patient = props.patient;
+  const [name, setName] = useState(patient ? patient.name : '');
+  const [age, setAge] = useState(patient ? patient.age : 0);
+  const navigate = useNavigate();
 
   const nameChangeHandler = (event) => {
     setName(event.target.value);
@@ -29,6 +32,7 @@ const PatientForm = () => {
     });
     const data = await response.json();
     console.log("DATA:", data);
+    navigate("/prescriptions");
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import PatientForm from "./components/patient/PatientForm";
 import Layout from "./components/layout/Layout";
@@ -11,7 +11,7 @@ function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<PatientForm/>}/>
+        <Route path="/" element={<Navigate to="/patients" />}/>
         <Route path="patients" element={<PatientsTable/>}/>
         <Route path="medicines" element={<MedicineTable/>}/>
         <Route path="new-patient" element={<PatientForm/>}/>
