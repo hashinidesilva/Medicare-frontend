@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 
 const PatientForm = (props) => {
-  const patient = props.patient;
-  const [name, setName] = useState(patient ? patient.name : '');
-  const [age, setAge] = useState(patient ? patient.age : 0);
+  const {patient} = props;
+  const [name, setName] = useState('');
+  const [age, setAge] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (patient) {
+      setName(patient.name);
+      setAge(patient.age);
+    }
+  }, [patient]);
 
   const nameChangeHandler = (event) => {
     setName(event.target.value);
@@ -32,7 +39,7 @@ const PatientForm = (props) => {
     });
     const data = await response.json();
     console.log("DATA:", data);
-    navigate("/prescriptions");
+    props.onAddPatient(data);
   };
 
   return (
@@ -50,16 +57,6 @@ const PatientForm = (props) => {
       <Box sx={{margin: '20px'}}>
         <form onSubmit={submitHandler}>
           <Grid container direction="column" spacing={3} sx={{flexGrow: 1}}>
-            <Grid item>
-              <TextField
-                fullWidth
-                id="date"
-                label="Date"
-                type="date"
-                variant="outlined"
-                InputLabelProps={{shrink: true}}
-              />
-            </Grid>
             <Grid item>
               <TextField
                 fullWidth

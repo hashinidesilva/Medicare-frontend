@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Box, Button, Grid, IconButton, InputAdornment,
@@ -16,13 +16,15 @@ import axios from "axios";
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
-import PatientForm from "./PatientForm";
+import MedicationIcon from '@mui/icons-material/Medication';
+import PatientForm from "./patient/PatientForm";
 
 const PatientsTable = () => {
   const [patients, setPatients] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState({});
+  const navigate =useNavigate()
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/patients",
@@ -36,6 +38,8 @@ const PatientsTable = () => {
   const searchTextChangeHandler = (event) => {
     setSearchText(event.target.value);
   };
+
+  console.log("selected patients", selectedPatient);
 
   return (
     <Box sx={{margin: '20px', display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -81,6 +85,13 @@ const PatientsTable = () => {
                           setSelectedPatient(patient);
                         }}>
                           <EditIcon/>
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="right" width={'10px'}>
+                        <IconButton onClick={() => {
+                         navigate("/prescriptions")
+                        }}>
+                          <MedicationIcon/>
                         </IconButton>
                       </TableCell>
                     </TableRow>
