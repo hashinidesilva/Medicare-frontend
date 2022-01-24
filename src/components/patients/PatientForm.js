@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
 
 const PatientForm = (props) => {
   const {patient} = props;
@@ -55,7 +55,7 @@ const PatientForm = (props) => {
                 label="Patient name"
                 type="text"
                 variant="outlined"
-                value={name}
+                value={name || ''}
                 onChange={nameChangeHandler}
               />
             </Grid>
@@ -66,11 +66,14 @@ const PatientForm = (props) => {
                 label="Age"
                 type="number"
                 variant="outlined"
-                value={age}
+                value={age || 0}
                 onChange={ageChangeHandler}/>
             </Grid>
             <Grid item>
-              <Button variant="contained" type="submit">Submit</Button>
+              <Stack direction="row" spacing={4}>
+                <Button variant="contained" type="submit">Save</Button>
+                <Button variant="outlined" onClick={() => navigate(-1)}>Cancel</Button>
+              </Stack>
             </Grid>
           </Grid>
         </form>

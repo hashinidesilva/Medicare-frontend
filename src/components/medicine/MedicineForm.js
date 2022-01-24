@@ -1,20 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
   Button,
-  FormControl, Grid,
+  FormControl,
+  Grid,
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Stack,
   TextField,
   Typography
 } from "@mui/material";
 
-const MedicineForm = () => {
+const MedicineForm = (props) => {
   const [name, setName] = useState('');
   const [unitPrice, setUnitPrice] = useState(0);
   const [units, setUnits] = useState(0);
+  const navigate = useNavigate();
+
+  const {medicine} = props;
+
+  useEffect(() => {
+    if (medicine) {
+      setName(medicine.name);
+      setUnitPrice(medicine.unitPrice);
+      setUnits(medicine.units);
+    }
+  }, [medicine]);
 
   const nameChangeHandler = (event) => {
     setName(event.target.value);
@@ -67,7 +81,7 @@ const MedicineForm = () => {
                 label="Medicine name"
                 type="text"
                 variant="outlined"
-                value={name}
+                value={name || ''}
                 onChange={nameChangeHandler}
               />
             </Grid>
@@ -78,7 +92,7 @@ const MedicineForm = () => {
                   id="unit-price"
                   startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
                   label="Unit Price"
-                  value={unitPrice}
+                  value={unitPrice || 0}
                   onChange={unitPriceChangeHandler}
                 />
               </FormControl>
@@ -90,12 +104,15 @@ const MedicineForm = () => {
                 label="Units"
                 type="number"
                 variant="outlined"
-                value={units}
+                value={units || 0}
                 onChange={unitsChangeHandler}
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" type="submit">Add</Button>
+              <Stack direction="row" spacing={4}>
+                <Button variant="contained" type="submit">Save</Button>
+                <Button variant="outlined" onClick={() => navigate(-1)}>Cancel</Button>
+              </Stack>
             </Grid>
           </Grid>
         </form>

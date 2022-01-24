@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
-  Box, Button, Grid, InputAdornment,
+  Box, Button, Grid, IconButton, InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -10,11 +10,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField
+  TextField, Tooltip
 } from "@mui/material";
 import axios from "axios";
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from "@mui/icons-material/Edit";
 
 const MedicineTable = () => {
   const [medicines, setMedicines] = useState([]);
@@ -51,7 +52,7 @@ const MedicineTable = () => {
               ),
             }}
           />
-          <Button variant="contained" startIcon={<AddIcon/>} component={Link} to="/new-medicine">Add Medicine</Button>
+          <Button variant="contained" startIcon={<AddIcon/>} component={Link} to="/medicines/create">Add Medicine</Button>
         </Grid>
         <Grid item>
           <TableContainer component={Paper}>
@@ -72,6 +73,15 @@ const MedicineTable = () => {
                     <TableCell component="th" scope="row">{medicine.name}</TableCell>
                     <TableCell align="right">{medicine.unitPrice}</TableCell>
                     <TableCell align="right">{medicine.units}</TableCell>
+                    <TableCell align="right" width={'10px'}>
+                      <Tooltip title="Edit">
+                        <IconButton
+                          component={Link}
+                          to={`${medicine.id}/edit`}>
+                          <EditIcon/>
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

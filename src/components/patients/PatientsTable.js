@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 import {
@@ -47,9 +48,9 @@ const PatientsTable = (props) => {
               <TableCell align="right">{patient.age}</TableCell>
               <TableCell align="right" width={'10px'}>
                 <Tooltip title="Edit">
-                  <IconButton onClick={() => {
-                    props.onPatientEdit(patient);
-                  }}>
+                  <IconButton
+                    component={Link}
+                    to={`${patient.id}/edit`}>
                     <EditIcon/>
                   </IconButton>
                 </Tooltip>

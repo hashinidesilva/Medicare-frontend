@@ -5,20 +5,12 @@ import { Box, Button, Grid, InputAdornment, Stack, TextField } from "@mui/materi
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import PatientsTable from "../components/patients/PatientsTable";
-import EditPatient from "../components/patients/EditPatient";
-import CloseIcon from "@mui/icons-material/Close";
 import PrescriptionTable from "../components/patients/PrescriptionTable";
 
 const Patients = () => {
   const [searchText, setSearchText] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
   const [addPrescription, setAddPrescription] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState({});
-
-  const patientEditHandler = (patient) => {
-    setSelectedPatient(patient);
-    setIsEditing(true);
-  };
 
   const openPrescriptionEditPage = (patient) => {
     setAddPrescription(true);
@@ -48,23 +40,22 @@ const Patients = () => {
                 ),
               }}
             />
-            <Button variant="contained" startIcon={<AddIcon/>} component={Link} to="/new-patient">Add Patient</Button>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon/>}
+              component={Link}
+              to="/patients/create"
+            >
+              Add Patient
+            </Button>
           </Stack>
         </Grid>
         <Grid item>
           <Stack direction="row" spacing={2}>
             {/*<PatientsTableDataGrid onEdit={patientEditHandler} onAddMedicine={openPrescriptionEditPage}*/}
             {/*                   searchText={searchText}/>*/}
-            <PatientsTable searchText={searchText} onPatientEdit={patientEditHandler}
+            <PatientsTable searchText={searchText}
                            onAddMedicine={openPrescriptionEditPage}/>
-            {isEditing && (
-              <Grid item xs={6}>
-                <Button startIcon={<CloseIcon/>} onClick={() => setIsEditing(false)}>
-                  Close
-                </Button>
-                <EditPatient patient={selectedPatient}/>
-              </Grid>
-            )}
           </Stack>
         </Grid>
       </Grid>

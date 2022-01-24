@@ -1,19 +1,36 @@
-import PatientForm from "./PatientForm";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const EditPatient = ({patient}) => {
+import PatientForm from "./PatientForm";
+import axios from "axios";
+import { Box } from "@mui/material";
+
+const EditPatient = () => {
+  const [patient, setPatient] = useState({});
+  const params = useParams();
+  const {patientId} = params;
+
+  useEffect(async () => {
+    const response = await axios.get(`http://localhost:8080/patients/${patientId}`);
+    const data = await response.data;
+    setPatient(data);
+  }, []);
+
   const submitHandler = async (patient) => {
-    const response = await fetch("http://localhost:8080/patients", {
+    await fetch("http://localhost:8080/patients", {
       method: 'PUT',
       body: JSON.stringify(patient),
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    const data = await response.json();
+    // const data = await response.json();
   };
 
   return (
-    <PatientForm onAddPatient={submitHandler} patient={patient}/>
+    <Box sx={{margin: "20px", width: '75%', justifyContent: "center"}}>
+      <PatientForm onAddPatient={submitHandler} patient={patient}/>
+    </Box>
   );
 };
 
