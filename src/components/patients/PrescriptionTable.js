@@ -15,6 +15,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography
 } from "@mui/material";
 import axios from "axios";
@@ -139,11 +140,13 @@ const PrescriptionTable = (props) => {
                       </TableCell>
                     ))}
                     <TableCell align="right" width={'10px'}>
-                      <IconButton onClick={() => {
-                        setPrescriptions((prevState) => prevState.filter(pres => pres.key !== prescription.key));
-                      }}>
-                        <DeleteIcon color="error"/>
-                      </IconButton>
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => {
+                          setPrescriptions((prevState) => prevState.filter(pres => pres.key !== prescription.key));
+                        }}>
+                          <DeleteIcon color="error"/>
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

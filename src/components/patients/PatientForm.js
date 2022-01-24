@@ -24,26 +24,17 @@ const PatientForm = (props) => {
     setAge(event.target.value);
   };
 
-  const submitHandler = async (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
     const newPatient = {
       name: name,
       age: age
     };
-    const response = await fetch("http://localhost:8080/patients", {
-      method: 'POST',
-      body: JSON.stringify(newPatient),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await response.json();
-    console.log("DATA:", data);
-    props.onAddPatient(data);
+    props.onAddPatient(newPatient);
   };
 
   return (
-    <Box sx={{margin: '20px', width: '75%', border: 1}}>
+    <Box sx={{border: 1}}>
       <Box
         sx={{
           display: "flex",
