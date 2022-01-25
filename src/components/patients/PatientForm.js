@@ -1,18 +1,35 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Stack, TextField, Typography } from "@mui/material";
+
+const genderList = [
+  {
+    value: 'Male',
+    label: 'Male',
+  },
+  {
+    value: 'Female',
+    label: 'Female',
+  },
+  {
+    value: 'Non-binary',
+    label: 'None-binary',
+  }
+];
 
 const PatientForm = (props) => {
   const {patient} = props;
   const [name, setName] = useState('');
   const [age, setAge] = useState(0);
+  const [gender, setGender] = useState(genderList[0].value);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (patient) {
       setName(patient.name);
       setAge(patient.age);
+      setGender(patient.gender);
     }
   }, [patient]);
 
@@ -24,11 +41,16 @@ const PatientForm = (props) => {
     setAge(event.target.value);
   };
 
+  const genderChangeHandler = (event) => {
+    setGender(event.target.value);
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
     const newPatient = {
       name: name,
-      age: age
+      age: age,
+      gender: gender,
     };
     props.onAddPatient(newPatient);
   };
@@ -55,7 +77,7 @@ const PatientForm = (props) => {
                 label="Patient name"
                 type="text"
                 variant="outlined"
-                value={name || ''}
+                value={name}
                 onChange={nameChangeHandler}
               />
             </Grid>
@@ -66,8 +88,24 @@ const PatientForm = (props) => {
                 label="Age"
                 type="number"
                 variant="outlined"
-                value={age || 0}
+                value={age}
                 onChange={ageChangeHandler}/>
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="gender"
+                select
+                label="Gender"
+                value={gender || genderList[0].value}
+                onChange={genderChangeHandler}
+              >
+                {genderList.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item>
               <Stack direction="row" spacing={4}>

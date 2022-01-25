@@ -22,7 +22,6 @@ const SideBar = () => {
         <List>
           <ListItem button component={Link} to="/patients">Patients</ListItem>
           <ListItem button component={Link} to="/medicines">Medicines</ListItem>
-          <ListItem button component={Link} to="/prescription">Prescriptions</ListItem>
         </List>
       </Box>
     </Drawer>

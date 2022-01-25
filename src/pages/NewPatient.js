@@ -1,12 +1,10 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Box } from "@mui/material";
 import PatientForm from "../components/patients/PatientForm";
-import PrescriptionTable from "../components/patients/PrescriptionTable";
 
 const NewPatient = () => {
-  const [newPatient, setNewPatient] = useState({});
-  const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+  const navigate = useNavigate();
 
   const submitHandler = async (patient) => {
     const response = await fetch("http://localhost:8080/patients", {
@@ -16,15 +14,13 @@ const NewPatient = () => {
         'Content-Type': 'application/json'
       }
     });
-    const data = await response.json();
-    setNewPatient(data);
-    setShowPrescriptionForm(true);
+    const savedPatient = await response.json();
+    navigate(`/patients/${savedPatient.id}/prescriptions`);
   };
 
   return (
     <Box sx={{margin: '20px', width: '75%'}}>
-      {!showPrescriptionForm && <PatientForm onAddPatient={submitHandler}/>}
-      {showPrescriptionForm && <PrescriptionTable patient={newPatient}/>}
+      <PatientForm onAddPatient={submitHandler}/>
     </Box>
   );
 };

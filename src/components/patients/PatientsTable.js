@@ -36,6 +36,7 @@ const PatientsTable = (props) => {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell align="right">Age</TableCell>
+            <TableCell align="right">Gender</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -46,18 +47,23 @@ const PatientsTable = (props) => {
             >
               <TableCell component="th" scope="row">{patient.name}</TableCell>
               <TableCell align="right">{patient.age}</TableCell>
+              <TableCell align="right">{patient.gender}</TableCell>
               <TableCell align="right" width={'10px'}>
                 <Tooltip title="Edit">
                   <IconButton
                     component={Link}
-                    to={`${patient.id}/edit`}>
+                    to={`${patient.id}/edit`}
+                  >
                     <EditIcon/>
                   </IconButton>
                 </Tooltip>
               </TableCell>
               <TableCell align="right" width={'10px'}>
                 <Tooltip title="Add prescription">
-                  <IconButton onClick={() => props.onAddMedicine(patient)}>
+                  <IconButton
+                    component={Link}
+                    to={`${patient.id}/prescriptions`}
+                  >
                     <MedicationIcon/>
                   </IconButton>
                 </Tooltip>

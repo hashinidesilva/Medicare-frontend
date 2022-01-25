@@ -4,8 +4,8 @@ import {
   Autocomplete,
   Box,
   Button,
-  Card,
-  CardContent, Grid, IconButton,
+  Grid,
+  IconButton,
   Paper,
   Stack,
   Table,
@@ -15,11 +15,11 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip,
-  Typography
+  Tooltip
 } from "@mui/material";
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from "react-router-dom";
 
 const emptyRow = {key: 0, medicineName: "", dose: "", frequency: "", duration: "", additionalInfo: ""};
 
@@ -31,11 +31,24 @@ const columns = [
   {field: 'additionalInfo', headerName: 'Additional Information'},
 ];
 
-const PrescriptionTable = (props) => {
+const getTodayDate = () => {
+  let date = new Date(),
+    month = '' + (date.getMonth() + 1),
+    day = '' + date.getDate(),
+    year = date.getFullYear();
+
+  if (month.length < 2)
+    month = '0' + month;
+  if (day.length < 2)
+    day = '0' + day;
+  return [year, month, day].join('-');
+};
+
+const PrescriptionForm = ({patient}) => {
   const [prescriptions, setPrescriptions] = useState([emptyRow]);
   const [medicines, setMedicines] = useState([]);
-  const [date, setDate] = useState(new Date());
-  const {patient} = props;
+  const [date, setDate] = useState(getTodayDate());
+  const navigate = useNavigate();
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicines");
@@ -58,7 +71,7 @@ const PrescriptionTable = (props) => {
       {...row, medicineName: value} : row));
   };
 
-  const savePrescriptionData = () => {
+  const savePrescriptionData = async () => {
     const prescription = {
       patientId: patient.id,
       date: date,
@@ -68,35 +81,30 @@ const PrescriptionTable = (props) => {
           dose: pres.dose,
           frequency: pres.frequency,
           duration: pres.duration,
-          additionalInfo: pres.dose,
+          additionalInfo: pres.additionalInfo,
         };
       })
     };
 
-    console.log("DATA prescription", prescription);
+    await fetch("http://localhost:8080/prescriptions", {
+      method: 'POST',
+      body: JSON.stringify(prescription),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    navigate("/patients");
   };
 
   return (
-    <Box sx={{margin: '20px', width: '90%'}}>
+    <Box sx={{padding: 3, border: 1}}>
       <Grid container spacing={2} direction="column">
-        <Grid item>
-          {patient && (
-            <Card variant="outlined" sx={{backgroundColor: "#E8E8E8"}}>
-              <CardContent>
-                <Typography mx={2} variant="h5" gutterBottom>Patient Information</Typography>
-                <Typography mx={2} color="text.secondary" gutterBottom>Name</Typography>
-                <Typography mx={2}>{patient.name}</Typography>
-                <Typography mx={2} color="text.secondary" sx={{marginTop: 1.5}} gutterBottom>Age</Typography>
-                <Typography mx={2}>{patient.age}</Typography>
-              </CardContent>
-            </Card>
-          )}
-        </Grid>
         <Grid item>
           <TextField
             id="date"
             label="Date"
             type="date"
+            value={date}
             variant="outlined"
             InputLabelProps={{shrink: true}}
             onChange={dateChangeHandler}
@@ -168,4 +176,4 @@ const PrescriptionTable = (props) => {
   );
 };
 
-export default PrescriptionTable;
+export default PrescriptionForm;

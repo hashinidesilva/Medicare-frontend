@@ -5,7 +5,7 @@ import { Box, Button, Grid, InputAdornment, Stack, TextField } from "@mui/materi
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import PatientsTable from "../components/patients/PatientsTable";
-import PrescriptionTable from "../components/patients/PrescriptionTable";
+import PrescriptionForm from "../components/patients/PrescriptionForm";
 
 const Patients = () => {
   const [searchText, setSearchText] = useState('');
@@ -18,7 +18,7 @@ const Patients = () => {
   };
 
   if (addPrescription) {
-    return <PrescriptionTable patient={selectedPatient}/>;
+    return <PrescriptionForm patient={selectedPatient}/>;
   }
 
   return (

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import PatientForm from "./PatientForm";
 import axios from "axios";
 import { Box } from "@mui/material";
 
 const EditPatient = () => {
-  const [patient, setPatient] = useState({});
+  const [patient, setPatient] = useState({name: '', age: 0});
+  const navigate = useNavigate();
   const params = useParams();
   const {patientId} = params;
 
@@ -14,17 +15,17 @@ const EditPatient = () => {
     const response = await axios.get(`http://localhost:8080/patients/${patientId}`);
     const data = await response.data;
     setPatient(data);
-  }, []);
+  }, [patientId]);
 
   const submitHandler = async (patient) => {
-    await fetch("http://localhost:8080/patients", {
+    await fetch(`http://localhost:8080/patients/${patientId}`, {
       method: 'PUT',
       body: JSON.stringify(patient),
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    // const data = await response.json();
+    navigate(-1);
   };
 
   return (

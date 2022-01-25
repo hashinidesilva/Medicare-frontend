@@ -14,7 +14,7 @@ const EditMedicine = () => {
     const response = await axios.get(`http://localhost:8080/medicines/${medicineId}`);
     const data = await response.data;
     setMedicine(data);
-  }, []);
+  }, [medicineId]);
 
   return (
     <Box sx={{margin: "20px", width: '75%', justifyContent: "center"}}>
