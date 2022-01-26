@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Box } from "@mui/material";
-import PatientForm from "../components/patients/PatientForm";
+import PatientForm from "../components/patient/PatientForm";
 
 const NewPatient = () => {
   const navigate = useNavigate();

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Autocomplete,
@@ -19,15 +20,15 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from "react-router-dom";
 
-const emptyRow = {key: 0, medicineName: "", dose: "", frequency: "", duration: "", additionalInfo: ""};
+const emptyRow = {key: 0, medicineName: "", dose: "", frequency: "", duration: "", quantity: "", additionalInfo: ""};
 
 const columns = [
   {field: 'medicineName', headerName: 'Medicine Name'},
   {field: 'dose', headerName: 'Dose'},
   {field: 'frequency', headerName: 'Frequency'},
   {field: 'duration', headerName: 'Duration'},
+  {field: 'quantity', headerName: 'Quantity'},
   {field: 'additionalInfo', headerName: 'Additional Information'},
 ];
 
@@ -44,6 +45,10 @@ const getTodayDate = () => {
   return [year, month, day].join('-');
 };
 
+const isCellDisabled = (medicineType, headerName) => {
+  return headerName === 'dose' && medicineType === 'Cream';
+};
+
 const PrescriptionForm = ({patient}) => {
   const [prescriptions, setPrescriptions] = useState([emptyRow]);
   const [medicines, setMedicines] = useState([]);
@@ -53,7 +58,13 @@ const PrescriptionForm = ({patient}) => {
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicines");
     const data = await response.data;
-    setMedicines(data.map(_ => _.name));
+    setMedicines(data.map(medicine => {
+      return {
+        id: medicine.id,
+        label: medicine.name,
+        type: medicine.type
+      };
+    }));
   }, []);
 
   const dateChangeHandler = (event) => {
@@ -68,7 +79,7 @@ const PrescriptionForm = ({patient}) => {
 
   const medicineNameChangeHandler = (value, index) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
-      {...row, medicineName: value} : row));
+      {...row, medicineName: value.label, medicineType: value.type} : row));
   };
 
   const savePrescriptionData = async () => {
@@ -127,8 +138,7 @@ const PrescriptionForm = ({patient}) => {
                     {columns.map(column => column.field === 'medicineName' ? (
                       <TableCell width="250px" key={column.field}>
                         <Autocomplete
-                          autoComplete
-                          includeInputInList
+                          disableClearable
                           options={medicines}
                           onChange={(event, value) => medicineNameChangeHandler(value, index)}
                           renderInput={(params) =>
@@ -142,6 +152,7 @@ const PrescriptionForm = ({patient}) => {
                     ) : (
                       <TableCell key={column.field}>
                         <TextField
+                          disabled={isCellDisabled(prescription.medicineType, column.field)}
                           size="small"
                           value={prescription[column.field]}
                           onChange={event => changeHandler(event, column.field, index)}/>

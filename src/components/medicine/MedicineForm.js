@@ -8,16 +8,33 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
+  MenuItem,
   OutlinedInput,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
 
+const medicineTypeList = [
+  {
+    value: 'Pill',
+    label: 'Pill',
+  },
+  {
+    value: 'Cream',
+    label: 'Cream',
+  },
+  {
+    value: 'Syrup',
+    label: 'Syrup',
+  }
+];
+
 const MedicineForm = (props) => {
   const [name, setName] = useState('');
   const [unitPrice, setUnitPrice] = useState(0);
   const [units, setUnits] = useState(0);
+  const [type, setType] = useState(medicineTypeList[0].value);
   const navigate = useNavigate();
 
   const {medicine} = props;
@@ -27,6 +44,7 @@ const MedicineForm = (props) => {
       setName(medicine.name);
       setUnitPrice(medicine.unitPrice);
       setUnits(medicine.units);
+      setType(medicine.type);
     }
   }, [medicine]);
 
@@ -42,21 +60,20 @@ const MedicineForm = (props) => {
     setUnits(event.target.value);
   };
 
+  const typeChangeHandler = (event) => {
+    setType(event.target.value);
+  };
+
   const submitHandler = async (event) => {
     event.preventDefault();
     const newMedicine = {
       name: name,
       unitPrice: unitPrice,
-      units: units
+      units: units,
+      type: type
     };
-    const response = await fetch("http://localhost:8080/medicines", {
-      method: 'POST',
-      body: JSON.stringify(newMedicine),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    await response.json();
+
+    props.onAddMedicine(newMedicine);
   };
 
   return (
@@ -81,7 +98,7 @@ const MedicineForm = (props) => {
                 label="Medicine name"
                 type="text"
                 variant="outlined"
-                value={name || ''}
+                value={name}
                 onChange={nameChangeHandler}
               />
             </Grid>
@@ -92,7 +109,7 @@ const MedicineForm = (props) => {
                   id="unit-price"
                   startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
                   label="Unit Price"
-                  value={unitPrice || 0}
+                  value={unitPrice}
                   onChange={unitPriceChangeHandler}
                 />
               </FormControl>
@@ -104,9 +121,25 @@ const MedicineForm = (props) => {
                 label="Units"
                 type="number"
                 variant="outlined"
-                value={units || 0}
+                value={units}
                 onChange={unitsChangeHandler}
               />
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                id="type"
+                select
+                label="Medicine type"
+                value={type || medicineTypeList[0].value}
+                onChange={typeChangeHandler}
+              >
+                {medicineTypeList.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item>
               <Stack direction="row" spacing={4}>

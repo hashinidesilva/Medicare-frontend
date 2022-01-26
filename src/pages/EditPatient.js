@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import PatientForm from "./PatientForm";
+import PatientForm from "../components/patient/PatientForm";
 import axios from "axios";
 import { Box } from "@mui/material";
 

@@ -17,6 +17,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import MedicationIcon from '@mui/icons-material/Medication';
 
 const PatientsTable = (props) => {
+  /*  const {searchText} = props;
+
+    const fetchPatients = async () => {
+      const {data} = await axios.get("http://localhost:8080/patients",
+        {
+          params: {patientName: searchText === '' ? null : searchText}
+        });
+      return data;
+    };
+
+    const {isLoading, data: patients} = useQuery('patients', fetchPatients);
+
+    if (isLoading) {
+      return <span>Is loading</span>;
+    }*/
+
   const [patients, setPatients] = useState([]);
   const {searchText} = props;
 

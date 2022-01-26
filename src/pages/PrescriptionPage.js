@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 
 import axios from "axios";
 import { Box, Grid } from "@mui/material";
-import PatientInfoCard from "../components/patients/PatientInfoCard";
-import PrescriptionForm from "../components/patients/PrescriptionForm";
+import PatientInfoCard from "../components/patient/PatientInfoCard";
+import PrescriptionForm from "../components/patient/PrescriptionForm";
 
 const PrescriptionPage = () => {
   const [patient, setPatient] = useState({});

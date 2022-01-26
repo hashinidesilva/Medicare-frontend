@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
-import MedicineForm from "./components/medicine/MedicineForm";
-import MedicineTable from "./components/medicine/MedicineTable";
 import PrescriptionPage from "./pages/PrescriptionPage";
 import Patients from "./pages/Patients";
 import NewPatient from "./pages/NewPatient";
-import EditPatient from "./components/patients/EditPatient";
-import EditMedicine from "./components/medicine/EditMedicine";
+import EditPatient from "./pages/EditPatient";
+import EditMedicine from "./pages/EditMedicine";
+import NewMedicine from "./pages/NewMedicine";
+import Medicines from "./pages/Medicines";
 
 function App() {
   return (
@@ -18,8 +18,8 @@ function App() {
         <Route path="patients/create" element={<NewPatient/>}/>
         <Route path="patients/:patientId/edit" element={<EditPatient/>}/>
         <Route path="patients/:patientId/prescriptions" element={<PrescriptionPage/>}/>
-        <Route path="medicines" element={<MedicineTable/>}/>
-        <Route path="medicines/create" element={<MedicineForm/>}/>
+        <Route path="medicines" element={<Medicines/>}/>
+        <Route path="medicines/create" element={<NewMedicine/>}/>
         <Route path="medicines/:medicineId/edit" element={<EditMedicine/>}/>
       </Routes>
     </Layout>

@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { Box, Button, Grid, InputAdornment, Stack, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import PatientsTable from "../components/patient/PatientsTable";
+import MedicineTable from "../components/medicine/MedicineTable";
 
-const Patients = () => {
+const Medicines = () => {
   const [searchText, setSearchText] = useState('');
 
   return (
@@ -16,7 +16,7 @@ const Patients = () => {
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <TextField
               id="search-text"
-              placeholder="Search patients..."
+              placeholder="Search medicines..."
               type="text"
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
@@ -32,18 +32,18 @@ const Patients = () => {
               variant="contained"
               startIcon={<AddIcon/>}
               component={Link}
-              to="/patients/create"
+              to="/medicines/create"
             >
-              Add Patient
+              Add Medicine
             </Button>
           </Stack>
         </Grid>
         <Grid item>
-          <PatientsTable searchText={searchText}/>
+          <MedicineTable searchText={searchText}/>
         </Grid>
       </Grid>
     </Box>
   );
 };
 
-export default Patients;
+export default Medicines;
