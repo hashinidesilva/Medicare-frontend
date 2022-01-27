@@ -21,13 +21,13 @@ import {
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const emptyRow = {key: 0, medicineName: "", dose: "", frequency: "", duration: "", quantity: "", additionalInfo: ""};
+const emptyRow = {key: 0, medicineName: "", dose: "", frequency: 0, duration: 0, quantity: 0, additionalInfo: ""};
 
 const columns = [
   {field: 'medicineName', headerName: 'Medicine Name'},
   {field: 'dose', headerName: 'Dose'},
   {field: 'frequency', headerName: 'Frequency'},
-  {field: 'duration', headerName: 'Duration'},
+  {field: 'duration', headerName: 'Duration \n(in days)'},
   {field: 'quantity', headerName: 'Quantity'},
   {field: 'additionalInfo', headerName: 'Additional Information'},
 ];
@@ -43,10 +43,6 @@ const getTodayDate = () => {
   if (day.length < 2)
     day = '0' + day;
   return [year, month, day].join('-');
-};
-
-const isCellDisabled = (medicineType, headerName) => {
-  return headerName === 'dose' && medicineType === 'Cream';
 };
 
 const PrescriptionForm = ({patient}) => {
@@ -71,15 +67,63 @@ const PrescriptionForm = ({patient}) => {
     setDate(event.target.value);
   };
 
-  const changeHandler = (event, field, index) => {
-    const newValue = event.target.value;
-    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
-      {...row, [field]: newValue} : row));
-  };
-
   const medicineNameChangeHandler = (value, index) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
       {...row, medicineName: value.label, medicineType: value.type} : row));
+  };
+
+  const doseChangeHandler = (event, index, medicineType) => {
+    const newValue = event.target.value;
+    setPrescriptions((prevState) => prevState.map((row, rowId) => {
+      if (rowId === index) {
+        if (medicineType === 'Pill') {
+          const quantity = parseInt(newValue) * row.frequency * row.duration;
+          return {...row, dose: newValue, quantity: quantity};
+        }
+        return {...row, dose: newValue};
+      }
+      return row;
+    }));
+  };
+
+  const frequencyChangeHandler = (event, index, medicineType) => {
+    const newValue = event.target.value;
+    setPrescriptions((prevState) => prevState.map((row, rowId) => {
+      if (rowId === index) {
+        if (medicineType === 'Pill') {
+          const quantity = parseInt(row.dose) * newValue * row.duration;
+          return {...row, frequency: newValue, quantity: quantity};
+        }
+        return {...row, frequency: newValue};
+      }
+      return row;
+    }));
+  };
+
+  const durationChangeHandler = (event, index, medicineType) => {
+    const newValue = event.target.value;
+    setPrescriptions((prevState) => prevState.map((row, rowId) => {
+      if (rowId === index) {
+        if (medicineType === 'Pill') {
+          const quantity = parseInt(row.dose) * row.frequency * newValue;
+          return {...row, duration: newValue, quantity: quantity};
+        }
+        return {...row, duration: newValue};
+      }
+      return row;
+    }));
+  };
+
+  const quantityChangeHandler = (event, index) => {
+    const newValue = event.target.value;
+    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
+      {...row, quantity: newValue} : row));
+  };
+
+  const additionalInfoChangeHandler = (event, index) => {
+    const newValue = event.target.value;
+    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
+      {...row, additionalInfo: newValue} : row));
   };
 
   const savePrescriptionData = async () => {
@@ -92,6 +136,7 @@ const PrescriptionForm = ({patient}) => {
           dose: pres.dose,
           frequency: pres.frequency,
           duration: pres.duration,
+          quantity: pres.quantity,
           additionalInfo: pres.additionalInfo,
         };
       })
@@ -135,29 +180,55 @@ const PrescriptionForm = ({patient}) => {
                     key={prescription.key}
                     sx={{'&:last-child td, &:last-child th': {border: 0}}}
                   >
-                    {columns.map(column => column.field === 'medicineName' ? (
-                      <TableCell width="250px" key={column.field}>
-                        <Autocomplete
-                          disableClearable
-                          options={medicines}
-                          onChange={(event, value) => medicineNameChangeHandler(value, index)}
-                          renderInput={(params) =>
-                            <TextField
-                              {...params}
-                              placeholder="Select medicine"
-                              size="small"
-                            />
-                          }/>
-                      </TableCell>
-                    ) : (
-                      <TableCell key={column.field}>
-                        <TextField
-                          disabled={isCellDisabled(prescription.medicineType, column.field)}
-                          size="small"
-                          value={prescription[column.field]}
-                          onChange={event => changeHandler(event, column.field, index)}/>
-                      </TableCell>
-                    ))}
+                    <TableCell width="250px">
+                      <Autocomplete
+                        disableClearable
+                        options={medicines}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        onChange={(event, value) => medicineNameChangeHandler(value, index)}
+                        renderInput={(params) =>
+                          <TextField
+                            {...params}
+                            placeholder="Select medicine"
+                            size="small"
+                          />
+                        }/>
+                    </TableCell>
+                    <TableCell width="70px">
+                      <TextField
+                        disabled={prescription.medicineType === 'Cream'}
+                        size="small"
+                        value={prescription.dose}
+                        onChange={event => doseChangeHandler(event, index, prescription.medicineType)}/>
+                    </TableCell>
+                    <TableCell width="70px">
+                      <TextField
+                        size="small"
+                        value={prescription.frequency}
+                        onChange={event => frequencyChangeHandler(event, index, prescription.medicineType)}/>
+                    </TableCell>
+                    <TableCell width="70px">
+                      <TextField
+                        size="small"
+                        value={prescription.duration}
+                        onChange={event => durationChangeHandler(event, index, prescription.medicineType)}/>
+                    </TableCell>
+                    <TableCell width="70px">
+                      <TextField
+                        disabled={prescription.medicineType === 'Pill'}
+                        size="small"
+                        value={prescription.quantity}
+                        onChange={event => quantityChangeHandler(event, index)}/>
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={3}
+                        size="small"
+                        value={prescription.additionalInfo}
+                        onChange={event => additionalInfoChangeHandler(event, index)}/>
+                    </TableCell>
                     <TableCell align="right" width={'10px'}>
                       <Tooltip title="Delete">
                         <IconButton onClick={() => {

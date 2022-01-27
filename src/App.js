@@ -8,6 +8,8 @@ import EditPatient from "./pages/EditPatient";
 import EditMedicine from "./pages/EditMedicine";
 import NewMedicine from "./pages/NewMedicine";
 import Medicines from "./pages/Medicines";
+import NotificationsPage from "./pages/NotificationsPage";
+
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
         <Route path="medicines" element={<Medicines/>}/>
         <Route path="medicines/create" element={<NewMedicine/>}/>
         <Route path="medicines/:medicineId/edit" element={<EditMedicine/>}/>
+        <Route path="notifications" element={<NotificationsPage/>}/>
       </Routes>
     </Layout>
   );

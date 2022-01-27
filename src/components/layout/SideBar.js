@@ -8,7 +8,6 @@ const SideBar = () => {
       sx={{
         width: 240,
         display: "flex", justifyContent: "center", alignItems: "center",
-        // flexShrink: 0,
         '& .MuiDrawer-paper': {
           width: 240,
           boxSizing: 'border-box',
@@ -22,6 +21,7 @@ const SideBar = () => {
         <List>
           <ListItem button component={Link} to="/patients">Patients</ListItem>
           <ListItem button component={Link} to="/medicines">Medicines</ListItem>
+          <ListItem button component={Link} to="/notifications">Notifications</ListItem>
         </List>
       </Box>
     </Drawer>
