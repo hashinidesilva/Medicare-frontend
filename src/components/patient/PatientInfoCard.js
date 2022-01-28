@@ -1,6 +1,6 @@
 import { Card, CardContent, Stack, Typography } from "@mui/material";
 
-const PatientInfoCard = ({patient}) => {
+const PatientInfoCard = ({patient = {}}) => {
 
   return (
     <Card variant="outlined" sx={{backgroundColor: "#E8E8E8"}}>

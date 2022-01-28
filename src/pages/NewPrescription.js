@@ -4,9 +4,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Box, Grid } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
-import PrescriptionForm from "../components/patient/PrescriptionForm";
+import MedicationsForm from "../components/patient/MedicationsForm";
 
-const PrescriptionPage = () => {
+const NewPrescription = () => {
   const [patient, setPatient] = useState({});
   const params = useParams();
   const {patientId} = params;
@@ -28,11 +28,11 @@ const PrescriptionPage = () => {
           <PatientInfoCard patient={patient}/>
         </Grid>
         <Grid item>
-          <PrescriptionForm patient={patient}/>
+          <MedicationsForm patient={patient}/>
         </Grid>
       </Grid>
     </Box>
   );
 };
 
-export default PrescriptionPage;
+export default NewPrescription;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
+import PrescriptionContext from "../../store/prescription-context";
 
 const emptyRow = {key: 0, medicineName: "", dose: "", frequency: 0, duration: 0, quantity: 0, additionalInfo: ""};
 
@@ -36,20 +37,27 @@ const getTodayDate = () => {
   let date = new Date(),
     month = '' + (date.getMonth() + 1),
     day = '' + date.getDate(),
-    year = date.getFullYear();
+    year = date.getFullYear(),
+    hours = date.getHours().toString(),
+    minutes = date.getMinutes().toString();
 
   if (month.length < 2)
     month = '0' + month;
   if (day.length < 2)
     day = '0' + day;
-  return [year, month, day].join('-');
+  if (hours.length < 2)
+    hours = '0' + hours;
+  if (minutes.length < 2)
+    minutes = '0' + minutes;
+  return [year, month, day].join('-') + "T" + [hours, minutes].join(':');
 };
 
-const PrescriptionForm = ({patient}) => {
+const MedicationsForm = ({patient = {}}) => {
   const [prescriptions, setPrescriptions] = useState([emptyRow]);
   const [medicines, setMedicines] = useState([]);
   const [date, setDate] = useState(getTodayDate());
   const navigate = useNavigate();
+  const prescriptionCtx = useContext(PrescriptionContext);
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicines");
@@ -66,6 +74,7 @@ const PrescriptionForm = ({patient}) => {
   const dateChangeHandler = (event) => {
     setDate(event.target.value);
   };
+  console.log("CTX", prescriptionCtx);
 
   const medicineNameChangeHandler = (value, index) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
@@ -142,13 +151,15 @@ const PrescriptionForm = ({patient}) => {
       })
     };
 
-    await fetch("http://localhost:8080/prescriptions", {
+    const response = await fetch("http://localhost:8080/prescriptions", {
       method: 'POST',
       body: JSON.stringify(prescription),
       headers: {
         'Content-Type': 'application/json'
       }
     });
+    const savedPrescription = await response.data;
+    prescriptionCtx.addItem(savedPrescription);
     navigate("/patients");
   };
 
@@ -159,7 +170,7 @@ const PrescriptionForm = ({patient}) => {
           <TextField
             id="date"
             label="Date"
-            type="date"
+            type="datetime-local"
             value={date}
             variant="outlined"
             InputLabelProps={{shrink: true}}
@@ -258,4 +269,4 @@ const PrescriptionForm = ({patient}) => {
   );
 };
 
-export default PrescriptionForm;
+export default MedicationsForm;

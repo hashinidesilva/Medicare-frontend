@@ -1,5 +1,5 @@
-import { AppBar, Badge, IconButton, Toolbar, Typography } from "@mui/material";
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import Notifications from "../notification/Notifications";
 
 const NavBar = () => {
   return (
@@ -8,15 +8,7 @@ const NavBar = () => {
         <Typography variant="h4" component="div" sx={{flexGrow: 1}}>
           Medicare
         </Typography>
-        <IconButton
-          size="large"
-          aria-label="show new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={0} color="error">
-            <NotificationsIcon/>
-          </Badge>
-        </IconButton>
+        <Notifications/>
       </Toolbar>
     </AppBar>
   );
