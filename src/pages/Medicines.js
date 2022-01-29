@@ -10,7 +10,7 @@ const Medicines = () => {
   const [searchText, setSearchText] = useState('');
 
   return (
-    <Box sx={{margin: '20px', display: "flex", justifyContent: "center", alignItems: "center"}}>
+    <Box sx={{margin: '20px'}}>
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -31,6 +31,7 @@ const Medicines = () => {
             <Button
               variant="contained"
               startIcon={<AddIcon/>}
+              sx={{backgroundColor:"#14bdc2"}}
               component={Link}
               to="/medicines/create"
             >

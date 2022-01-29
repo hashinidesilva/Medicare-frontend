@@ -1,53 +1,33 @@
-import {
-  Checkbox,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@mui/material";
+import Table from "../UI/Table";
 
 const MedicationsTable = ({medications = []}) => {
 
-  return (
-    <TableContainer component={Paper}>
-      <Table sx={{minWidth: 650}} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Medicine name</TableCell>
-            <TableCell align="right">Medicine type</TableCell>
-            <TableCell align="right">Dose</TableCell>
-            <TableCell align="right">Frequency</TableCell>
-            <TableCell align="right">Duration</TableCell>
-            <TableCell align="right">Quantity</TableCell>
-            <TableCell align="right">AdditionalInfo</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {medications.map((medication) => (
-            <TableRow
-              key={medication.medicine.id}
-              sx={{'&:last-child td, &:last-child th': {border: 0}}}
-            >
-              <TableCell component="th" scope="row">{medication.medicine.name}</TableCell>
-              <TableCell align="right">{medication.medicine.type}</TableCell>
-              <TableCell align="right">{medication.dose}</TableCell>
-              <TableCell align="right">{medication.frequency}</TableCell>
-              <TableCell align="right">{medication.duration}</TableCell>
-              <TableCell align="right">{medication.quantity}</TableCell>
-              <TableCell align="right">{medication.additionalInfo}</TableCell>
-              <TableCell align="right">
-                <Checkbox/>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+  const medicines = medications.map(medication => {
+    return {
+      id: medication.medicine.id,
+      name: medication.medicine.name,
+      type: medication.medicine.type,
+      dose: medication.dose,
+      frequency: medication.frequency,
+      duration: medication.duration,
+      quantity: medication.quantity,
+      additionalInfo: medication.additionalInfo,
+    };
+  });
 
+  const columns = [
+    {field: 'name', headerName: 'Medicine', width: '300'},
+    {field: 'type', headerName: 'Type', flex: 1},
+    {field: 'dose', headerName: 'Dose', flex: 0.75},
+    {field: 'frequency', headerName: 'Frequency', flex: 0.5},
+    {field: 'duration', headerName: 'Duration', flex: 0.5},
+    {field: 'quantity', headerName: 'Quantity', flex: 1},
+    {field: 'additionalInfo', headerName: 'Additional Info', flex: 2},
+  ];
+
+  return (
+    <Table columns={columns} rows={medicines}/>
+  );
 };
 
 export default MedicationsTable;

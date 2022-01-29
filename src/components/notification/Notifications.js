@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 
 import axios from "axios";
-import { Badge, Divider, IconButton, Menu, MenuItem } from "@mui/material";
+import { Badge, IconButton, Menu, MenuItem } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import PrescriptionContext from "../../store/prescription-context";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +59,7 @@ const Notifications = () => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        {prescriptions.map((prescription, index) => (
+        {prescriptions.map(prescription => (
           <MenuItem
             key={prescription.id}
             onClick={menuItemClickHandler.bind(null, prescription.id)}>

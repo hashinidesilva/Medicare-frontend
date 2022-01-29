@@ -2,37 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
-import {
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip
-} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import MedicationIcon from '@mui/icons-material/Medication';
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import { Tooltip } from "@mui/material";
+import Table from "../UI/Table";
 
 const PatientsTable = (props) => {
-  /*  const {searchText} = props;
-
-    const fetchPatients = async () => {
-      const {data} = await axios.get("http://localhost:8080/patients",
-        {
-          params: {patientName: searchText === '' ? null : searchText}
-        });
-      return data;
-    };
-
-    const {isLoading, data: patients} = useQuery('patients', fetchPatients);
-
-    if (isLoading) {
-      return <span>Is loading</span>;
-    }*/
-
   const [patients, setPatients] = useState([]);
   const {searchText} = props;
 
@@ -45,50 +21,40 @@ const PatientsTable = (props) => {
     setPatients(data);
   }, [searchText]);
 
+  const columns = [
+    {field: 'name', headerName: 'Name', width: '400'},
+    {field: 'age', headerName: 'Age', flex: 1},
+    {field: 'gender', headerName: 'Gender', flex: 1},
+    {
+      field: 'actions',
+      type: 'actions',
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={
+            <Tooltip title={"Edit"}>
+              <EditIcon sx={{color: "#c07015"}}/>
+            </Tooltip>
+          }
+          component={Link}
+          to={`${params.id}/edit`}
+          label="Edit"
+        />,
+        <GridActionsCellItem
+          icon={
+            <Tooltip title="Add prescription">
+              <MedicationIcon sx={{color: "#1b15c0"}}/>
+            </Tooltip>
+          }
+          label="Add prescription"
+          component={Link}
+          to={`${params.id}/prescriptions`}
+        />
+      ],
+    },
+  ];
+
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Age</TableCell>
-            <TableCell align="right">Gender</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {patients.map((patient) => (
-            <TableRow
-              key={patient.name}
-              sx={{'&:last-child td, &:last-child th': {border: 0}}}
-            >
-              <TableCell component="th" scope="row">{patient.name}</TableCell>
-              <TableCell align="right">{patient.age}</TableCell>
-              <TableCell align="right">{patient.gender}</TableCell>
-              <TableCell align="right" width={'10px'}>
-                <Tooltip title="Edit">
-                  <IconButton
-                    component={Link}
-                    to={`${patient.id}/edit`}
-                  >
-                    <EditIcon/>
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="right" width={'10px'}>
-                <Tooltip title="Add prescription">
-                  <IconButton
-                    component={Link}
-                    to={`${patient.id}/prescriptions`}
-                  >
-                    <MedicationIcon/>
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Table columns={columns} rows={patients}/>
   );
 };
 

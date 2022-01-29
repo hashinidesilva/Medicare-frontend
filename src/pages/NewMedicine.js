@@ -19,7 +19,7 @@ const NewMedicine = () => {
   };
 
   return (
-    <Box sx={{margin: '20px', width: '75%'}}>
+    <Box sx={{marginX: '20px', marginTop: '90px', display: "flex", justifyContent: "center"}}>
       <MedicineForm onAddMedicine={submitHandler}/>
     </Box>
   );

@@ -30,6 +30,7 @@ const Patients = () => {
             />
             <Button
               variant="contained"
+              sx={{backgroundColor:"#14bdc2"}}
               startIcon={<AddIcon/>}
               component={Link}
               to="/patients/create"

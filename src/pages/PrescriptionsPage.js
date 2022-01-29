@@ -15,7 +15,8 @@ const PrescriptionsPage = () => {
         <Grid item key={item.patient.id}>
           <ButtonBase
             component={Link}
-            to={`${item.id}`}>
+            to={`${item.id}`}
+          >
             <PatientInfoCard patient={item.patient}/>
           </ButtonBase>
         </Grid>

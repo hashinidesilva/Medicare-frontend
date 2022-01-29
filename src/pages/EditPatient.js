@@ -29,7 +29,7 @@ const EditPatient = () => {
   };
 
   return (
-    <Box sx={{margin: "20px", width: '75%', justifyContent: "center"}}>
+    <Box sx={{marginX: "20px", marginTop: "90px", display: "flex", justifyContent: "center"}}>
       <PatientForm onAddPatient={submitHandler} patient={patient}/>
     </Box>
   );

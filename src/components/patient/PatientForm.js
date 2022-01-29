@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Grid, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, MenuItem, Paper, Stack, TextField, Typography } from "@mui/material";
 
 const genderList = [
   {
@@ -56,66 +56,68 @@ const PatientForm = (props) => {
   };
 
   return (
-    <Box sx={{border: 1}}>
+    <Box sx={{border: 1, borderColor: "ActiveCaption", width: "75%"}} component={Paper}>
       <Box
         sx={{
           display: "flex",
           alignItems: 'center',
-          width: "100%",
           height: 70,
-          backgroundColor: 'primary.dark',
+          justifyContent: "center"
         }}>
-        <Typography mx={2} color="#FFFFFF" variant="h4">Patient Form</Typography>
+        <Typography variant="h4">Patient Form</Typography>
       </Box>
-      <Box sx={{margin: '20px'}}>
-        <form onSubmit={submitHandler}>
-          <Grid container direction="column" spacing={3} sx={{flexGrow: 1}}>
-            <Grid item>
-              <TextField
-                fullWidth
-                id="name"
-                label="Patient name"
-                type="text"
-                variant="outlined"
-                value={name}
-                onChange={nameChangeHandler}
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                id="age"
-                label="Age"
-                type="number"
-                variant="outlined"
-                value={age}
-                onChange={ageChangeHandler}/>
-            </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                id="gender"
-                select
-                label="Gender"
-                value={gender || genderList[0].value}
-                onChange={genderChangeHandler}
-              >
-                {genderList.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item>
-              <Stack direction="row" spacing={4}>
-                <Button variant="contained" type="submit">Save</Button>
-                <Button variant="outlined" onClick={() => navigate(-1)}>Cancel</Button>
-              </Stack>
-            </Grid>
-          </Grid>
-        </form>
-      </Box>
+      <Divider/>
+      <form onSubmit={submitHandler} style={{margin: '20px'}}>
+        <Stack spacing={4}>
+          <TextField
+            fullWidth
+            id="name"
+            label="Patient name"
+            type="text"
+            variant="outlined"
+            value={name}
+            onChange={nameChangeHandler}
+          />
+          <TextField
+            fullWidth
+            id="age"
+            label="Age"
+            type="number"
+            variant="outlined"
+            value={age}
+            onChange={ageChangeHandler}/>
+          <TextField
+            fullWidth
+            id="gender"
+            select
+            label="Gender"
+            value={gender || genderList[0].value}
+            onChange={genderChangeHandler}
+          >
+            {genderList.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Stack direction="row" spacing={4}>
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{backgroundColor: "#1a14c2"}}
+            >
+              Save
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => navigate(-1)}
+              sx={{backgroundColor: "#c27114"}}
+            >
+              Cancel
+            </Button>
+          </Stack>
+        </Stack>
+      </form>
     </Box>
   );
 };

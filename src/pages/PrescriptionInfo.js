@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import axios from "axios";
-import { Box, Stack } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import MedicationsTable from "../components/patient/MedicationsTable";
 
@@ -15,7 +15,6 @@ const PrescriptionInfo = () => {
     async function fetchData() {
       const response = await axios.get(`http://localhost:8080/prescriptions/${prescriptionId}`);
       const data = await response.data;
-      console.log("DATA", data);
       setPrescription(data);
     }
 
@@ -26,10 +25,14 @@ const PrescriptionInfo = () => {
 
   return (
     <Box sx={{margin: '20px', display: "flex"}}>
-      <Stack sx={{width: '100%'}} spacing={2}>
-        <PatientInfoCard patient={patient}/>
-        <MedicationsTable medications={medicines}/>
-      </Stack>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={4}>
+          <PatientInfoCard patient={patient}/>
+        </Grid>
+        <Grid item xs={12}>
+          <MedicationsTable medications={medicines}/>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

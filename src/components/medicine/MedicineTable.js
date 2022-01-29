@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import {
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip
-} from "@mui/material";
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
+import Table from "../UI/Table";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import { Tooltip } from "@mui/material";
 
 const MedicineTable = (props) => {
   const [medicines, setMedicines] = useState([]);
@@ -28,41 +20,31 @@ const MedicineTable = (props) => {
     setMedicines(data);
   }, [searchText]);
 
+  const columns = [
+    {field: 'name', headerName: 'Medicine', width: '400'},
+    {field: 'type', headerName: 'Type', flex: 1},
+    {field: 'unitPrice', headerName: 'Unit Price', flex: 1},
+    {field: 'units', headerName: 'Units', flex: 1},
+    {
+      field: 'actions',
+      type: 'actions',
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={
+            <Tooltip title={"Edit"}>
+              <EditIcon sx={{color: "#c07015"}}/>
+            </Tooltip>
+          }
+          component={Link}
+          to={`${params.id}/edit`}
+          label="Edit"
+        />,
+      ],
+    },
+  ];
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{minWidth: 650}} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Medicine</TableCell>
-            <TableCell align="right">Type</TableCell>
-            <TableCell align="right">Unit Price</TableCell>
-            <TableCell align="right">Units</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {medicines.map((medicine) => (
-            <TableRow
-              key={medicine.name}
-              sx={{'&:last-child td, &:last-child th': {border: 0}}}
-            >
-              <TableCell component="th" scope="row">{medicine.name}</TableCell>
-              <TableCell align="right">{medicine.type}</TableCell>
-              <TableCell align="right">{medicine.unitPrice}</TableCell>
-              <TableCell align="right">{medicine.units}</TableCell>
-              <TableCell align="right" width={'10px'}>
-                <Tooltip title="Edit">
-                  <IconButton
-                    component={Link}
-                    to={`${medicine.id}/edit`}>
-                    <EditIcon/>
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Table columns={columns} rows={medicines}/>
   );
 };
 

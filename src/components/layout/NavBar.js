@@ -3,7 +3,7 @@ import Notifications from "../notification/Notifications";
 
 const NavBar = () => {
   return (
-    <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
+    <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#1565c0"}}>
       <Toolbar>
         <Typography variant="h4" component="div" sx={{flexGrow: 1}}>
           Medicare
