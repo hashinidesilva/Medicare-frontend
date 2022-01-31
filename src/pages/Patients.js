@@ -15,6 +15,7 @@ const Patients = () => {
         <Grid item>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <TextField
+              autoFocus
               id="search-text"
               placeholder="Search patients..."
               type="text"

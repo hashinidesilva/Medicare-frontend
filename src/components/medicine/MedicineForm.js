@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -6,6 +6,7 @@ import {
   Button,
   Divider,
   FormControl,
+  FormHelperText,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -15,6 +16,7 @@ import {
   TextField,
   Typography
 } from "@mui/material";
+import useInput from "../../hooks/useInput";
 
 const medicineTypeList = [
   {
@@ -32,38 +34,51 @@ const medicineTypeList = [
 ];
 
 const MedicineForm = (props) => {
-  const [name, setName] = useState('');
-  const [unitPrice, setUnitPrice] = useState(0);
-  const [units, setUnits] = useState(0);
-  const [type, setType] = useState(medicineTypeList[0].value);
   const navigate = useNavigate();
-
   const {medicine} = props;
+
+  const {
+    value: name,
+    isValid: nameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler
+  } = useInput(value => value.trim() !== '', '');
+
+  const {
+    value: unitPrice,
+    isValid: unitPriceIsValid,
+    hasError: unitPriceHasError,
+    valueChangeHandler: unitPriceChangeHandler,
+    inputBlurHandler: unitPriceBlurHandler
+  } = useInput(value => value > 0, 0);
+
+  const {
+    value: units,
+    isValid: unitsIsValid,
+    hasError: unitsHasError,
+    valueChangeHandler: unitsChangeHandler,
+    inputBlurHandler: unitsBlurHandler
+  } = useInput(value => value > 0, 0);
+
+  const {
+    value: type,
+    isValid: typeIsValid,
+    hasError: typeHasError,
+    valueChangeHandler: typeChangeHandler,
+    inputBlurHandler: typeBlurHandler
+  } = useInput(value => medicineTypeList.map(item => item.value).includes(value), medicineTypeList[0].value);
+
+  const formIsValid = nameIsValid && unitPriceIsValid && unitsIsValid && typeIsValid;
 
   useEffect(() => {
     if (medicine) {
-      setName(medicine.name);
-      setUnitPrice(medicine.unitPrice);
-      setUnits(medicine.units);
-      setType(medicine.type);
+      nameChangeHandler(medicine.name);
+      unitPriceChangeHandler(medicine.unitPrice);
+      unitsChangeHandler(medicine.units);
+      typeChangeHandler(medicine.type);
     }
-  }, [medicine]);
-
-  const nameChangeHandler = (event) => {
-    setName(event.target.value);
-  };
-
-  const unitPriceChangeHandler = (event) => {
-    setUnitPrice(event.target.value);
-  };
-
-  const unitsChangeHandler = (event) => {
-    setUnits(event.target.value);
-  };
-
-  const typeChangeHandler = (event) => {
-    setType(event.target.value);
-  };
+  }, [medicine, nameChangeHandler, unitPriceChangeHandler, unitsChangeHandler, typeChangeHandler]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -92,40 +107,49 @@ const MedicineForm = (props) => {
       <form onSubmit={submitHandler} style={{margin: '20px'}}>
         <Stack spacing={4}>
           <TextField
+            error={nameHasError}
             fullWidth
             id="name"
             label="Medicine name"
             type="text"
-            variant="outlined"
             value={name}
-            onChange={nameChangeHandler}
+            onChange={(event) => nameChangeHandler(event.target.value)}
+            onBlur={nameBlurHandler}
+            helperText={nameHasError && "Name must not be empty"}
           />
           <FormControl fullWidth>
             <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
             <OutlinedInput
+              error={unitPriceHasError}
               id="unit-price"
               startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
               label="Unit Price"
               value={unitPrice}
-              onChange={unitPriceChangeHandler}
+              onChange={(event) => unitPriceChangeHandler(event.target.value)}
+              onBlur={unitPriceBlurHandler}
             />
+            {unitPriceHasError && <FormHelperText error>Unit price must be > 0</FormHelperText>}
           </FormControl>
           <TextField
+            error={unitsHasError}
             fullWidth
             id="units"
             label="Units"
             type="number"
-            variant="outlined"
             value={units}
-            onChange={unitsChangeHandler}
+            onChange={(event) => unitsChangeHandler(event.target.value)}
+            onBlur={unitsBlurHandler}
+            helperText={unitsHasError && "Units must be > 0"}
           />
           <TextField
+            error={typeHasError}
             fullWidth
             id="type"
             select
             label="Medicine type"
             value={type || medicineTypeList[0].value}
-            onChange={typeChangeHandler}
+            onChange={(event) => typeChangeHandler(event.target.value)}
+            onBlur={typeBlurHandler}
           >
             {medicineTypeList.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -137,6 +161,7 @@ const MedicineForm = (props) => {
             <Button
               variant="contained"
               type="submit"
+              disabled={!formIsValid}
               sx={{backgroundColor: "#1a14c2"}}
             >
               Save

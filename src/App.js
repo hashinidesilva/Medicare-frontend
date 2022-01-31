@@ -19,16 +19,22 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Navigate to="/patients"/>}/>
-          <Route path="patients" element={<Patients/>}/>
-          <Route path="patients/create" element={<NewPatient/>}/>
-          <Route path="patients/:patientId/edit" element={<EditPatient/>}/>
-          <Route path="patients/:patientId/prescriptions/create" element={<NewPrescription/>}/>
-          <Route path="patients/:patientId/prescriptions" element={<PatientHistory/>}/>
-          <Route path="medicines" element={<Medicines/>}/>
-          <Route path="medicines/create" element={<NewMedicine/>}/>
-          <Route path="medicines/:medicineId/edit" element={<EditMedicine/>}/>
-          <Route path="prescriptions" element={<UnprocessedPrescriptions/>}/>
-          <Route path="prescriptions/:prescriptionId" element={<PrescriptionInfo/>}/>
+          <Route path="/patients">
+            <Route index element={<Patients/>}/>
+            <Route path="create" element={<NewPatient/>}/>
+            <Route path=":patientId/edit" element={<EditPatient/>}/>
+            <Route path=":patientId/prescriptions/create" element={<NewPrescription/>}/>
+            <Route path=":patientId/prescriptions" element={<PatientHistory/>}/>
+          </Route>
+          <Route path="/medicines">
+            <Route index element={<Medicines/>}/>
+            <Route path="create" element={<NewMedicine/>}/>
+            <Route path=":medicineId/edit" element={<EditMedicine/>}/>
+          </Route>
+          <Route path="/prescriptions">
+            <Route index element={<UnprocessedPrescriptions/>}/>
+            <Route path=":prescriptionId" element={<PrescriptionInfo/>}/>
+          </Route>
         </Routes>
       </Layout>
     </PrescriptionProvider>

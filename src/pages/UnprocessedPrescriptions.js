@@ -12,7 +12,7 @@ const UnprocessedPrescriptions = () => {
   return (
     <Grid container spacing={4} sx={{margin: '20px', display: "flex"}}>
       {items.map(item => (
-        <Grid item key={item.patient.id}>
+        <Grid item key={item.id}>
           <ButtonBase
             component={Link}
             to={`${item.id}`}

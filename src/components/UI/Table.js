@@ -49,6 +49,7 @@ const Table = ({rows, columns}) => {
       rows={rows}
       columns={columns}
       pageSize={8}
+      rowsPerPageOptions={[8]}
       pagination
       autoHeight
       props

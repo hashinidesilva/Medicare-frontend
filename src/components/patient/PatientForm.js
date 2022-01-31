@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Button, Divider, MenuItem, Paper, Stack, TextField, Typography } from "@mui/material";
+import useInput from "../../hooks/useInput";
 
 const genderList = [
   {
@@ -19,31 +20,42 @@ const genderList = [
 ];
 
 const PatientForm = (props) => {
-  const {patient} = props;
-  const [name, setName] = useState('');
-  const [age, setAge] = useState(0);
-  const [gender, setGender] = useState(genderList[0].value);
   const navigate = useNavigate();
+  const {patient} = props;
+
+  const {
+    value: name,
+    isValid: nameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler
+  } = useInput(value => value.trim() !== '', '');
+
+  const {
+    value: age,
+    isValid: ageIsValid,
+    hasError: ageHasError,
+    valueChangeHandler: ageChangeHandler,
+    inputBlurHandler: ageBlurHandler
+  } = useInput(value => value > 0, 0);
+
+  const {
+    value: gender,
+    isValid: genderIsValid,
+    hasError: genderHasError,
+    valueChangeHandler: genderChangeHandler,
+    inputBlurHandler: genderBlurHandler
+  } = useInput(value => genderList.map(item => item.value).includes(value), genderList[0].value);
 
   useEffect(() => {
     if (patient) {
-      setName(patient.name);
-      setAge(patient.age);
-      setGender(patient.gender);
+      nameChangeHandler(patient.name);
+      ageChangeHandler(patient.age);
+      genderChangeHandler(patient.gender);
     }
-  }, [patient]);
+  }, [patient, nameChangeHandler, ageChangeHandler, genderChangeHandler]);
 
-  const nameChangeHandler = (event) => {
-    setName(event.target.value);
-  };
-
-  const ageChangeHandler = (event) => {
-    setAge(event.target.value);
-  };
-
-  const genderChangeHandler = (event) => {
-    setGender(event.target.value);
-  };
+  const formIsValid = nameIsValid && ageIsValid && genderIsValid;
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -70,29 +82,39 @@ const PatientForm = (props) => {
       <form onSubmit={submitHandler} style={{margin: '20px'}}>
         <Stack spacing={4}>
           <TextField
+            error={nameHasError}
             fullWidth
+            required
             id="name"
             label="Patient name"
             type="text"
-            variant="outlined"
             value={name}
-            onChange={nameChangeHandler}
+            onChange={(event) => nameChangeHandler(event.target.value)}
+            onBlur={nameBlurHandler}
+            helperText={nameHasError && "Name must not be empty"}
           />
           <TextField
+            error={ageHasError}
             fullWidth
+            required
             id="age"
             label="Age"
             type="number"
-            variant="outlined"
             value={age}
-            onChange={ageChangeHandler}/>
+            onChange={(event) => ageChangeHandler(event.target.value)}
+            onBlur={ageBlurHandler}
+            helperText={ageHasError && "Age must be > 0"}
+          />
           <TextField
+            error={genderHasError}
             fullWidth
+            required
             id="gender"
             select
             label="Gender"
             value={gender || genderList[0].value}
-            onChange={genderChangeHandler}
+            onChange={(event) => genderChangeHandler(event.target.value)}
+            onBlur={genderBlurHandler}
           >
             {genderList.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -104,6 +126,7 @@ const PatientForm = (props) => {
             <Button
               variant="contained"
               type="submit"
+              disabled={!formIsValid}
               sx={{backgroundColor: "#1a14c2"}}
             >
               Save
