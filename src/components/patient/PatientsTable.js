@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import EditIcon from '@mui/icons-material/Edit';
 import MedicationIcon from '@mui/icons-material/Medication';
+import HistoryIcon from '@mui/icons-material/History';
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { Tooltip } from "@mui/material";
 import Table from "../UI/Table";
@@ -28,6 +29,7 @@ const PatientsTable = (props) => {
     {
       field: 'actions',
       type: 'actions',
+      flex: 0.5,
       getActions: (params) => [
         <GridActionsCellItem
           icon={
@@ -47,8 +49,18 @@ const PatientsTable = (props) => {
           }
           label="Add prescription"
           component={Link}
+          to={`${params.id}/prescriptions/create`}
+        />,
+        <GridActionsCellItem
+          icon={
+            <Tooltip title="Show history">
+              <HistoryIcon sx={{color: "#c21465"}}/>
+            </Tooltip>
+          }
+          label="Show history"
+          component={Link}
           to={`${params.id}/prescriptions`}
-        />
+        />,
       ],
     },
   ];

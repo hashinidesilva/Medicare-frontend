@@ -15,7 +15,7 @@ const NewPatient = () => {
       }
     });
     const savedPatient = await response.json();
-    navigate(`/patients/${savedPatient.id}/prescriptions`);
+    navigate(`/patients/${savedPatient.id}/prescriptions/create`);
   };
 
   return (

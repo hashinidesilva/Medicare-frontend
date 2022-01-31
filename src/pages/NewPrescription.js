@@ -29,6 +29,7 @@ const getTodayDate = () => {
 const NewPrescription = () => {
   const [patient, setPatient] = useState({});
   const [date, setDate] = useState(getTodayDate());
+  const [diagnosis, setDiagnosis] = useState("");
   const params = useParams();
   const navigate = useNavigate();
   const prescriptionCtx = useContext(PrescriptionContext);
@@ -45,12 +46,8 @@ const NewPrescription = () => {
     fetchData();
   }, [patientId]);
 
-  const dateChangeHandler = (event) => {
-    setDate(event.target.value);
-  };
-
   const prescriptionSubmitHandler = async (medication) => {
-    const prescription = {...medication, date: date};
+    const prescription = {...medication, date: date, diagnosis: diagnosis};
     const response = await fetch("http://localhost:8080/prescriptions", {
       method: 'POST',
       body: JSON.stringify(prescription),
@@ -70,16 +67,15 @@ const NewPrescription = () => {
           <PatientInfoCard patient={patient}/>
         </Grid>
         <Grid item xs={6}>
-          <Grid container spacing={3} >
+          <Grid container spacing={3}>
             <Grid item xs={6}>
               <TextField
                 id="date"
                 label="Date"
                 type="datetime-local"
                 value={date}
-                variant="outlined" x
                 InputLabelProps={{shrink: true}}
-                onChange={dateChangeHandler}
+                onChange={(event) => setDate(event.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,8 +85,7 @@ const NewPrescription = () => {
                 multiline
                 rows={3}
                 label="Diagnosis"
-                variant="outlined"
-                InputLabelProps={{shrink: true}}
+                onChange={(event) => setDiagnosis(event.target.value)}
               />
             </Grid>
           </Grid>

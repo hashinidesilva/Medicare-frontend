@@ -5,7 +5,7 @@ import PrescriptionContext from "../store/prescription-context";
 import { ButtonBase, Grid } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 
-const PrescriptionsPage = () => {
+const UnprocessedPrescriptions = () => {
   const prescriptionCtx = useContext(PrescriptionContext);
   const items = prescriptionCtx.items;
 
@@ -25,4 +25,4 @@ const PrescriptionsPage = () => {
   );
 };
 
-export default PrescriptionsPage;
+export default UnprocessedPrescriptions;
