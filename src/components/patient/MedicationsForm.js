@@ -137,7 +137,9 @@ const MedicationsForm = (props) => {
         <Table sx={{minWidth: 650}} aria-label="simple table">
           <TableHead>
             <TableRow>
-              {columns.map(column => (<TableCell key={column.field}>{column.headerName}</TableCell>))}
+              {columns.map(column => (
+                <TableCell key={column.field} sx={{fontSize: 16}}>{column.headerName}</TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -213,12 +215,12 @@ const MedicationsForm = (props) => {
       <Stack direction={"row"} spacing={4} marginTop={3}>
         <Button
           variant="contained"
-          sx={{backgroundColor:"#14bdc2"}}
+          sx={{backgroundColor: "#b25600"}}
           onClick={() => setPrescriptions((prevState) => [...prevState, {...emptyRow, key: prevState.length}])}
         >
           Add row
         </Button>
-        <Button variant="contained" sx={{backgroundColor:"#1a14c2"}} onClick={savePrescriptionData}>Save</Button>
+        <Button variant="contained" sx={{backgroundColor: "#0003b2"}} onClick={savePrescriptionData}>Save</Button>
       </Stack>
     </Box>
   );

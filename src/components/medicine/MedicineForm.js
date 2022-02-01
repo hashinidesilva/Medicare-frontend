@@ -93,17 +93,17 @@ const MedicineForm = (props) => {
   };
 
   return (
-    <Box sx={{border: 1, borderColor: "ActiveCaption", width: "75%"}} component={Paper}>
+    <Box sx={{border: 1, borderColor: "#1e88e5"}}>
       <Box
         sx={{
           display: "flex",
           alignItems: 'center',
           height: 70,
-          justifyContent: "center"
+          justifyContent: "center",
+          backgroundColor: "#1e88e5"
         }}>
-        <Typography variant="h4">Medicine Form</Typography>
+        <Typography variant="h4" color="#ffffff">Medicine Form</Typography>
       </Box>
-      <Divider/>
       <form onSubmit={submitHandler} style={{margin: '20px'}}>
         <Stack spacing={4}>
           <TextField
@@ -162,14 +162,14 @@ const MedicineForm = (props) => {
               variant="contained"
               type="submit"
               disabled={!formIsValid}
-              sx={{backgroundColor: "#1a14c2"}}
+              sx={{backgroundColor: "#0003b2"}}
             >
               Save
             </Button>
             <Button
               variant="contained"
               onClick={() => navigate(-1)}
-              sx={{backgroundColor: "#c27114"}}
+              sx={{backgroundColor: "#b25600"}}
             >
               Cancel
             </Button>

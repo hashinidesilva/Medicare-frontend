@@ -21,7 +21,7 @@ const PatientHistory = () => {
   }, [patientId]);
 
   return (
-    <Box sx={{margin: '20px', display: "flex"}}>
+    <Box sx={{display: "flex"}}>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={4}>
           <PatientInfoCard patient={patient}/>

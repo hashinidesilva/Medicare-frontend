@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import axios from "axios";
-import { Box, Grid } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import MedicationsTable from "../components/patient/MedicationsTable";
 
@@ -24,7 +24,7 @@ const PrescriptionInfo = () => {
   const {patient, medicines} = prescription;
 
   return (
-    <Box sx={{margin: '20px', display: "flex"}}>
+    <Paper elevation={3} sx={{padding: 2, width: "100%"}}>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={4}>
           <PatientInfoCard patient={patient}/>
@@ -33,7 +33,7 @@ const PrescriptionInfo = () => {
           <MedicationsTable medications={medicines}/>
         </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 };
 

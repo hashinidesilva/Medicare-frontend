@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import PatientForm from "../components/patient/PatientForm";
 import axios from "axios";
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 
 const EditPatient = () => {
   const [patient, setPatient] = useState({name: '', age: 0});
@@ -29,8 +29,10 @@ const EditPatient = () => {
   };
 
   return (
-    <Box sx={{marginX: "20px", marginTop: "90px", display: "flex", justifyContent: "center"}}>
-      <PatientForm onAddPatient={submitHandler} patient={patient}/>
+    <Box sx={{marginTop: "50px", display: "flex", justifyContent: "center"}}>
+      <Paper elevation={3} sx={{width: "75%", padding: 2}}>
+        <PatientForm onAddPatient={submitHandler} patient={patient}/>
+      </Paper>
     </Box>
   );
 };

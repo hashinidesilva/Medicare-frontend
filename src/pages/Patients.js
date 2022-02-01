@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Box, Button, Grid, InputAdornment, Stack, TextField } from "@mui/material";
+import { Button, Grid, InputAdornment, Paper, Stack, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import PatientsTable from "../components/patient/PatientsTable";
@@ -10,7 +10,7 @@ const Patients = () => {
   const [searchText, setSearchText] = useState('');
 
   return (
-    <Box sx={{margin: '20px'}}>
+    <Paper elevation={3} sx={{padding: 2}}>
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -31,7 +31,7 @@ const Patients = () => {
             />
             <Button
               variant="contained"
-              sx={{backgroundColor: "#14bdc2"}}
+              sx={{backgroundColor: "#0003b2"}}
               size="large"
               startIcon={<AddIcon/>}
               component={Link}
@@ -45,7 +45,7 @@ const Patients = () => {
           <PatientsTable searchText={searchText}/>
         </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 };
 

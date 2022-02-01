@@ -25,6 +25,9 @@ const Table = ({rows, columns}) => {
     '& .MuiDataGrid-iconSeparator': {
       display: 'none',
     },
+    '& .MuiDataGrid-columnHeader': {
+      fontSize: 16,
+    },
     '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
       borderRight: `1px solid ${
         theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'

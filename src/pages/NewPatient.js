@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import PatientForm from "../components/patient/PatientForm";
 
 const NewPatient = () => {
@@ -19,8 +19,10 @@ const NewPatient = () => {
   };
 
   return (
-    <Box sx={{marginX: '20px', marginTop: '90px', display: "flex", justifyContent: "center"}}>
-      <PatientForm onAddPatient={submitHandler}/>
+    <Box sx={{marginTop: "50px", display: "flex", justifyContent: "center"}}>
+      <Paper elevation={3} sx={{width: "75%", padding: 2}}>
+        <PatientForm onAddPatient={submitHandler}/>
+      </Paper>
     </Box>
   );
 };

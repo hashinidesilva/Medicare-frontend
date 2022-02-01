@@ -11,8 +11,8 @@ const Layout = (props) => {
       <Toolbar/>
       <Box sx={{display: 'flex'}}>
         <SideBar/>
-        <Box sx={{flexGrow: 1}}>
-          <main>{props.children}</main>
+        <Box component="main" sx={{flexGrow: 1, margin: "40px"}}>
+          {props.children}
         </Box>
       </Box>
     </Fragment>

@@ -34,7 +34,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title={"Edit"}>
-              <EditIcon sx={{color: "#c07015"}}/>
+              <EditIcon sx={{color: "#b25600"}}/>
             </Tooltip>
           }
           component={Link}
@@ -44,7 +44,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Add prescription">
-              <MedicationIcon sx={{color: "#1b15c0"}}/>
+              <MedicationIcon sx={{color: "#5600b2"}}/>
             </Tooltip>
           }
           label="Add prescription"

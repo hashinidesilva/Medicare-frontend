@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from "@mui/material";
+import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
 import DescriptionIcon from '@mui/icons-material/Description';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import VaccinesIcon from '@mui/icons-material/Vaccines';
+import PersonIcon from '@mui/icons-material/Person';
+import VaccinesRoundedIcon from '@mui/icons-material/VaccinesRounded';
 
 const SideBar = () => {
   return (
     <Drawer
       sx={{
         width: 210,
-        display: "flex", justifyContent: "center", alignItems: "center",
+        flexShrink: 0,
         '& .MuiDrawer-paper': {
           width: 210,
           boxSizing: 'border-box',
@@ -20,25 +20,31 @@ const SideBar = () => {
       anchor="left"
     >
       <Toolbar/>
-      <Box sx={{overflow: 'auto', width: '100%', display: "flex", height: "100%"}}>
+      <Box sx={{height: "100%", backgroundColor: 'rgb(5, 30, 52)'}}>
         <List>
           <ListItem button component={Link} to="/patients">
             <ListItemIcon>
-              <PermIdentityIcon/>
+              <PersonIcon sx={{color: "#FFFFFF"}}/>
             </ListItemIcon>
-            <ListItemText>Patients</ListItemText>
+            <ListItemText
+              disableTypography
+              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Patients</Typography>}/>
           </ListItem>
           <ListItem button component={Link} to="/medicines">
             <ListItemIcon>
-              <VaccinesIcon/>
+              <VaccinesRoundedIcon sx={{color: "#FFFFFF"}}/>
             </ListItemIcon>
-            <ListItemText>Medicines</ListItemText>
+            <ListItemText
+              disableTypography
+              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Medicines</Typography>}/>
           </ListItem>
           <ListItem button component={Link} to="/prescriptions">
             <ListItemIcon>
-              <DescriptionIcon/>
+              <DescriptionIcon sx={{color: "#FFFFFF"}}/>
             </ListItemIcon>
-            <ListItemText>Prescriptions</ListItemText>
+            <ListItemText
+              disableTypography
+              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Prescriptions</Typography>}/>
           </ListItem>
         </List>
       </Box>

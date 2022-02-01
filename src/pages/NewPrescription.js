@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
-import { Box, Grid, TextField } from "@mui/material";
+import { Grid, Paper, TextField } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import MedicationsForm from "../components/patient/MedicationsForm";
 import PrescriptionContext from "../store/prescription-context";
@@ -61,7 +61,7 @@ const NewPrescription = () => {
   };
 
   return (
-    <Box sx={{margin: '20px'}}>
+    <Paper elevation={3} sx={{padding: 2}}>
       <Grid container spacing={4}>
         <Grid item xs={6}>
           <PatientInfoCard patient={patient}/>
@@ -94,7 +94,7 @@ const NewPrescription = () => {
           <MedicationsForm patient={patient} onSubmit={prescriptionSubmitHandler}/>
         </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 };
 

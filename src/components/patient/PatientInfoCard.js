@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, Divider, Stack, Typography } from "@mui/
 const PatientInfoCard = ({patient = {}}) => {
 
   return (
-    <Card variant="outlined" sx={{backgroundColor: "#40a5f7"}}>
+    <Card variant="outlined" sx={{backgroundColor: "#00b2af", minWidth: 300}}>
       <CardHeader title={"Patient Information"} titleTypographyProps={{textAlign: "center", color: "#ffffff"}}/>
       <Divider color="#ffffff"/>
       <CardContent>
