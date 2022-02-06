@@ -5,7 +5,25 @@ const NavBar = () => {
   return (
     <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#005cb2"}}>
       <Toolbar>
-        <Typography variant="h4" component="div" sx={{flexGrow: 1}}>
+        <Typography
+          component="div"
+          sx={{
+            flexGrow: 1,
+            fontSize: 42,
+            fontFamily: [
+              '-apple-system',
+              'BlinkMacSystemFont',
+              '"Segoe UI"',
+              'Roboto',
+              '"Helvetica Neue"',
+              'Arial',
+              'sans-serif',
+              '"Apple Color Emoji"',
+              '"Segoe UI Emoji"',
+              '"Segoe UI Symbol"',
+            ].join(','),
+          }}
+        >
           Medicare
         </Typography>
         <Notifications/>
