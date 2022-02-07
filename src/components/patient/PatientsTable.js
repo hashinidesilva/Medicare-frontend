@@ -12,6 +12,7 @@ import Table from "../UI/Table";
 
 const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [open, setOpen] = useState(false);
   const {searchText} = props;
 
@@ -23,6 +24,15 @@ const PatientsTable = (props) => {
     const data = await response.data;
     setPatients(data);
   }, [searchText]);
+
+  const deletePatientHandler = async () => {
+    const response = await axios.delete(`http://localhost:8080/medicare/v1/patients/${selectedPatientId}`);
+    await response.data;
+    const patientsResponse = await axios.get("http://localhost:8080/medicare/v1/patients");
+    const data = await patientsResponse.data;
+    setPatients(data);
+    setOpen(false);
+  };
 
   const columns = [
     {field: 'name', headerName: 'Name', width: '400'},
@@ -66,16 +76,18 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Delete">
-              <DeleteForeverIcon color="error" onClick={handleClickOpen}/>
+              <DeleteForeverIcon color="error"/>
             </Tooltip>
           }
+          onClick={handleClickOpen.bind(null, params.id)}
           label="Delete"
         />,
       ],
     },
   ];
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (patientId) => {
+    setSelectedPatientId(patientId);
     setOpen(true);
   };
 
@@ -96,7 +108,7 @@ const PatientsTable = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose} autoFocus>Yes</Button>
+        <Button onClick={deletePatientHandler} autoFocus>Yes</Button>
       </DialogActions>
     </Dialog>
   );
