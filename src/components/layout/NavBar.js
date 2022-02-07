@@ -1,5 +1,4 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
-import Notifications from "../notification/Notifications";
 
 const NavBar = () => {
   return (
@@ -26,7 +25,7 @@ const NavBar = () => {
         >
           Medicare
         </Typography>
-        <Notifications/>
+        {/*<Notifications/>*/}
       </Toolbar>
     </AppBar>
   );

@@ -13,7 +13,7 @@ const PrescriptionInfo = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(`http://localhost:8080/prescriptions/${prescriptionId}`);
+      const response = await axios.get(`http://localhost:8080/medicare/v1/prescriptions/${prescriptionId}`);
       const data = await response.data;
       setPrescription(data);
     }

@@ -7,7 +7,7 @@ const NewPatient = () => {
   const navigate = useNavigate();
 
   const submitHandler = async (patient) => {
-    const response = await fetch("http://localhost:8080/patients", {
+    const response = await fetch("http://localhost:8080/medicare/v1/patients", {
       method: 'POST',
       body: JSON.stringify(patient),
       headers: {

@@ -16,7 +16,7 @@ const Notifications = () => {
   const size = prescriptions.length;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/prescriptions",
+    const response = await axios.get("http://localhost:8080/medicare/v1/prescriptions",
       {
         params: {processed: false}
       });

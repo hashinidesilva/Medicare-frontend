@@ -14,7 +14,7 @@ const PatientsTable = (props) => {
   const {searchText} = props;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/patients",
+    const response = await axios.get("http://localhost:8080/medicare/v1/patients",
       {
         params: {patientName: searchText === '' ? null : searchText}
       });

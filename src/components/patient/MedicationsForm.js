@@ -37,7 +37,7 @@ const MedicationsForm = (props) => {
   const patient = props.patient;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/medicines");
+    const response = await axios.get("http://localhost:8080/medicare/v1/medicines");
     const data = await response.data;
     setMedicines(data.map(medicine => {
       return {

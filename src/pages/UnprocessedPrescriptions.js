@@ -1,24 +1,32 @@
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import PrescriptionContext from "../store/prescription-context";
 import { ButtonBase, Grid, Paper } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
+import axios from "axios";
 
 const UnprocessedPrescriptions = () => {
-  const prescriptionCtx = useContext(PrescriptionContext);
-  const items = prescriptionCtx.items;
+  const [prescriptions, setPrescriptions] = useState([]);
+
+  useEffect(async () => {
+    const response = await axios.get("http://localhost:8080/medicare/v1/prescriptions",
+      {
+        params: {processed: false}
+      });
+    const data = await response.data;
+    setPrescriptions(data);
+  }, []);
 
   return (
     <Grid container spacing={10} sx={{display: "flex", justifyContent: "center"}}>
-      {items.map(item => (
-        <Grid item key={item.id}>
+      {prescriptions.map(prescription => (
+        <Grid item key={prescription.id}>
           <ButtonBase
             component={Link}
-            to={`${item.id}`}
+            to={`${prescription.id}`}
           >
             <Paper elevation={24}>
-              <PatientInfoCard patient={item.patient}/>
+              <PatientInfoCard patient={prescription.patient}/>
             </Paper>
           </ButtonBase>
         </Grid>

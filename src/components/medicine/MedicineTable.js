@@ -12,7 +12,7 @@ const MedicineTable = (props) => {
   const {searchText} = props;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/medicines",
+    const response = await axios.get("http://localhost:8080/medicare/v1/medicines",
       {
         params: {medicineName: searchText === '' ? null : searchText}
       });

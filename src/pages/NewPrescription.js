@@ -38,7 +38,7 @@ const NewPrescription = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(`http://localhost:8080/patients/${patientId}`);
+      const response = await axios.get(`http://localhost:8080/medicare/v1/patients/${patientId}`);
       const data = await response.data;
       setPatient(data);
     }
@@ -48,7 +48,7 @@ const NewPrescription = () => {
 
   const prescriptionSubmitHandler = async (medication) => {
     const prescription = {...medication, date: date, diagnosis: diagnosis};
-    const response = await fetch("http://localhost:8080/prescriptions", {
+    const response = await fetch("http://localhost:8080/medicare/v1/prescriptions", {
       method: 'POST',
       body: JSON.stringify(prescription),
       headers: {

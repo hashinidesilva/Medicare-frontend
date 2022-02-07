@@ -12,7 +12,7 @@ const PatientHistory = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(`http://localhost:8080/patients/${patientId}`);
+      const response = await axios.get(`http://localhost:8080/medicare/v1/patients/${patientId}`);
       const data = await response.data;
       setPatient(data);
     }

@@ -12,13 +12,13 @@ const EditMedicine = () => {
   const {medicineId} = params;
 
   useEffect(async () => {
-    const response = await axios.get(`http://localhost:8080/medicines/${medicineId}`);
+    const response = await axios.get(`http://localhost:8080/medicare/v1/medicines/${medicineId}`);
     const data = await response.data;
     setMedicine(data);
   }, [medicineId]);
 
   const submitHandler = async (medicine) => {
-    await fetch(`http://localhost:8080/medicines/${medicineId}`, {
+    await fetch(`http://localhost:8080/medicare/v1/medicines/${medicineId}`, {
       method: 'PUT',
       body: JSON.stringify(medicine),
       headers: {
