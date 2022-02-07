@@ -14,8 +14,8 @@ const NewPatient = () => {
         'Content-Type': 'application/json'
       }
     });
-    const savedPatient = await response.json();
-    navigate(`/patients/${savedPatient.id}/prescriptions/create`);
+    const savedPatientId = await response.json();
+    navigate(`/patients/${savedPatientId}/prescriptions/create`);
   };
 
   return (

@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
 import { Grid, Paper, TextField } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import MedicationsForm from "../components/patient/MedicationsForm";
-import PrescriptionContext from "../store/prescription-context";
 
 const getTodayDate = () => {
   let date = new Date(),
@@ -32,7 +31,6 @@ const NewPrescription = () => {
   const [diagnosis, setDiagnosis] = useState("");
   const params = useParams();
   const navigate = useNavigate();
-  const prescriptionCtx = useContext(PrescriptionContext);
 
   const {patientId} = params;
 
@@ -55,8 +53,7 @@ const NewPrescription = () => {
         'Content-Type': 'application/json'
       }
     });
-    const savedPrescription = await response.data;
-    prescriptionCtx.addItem(savedPrescription);
+    await response.data;
     navigate("/patients");
   };
 

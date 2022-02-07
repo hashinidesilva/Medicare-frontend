@@ -5,12 +5,14 @@ import axios from "axios";
 import EditIcon from '@mui/icons-material/Edit';
 import MedicationIcon from '@mui/icons-material/Medication';
 import HistoryIcon from '@mui/icons-material/History';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { Tooltip } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from "@mui/material";
 import Table from "../UI/Table";
 
 const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
+  const [open, setOpen] = useState(false);
   const {searchText} = props;
 
   useEffect(async () => {
@@ -33,16 +35,6 @@ const PatientsTable = (props) => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={
-            <Tooltip title={"Edit"}>
-              <EditIcon sx={{color: "#b25600"}}/>
-            </Tooltip>
-          }
-          component={Link}
-          to={`${params.id}/edit`}
-          label="Edit"
-        />,
-        <GridActionsCellItem
-          icon={
             <Tooltip title="Add prescription">
               <MedicationIcon sx={{color: "#5600b2"}}/>
             </Tooltip>
@@ -50,6 +42,16 @@ const PatientsTable = (props) => {
           label="Add prescription"
           component={Link}
           to={`${params.id}/prescriptions/create`}
+        />,
+        <GridActionsCellItem
+          icon={
+            <Tooltip title={"Edit"}>
+              <EditIcon sx={{color: "#b25600"}}/>
+            </Tooltip>
+          }
+          component={Link}
+          to={`${params.id}/edit`}
+          label="Edit"
         />,
         <GridActionsCellItem
           icon={
@@ -61,12 +63,49 @@ const PatientsTable = (props) => {
           component={Link}
           to={`${params.id}/prescriptions`}
         />,
+        <GridActionsCellItem
+          icon={
+            <Tooltip title="Delete">
+              <DeleteForeverIcon color="error" onClick={handleClickOpen}/>
+            </Tooltip>
+          }
+          label="Delete"
+        />,
       ],
     },
   ];
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const confirmationPopup = (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete patient.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} autoFocus>Yes</Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
-    <Table columns={columns} rows={patients}/>
+    <>
+      <Table columns={columns} rows={patients}/>
+      {confirmationPopup}
+    </>
   );
 };
 
