@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import axios from "axios";
-import { Grid, Paper } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import MedicationsTable from "../components/patient/MedicationsTable";
 
@@ -21,13 +21,29 @@ const PrescriptionInfo = () => {
     fetchData();
   }, [prescriptionId]);
 
-  const {patient, medicines} = prescription;
+  const {patient, date, diagnosis, medicines} = prescription;
 
   return (
     <Paper elevation={3} sx={{padding: 2, width: "100%"}}>
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <PatientInfoCard patient={patient}/>
+        </Grid>
+        <Grid item xs={6}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box sx={{border: 1, borderRadius: 1, padding: 1, borderColor: "#808080"}}>
+                <Typography variant="subtitle1" color="#808080">Date</Typography>
+                <Typography>{date}</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{width: "90%", border: 1, borderRadius: 1, padding: 1, borderColor: "#808080"}}>
+                <Typography variant="subtitle1" color="#808080">Diagnosis</Typography>
+                <Typography paragraph={true}>{diagnosis}</Typography>
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <MedicationsTable medications={medicines}/>

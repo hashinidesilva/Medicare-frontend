@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Divider, MenuItem, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import useInput from "../../hooks/useInput";
 
 const genderList = [

@@ -220,7 +220,15 @@ const MedicationsForm = (props) => {
         >
           Add row
         </Button>
-        <Button variant="contained" sx={{backgroundColor: "#0003b2"}} onClick={savePrescriptionData}>Save</Button>
+        <Button
+          variant="contained"
+          sx={{backgroundColor: "#0003b2"}}
+          onClick={savePrescriptionData}
+          disabled={prescriptions.length === 0 ||
+            prescriptions.find(prescription => prescription.medicineName === '') !== undefined}
+        >
+          Save
+        </Button>
       </Stack>
     </Box>
   );

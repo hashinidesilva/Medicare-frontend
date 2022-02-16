@@ -11,6 +11,7 @@ import Medicines from "./pages/Medicines";
 import UnprocessedPrescriptions from "./pages/UnprocessedPrescriptions";
 import PrescriptionProvider from "./store/PrescriptionProvider";
 import PrescriptionInfo from "./pages/PrescriptionInfo";
+import UnprocessedPrescriptionInfo from "./pages/UnprocessedPrescriptionInfo";
 import PatientHistory from "./pages/PatientHistory";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path=":patientId/edit" element={<EditPatient/>}/>
             <Route path=":patientId/prescriptions/create" element={<NewPrescription/>}/>
             <Route path=":patientId/prescriptions" element={<PatientHistory/>}/>
+            <Route path=":patientId/prescriptions/:prescriptionId" element={<PrescriptionInfo/>}/>
           </Route>
           <Route path="/medicines">
             <Route index element={<Medicines/>}/>
@@ -33,8 +35,9 @@ function App() {
           </Route>
           <Route path="/prescriptions">
             <Route index element={<UnprocessedPrescriptions/>}/>
-            <Route path=":prescriptionId" element={<PrescriptionInfo/>}/>
+            <Route path=":prescriptionId" element={<UnprocessedPrescriptionInfo/>}/>
           </Route>
+          <Route path="*" element={<Navigate to="/patients"/>}/>
         </Routes>
       </Layout>
     </PrescriptionProvider>

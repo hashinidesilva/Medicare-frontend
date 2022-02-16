@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { ButtonBase, Grid, Paper } from "@mui/material";
+import { Box, ButtonBase, Grid, Paper, Typography } from "@mui/material";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import axios from "axios";
 
@@ -16,6 +16,16 @@ const UnprocessedPrescriptions = () => {
     const data = await response.data;
     setPrescriptions(data);
   }, []);
+
+  if (prescriptions.length === 0) {
+    return (
+      <Box sx={{display: "flex", justifyContent: "center"}}>
+        <Typography variant={"h4"}>
+          There are no new prescriptions!
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Grid container spacing={10} sx={{display: "flex", justifyContent: "center"}}>

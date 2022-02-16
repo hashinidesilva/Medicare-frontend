@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import axios from "axios";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
-import { Box, Grid } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
+import PrescriptionsTable from "../components/patient/PrescriptionsTable";
 
 const PatientHistory = () => {
   const [patient, setPatient] = useState({});
@@ -21,13 +22,16 @@ const PatientHistory = () => {
   }, [patientId]);
 
   return (
-    <Box sx={{display: "flex"}}>
+    <Paper elevation={3} sx={{padding: 2, width: "100%"}}>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={4}>
           <PatientInfoCard patient={patient}/>
         </Grid>
+        <Grid item xs={12}>
+          <PrescriptionsTable prescriptions={patient.prescriptions}/>
+        </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 };
 
