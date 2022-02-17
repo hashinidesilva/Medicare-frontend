@@ -74,7 +74,7 @@ const UnprocessedPrescriptionInfo = () => {
   );
 
   return (
-    <Paper elevation={3} sx={{padding: 2, width: "100%"}}>
+    <Paper elevation={3} sx={{padding: 2}}>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={4}>
           <PatientInfoCard patient={patient}/>

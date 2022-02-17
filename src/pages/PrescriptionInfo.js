@@ -24,7 +24,7 @@ const PrescriptionInfo = () => {
   const {patient, date, diagnosis, medicines} = prescription;
 
   return (
-    <Paper elevation={3} sx={{padding: 2, width: "100%"}}>
+    <Paper elevation={3} sx={{padding: 2}}>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={6}>
           <PatientInfoCard patient={patient}/>
