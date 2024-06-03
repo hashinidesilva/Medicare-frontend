@@ -22,7 +22,7 @@ const PatientsTable = (props) => {
         params: {patientName: searchText === '' ? null : searchText}
       });
     const data = await response.data;
-    setPatients(data);
+    setPatients(data.sort((patient1, patient2) => patient2.id - patient1.id));
   }, [searchText]);
 
   const deletePatientHandler = async () => {
@@ -36,17 +36,18 @@ const PatientsTable = (props) => {
 
   const columns = [
     {field: 'name', headerName: 'Name', width: '400'},
-    {field: 'age', headerName: 'Age', flex: 1},
-    {field: 'gender', headerName: 'Gender', flex: 1},
+    {field: 'age', headerName: 'Age', flex: 0.35},
+    {field: 'gender', headerName: 'Gender', flex: 0.5},
+    // {field: 'nationalID', headerName: 'ID', flex: 0.5},
     {
       field: 'actions',
       type: 'actions',
-      flex: 0.5,
+      flex: 0.75,
       getActions: (params) => [
         <GridActionsCellItem
           icon={
             <Tooltip title="Add prescription">
-              <MedicationIcon sx={{color: "#5600b2"}}/>
+              <MedicationIcon fontSize="large" sx={{color: "#5600b2"}}/>
             </Tooltip>
           }
           label="Add prescription"
@@ -56,7 +57,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title={"Edit"}>
-              <EditIcon sx={{color: "#b25600"}}/>
+              <EditIcon fontSize="large" sx={{color: "#b25600"}}/>
             </Tooltip>
           }
           component={Link}
@@ -66,7 +67,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Show history">
-              <HistoryIcon sx={{color: "#c21465"}}/>
+              <HistoryIcon fontSize="large" sx={{color: "#c21465"}}/>
             </Tooltip>
           }
           label="Show history"
@@ -76,7 +77,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Delete">
-              <DeleteForeverIcon color="error"/>
+              <DeleteForeverIcon fontSize="large" color="error"/>
             </Tooltip>
           }
           onClick={handleClickOpen.bind(null, params.id)}

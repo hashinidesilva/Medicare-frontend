@@ -13,6 +13,7 @@ import PrescriptionProvider from "./store/PrescriptionProvider";
 import PrescriptionInfo from "./pages/PrescriptionInfo";
 import UnprocessedPrescriptionInfo from "./pages/UnprocessedPrescriptionInfo";
 import PatientHistory from "./pages/PatientHistory";
+import LowInventory from "./pages/LowInventory";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route index element={<Medicines/>}/>
             <Route path="create" element={<NewMedicine/>}/>
             <Route path=":medicineId/edit" element={<EditMedicine/>}/>
+            <Route path="low-inventory" element={<LowInventory/>}/>
           </Route>
           <Route path="/prescriptions">
             <Route index element={<UnprocessedPrescriptions/>}/>

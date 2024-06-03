@@ -9,22 +9,26 @@ import { Tooltip } from "@mui/material";
 
 const MedicineTable = (props) => {
   const [medicines, setMedicines] = useState([]);
-  const {searchText} = props;
+  const {searchText, showLowInventory} = props;
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicare/v1/medicines",
       {
-        params: {medicineName: searchText === '' ? null : searchText}
+        params: {
+          medicineName: searchText === '' ? null : searchText,
+          lowInventory: showLowInventory ?? null
+        }
       });
     const data = await response.data;
-    setMedicines(data);
+    setMedicines(data.sort((med1, med2) => med2.id - med1.id));
   }, [searchText]);
 
   const columns = [
-    {field: 'name', headerName: 'Medicine', width: '400'},
-    {field: 'type', headerName: 'Type', flex: 1},
+    {field: 'name', headerName: 'Medicine', flex: 3},
+    {field: 'type', headerName: 'Type', flex: 0.75},
     {field: 'unitPrice', headerName: 'Unit Price', flex: 1},
     {field: 'units', headerName: 'Units', flex: 1},
+    {field: 'minimumUnits', headerName: 'Minimum Units', flex: 1},
     {
       field: 'actions',
       type: 'actions',
@@ -32,7 +36,7 @@ const MedicineTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title={"Edit"}>
-              <EditIcon sx={{color: "#b25600"}}/>
+              <EditIcon fontSize="large" sx={{color: "#b25600"}}/>
             </Tooltip>
           }
           component={Link}

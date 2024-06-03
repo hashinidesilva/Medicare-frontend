@@ -29,7 +29,7 @@ const EditMedicine = () => {
   };
 
   return (
-    <Box sx={{marginTop: "50px", display: "flex", justifyContent: "center"}}>
+    <Box sx={{marginTop: "10px", display: "flex", justifyContent: "center"}}>
       <Paper elevation={3} sx={{width: "75%", padding: 2}}>
         <MedicineForm medicine={medicine} onAddMedicine={submitHandler}/>
       </Paper>

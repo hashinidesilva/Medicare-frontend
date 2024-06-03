@@ -19,7 +19,17 @@ import {
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const emptyRow = {key: 0, medicineName: "", dose: "", frequency: 0, duration: 0, quantity: 0, additionalInfo: ""};
+const emptyRow = {
+  key: 0,
+  medicineName: "",
+  medicineType: "",
+  availableUnits: 0,
+  dose: "",
+  frequency: 0,
+  duration: 0,
+  quantity: 0,
+  additionalInfo: ""
+};
 
 const columns = [
   {field: 'medicineName', headerName: 'Medicine Name'},
@@ -43,7 +53,8 @@ const MedicationsForm = (props) => {
       return {
         id: medicine.id,
         label: medicine.name,
-        type: medicine.type
+        type: medicine.type,
+        units: medicine.units
       };
     }));
   }, []);
@@ -52,9 +63,9 @@ const MedicationsForm = (props) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
         if (value.type === 'Cream') {
-          return {...row, medicineName: value.label, medicineType: value.type, dose: ""};
+          return {...row, medicineName: value.label, medicineType: value.type, availableUnits: value.units, dose: ""};
         }
-        return {...row, medicineName: value.label, medicineType: value.type};
+        return {...row, medicineName: value.label, medicineType: value.type, availableUnits: value.units};
       }
       return row;
     }));
@@ -184,10 +195,13 @@ const MedicationsForm = (props) => {
                 </TableCell>
                 <TableCell width="70px">
                   <TextField
+                    error={prescription.availableUnits < prescription.quantity}
                     disabled={prescription.medicineType === 'Pill'}
                     size="small"
                     value={prescription.quantity}
-                    onChange={event => quantityChangeHandler(event, index)}/>
+                    onChange={event => quantityChangeHandler(event, index)}
+                    helperText={prescription.quantity !== 0 && prescription.availableUnits < prescription.quantity &&
+                      ("Available quantity:" + prescription.availableUnits)}/>
                 </TableCell>
                 <TableCell>
                   <TextField

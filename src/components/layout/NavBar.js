@@ -25,7 +25,9 @@ const NavBar = () => {
         >
           Medicare
         </Typography>
-        {/*<Notifications/>*/}
+        {/*<IconButton aria-label="notifications" sx={{color: "white"}}>*/}
+        {/*  <Notifications fontSize="large"/>*/}
+        {/*</IconButton>*/}
       </Toolbar>
     </AppBar>
   );

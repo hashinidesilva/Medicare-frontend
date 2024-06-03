@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   FormHelperText,
   InputAdornment,
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Paper,
   Stack,
   TextField,
   Typography
@@ -62,6 +60,14 @@ const MedicineForm = (props) => {
   } = useInput(value => value > 0, 0);
 
   const {
+    value: minUnits,
+    isValid: minUnitsIsValid,
+    hasError: minUnitsHasError,
+    valueChangeHandler: minUnitsChangeHandler,
+    inputBlurHandler: minUnitsBlurHandler
+  } = useInput(value => value > 0, 0);
+
+  const {
     value: type,
     isValid: typeIsValid,
     hasError: typeHasError,
@@ -69,13 +75,14 @@ const MedicineForm = (props) => {
     inputBlurHandler: typeBlurHandler
   } = useInput(value => medicineTypeList.map(item => item.value).includes(value), medicineTypeList[0].value);
 
-  const formIsValid = nameIsValid && unitPriceIsValid && unitsIsValid && typeIsValid;
+  const formIsValid = nameIsValid && unitPriceIsValid && unitsIsValid && typeIsValid && minUnitsIsValid;
 
   useEffect(() => {
     if (medicine) {
       nameChangeHandler(medicine.name);
       unitPriceChangeHandler(medicine.unitPrice);
       unitsChangeHandler(medicine.units);
+      minUnitsChangeHandler(medicine.minimumUnits);
       typeChangeHandler(medicine.type);
     }
   }, [medicine, nameChangeHandler, unitPriceChangeHandler, unitsChangeHandler, typeChangeHandler]);
@@ -86,6 +93,7 @@ const MedicineForm = (props) => {
       name: name,
       unitPrice: unitPrice,
       units: units,
+      minimumUnits: minUnits,
       type: type
     };
 
@@ -140,6 +148,17 @@ const MedicineForm = (props) => {
             onChange={(event) => unitsChangeHandler(event.target.value)}
             onBlur={unitsBlurHandler}
             helperText={unitsHasError && "Units must be > 0"}
+          />
+          <TextField
+            error={minUnitsHasError}
+            fullWidth
+            id="minUnits"
+            label="Minimum Units"
+            type="number"
+            value={minUnits}
+            onChange={(event) => minUnitsChangeHandler(event.target.value)}
+            onBlur={minUnitsBlurHandler}
+            helperText={minUnitsHasError && "Minimum Units must be > 0"}
           />
           <TextField
             error={typeHasError}

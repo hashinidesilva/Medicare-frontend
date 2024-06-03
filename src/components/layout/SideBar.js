@@ -22,7 +22,7 @@ const SideBar = () => {
       <Toolbar/>
       <Box sx={{height: "100%", backgroundColor: 'rgb(5, 30, 52)'}}>
         <List>
-          <ListItem button component={Link} to="/patients">
+          <ListItem component={Link} to="/patients">
             <ListItemIcon>
               <PersonIcon sx={{color: "#FFFFFF"}}/>
             </ListItemIcon>
@@ -30,15 +30,15 @@ const SideBar = () => {
               disableTypography
               primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Patients</Typography>}/>
           </ListItem>
-          <ListItem button component={Link} to="/medicines">
+          <ListItem component={Link} to="/medicines">
             <ListItemIcon>
               <VaccinesRoundedIcon sx={{color: "#FFFFFF"}}/>
             </ListItemIcon>
             <ListItemText
               disableTypography
-              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Medicines</Typography>}/>
+              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Inventory</Typography>}/>
           </ListItem>
-          <ListItem button component={Link} to="/prescriptions">
+          <ListItem component={Link} to="/prescriptions">
             <ListItemIcon>
               <DescriptionIcon sx={{color: "#FFFFFF"}}/>
             </ListItemIcon>

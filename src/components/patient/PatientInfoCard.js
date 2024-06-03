@@ -4,10 +4,11 @@ const PatientInfoCard = ({patient = {}}) => {
 
   return (
     <Card variant="outlined" sx={{backgroundColor: "#00b2af", minWidth: 300}}>
-      <CardHeader title={"Patient Information"} titleTypographyProps={{textAlign: "center", color: "#ffffff"}}/>
-      <Divider color="#ffffff"/>
       <CardContent>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        {/*<CardHeader title={"Patient Information"} titleTypographyProps={{textAlign: "center", color: "#ffffff",fontSize: 20}}/>*/}
+        <Typography color="#ffffff" sx={{fontSize: 20}}>Patient Information</Typography>
+        <Divider color="#ffffff"/>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={3}>
           <Typography color="#ffffff">Name</Typography>
           <Typography color="#ffffff">{patient.name}</Typography>
         </Stack>

@@ -26,10 +26,10 @@ const PrescriptionInfo = () => {
   return (
     <Paper elevation={3} sx={{padding: 2}}>
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <PatientInfoCard patient={patient}/>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Box sx={{border: 1, borderRadius: 1, padding: 1, borderColor: "#808080"}}>

@@ -51,11 +51,15 @@ const Table = ({rows, columns}) => {
     <StyledDataGrid
       rows={rows}
       columns={columns}
-      pageSize={8}
-      rowsPerPageOptions={[8]}
-      pagination
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 5,
+          },
+        },
+      }}
+      pageSizeOptions={[5, 10, 15]}
       autoHeight
-      props
     />
   );
 
