@@ -9,7 +9,7 @@ const Layout = (props) => {
     <Fragment>
       <NavBar/>
       <Toolbar/>
-      <Box sx={{display: 'flex'}}>
+      <Box sx={{display: 'flex', backgroundColor: "#f2f3f5", width: '100%', height: '100vh'}}>
         <SideBar/>
         <Box component="main" sx={{flexGrow: 1, margin: "40px"}}>
           {props.children}

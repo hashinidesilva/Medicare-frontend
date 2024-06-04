@@ -45,6 +45,9 @@ const Table = ({rows, columns}) => {
     '& .MuiPaginationItem-root': {
       borderRadius: 0,
     },
+    '& .allergy': {
+      backgroundColor: theme.palette.mode === 'light' ? '#fcd4da' : '#622',
+    }
   }));
 
   return (
@@ -54,12 +57,16 @@ const Table = ({rows, columns}) => {
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 5,
+            pageSize: 8,
           },
         },
       }}
-      pageSizeOptions={[5, 10, 15]}
+      pageSizeOptions={[8, 10, 15]}
       autoHeight
+      getRowClassName={(params) => {
+        const {allergies} = params.row;
+        return (allergies && allergies !== 'None') ? 'allergy' : '';
+      }}
     />
   );
 

@@ -14,7 +14,7 @@ const Medicines = () => {
       <Button
         variant="contained"
         size="large"
-        sx={{backgroundColor: "#c21465", width: "25%"}}
+        sx={{backgroundColor: "#8a17e2", width: "25%"}}
         component={Link}
         to="/medicines/low-inventory"
       >

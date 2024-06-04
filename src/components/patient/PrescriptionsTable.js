@@ -15,11 +15,12 @@ const PrescriptionsTable = ({prescriptions = []}) => {
 
   const columns = [
     {field: 'date', headerName: 'Date', flex: 0.5},
-    {field: 'diagnosis', headerName: 'Diagnosis', flex: 1},
+    {field: 'history', headerName: 'History and Management', flex: 2},
+    {field: 'diagnosis', headerName: 'Diagnosis', flex: 2},
     {
       field: 'actions',
       type: 'actions',
-      flex: 0.5,
+      flex: 0.75,
       renderCell: (params) => (
         <strong>
           <Button

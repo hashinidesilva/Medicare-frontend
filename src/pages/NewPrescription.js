@@ -3,80 +3,103 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
 import { Grid, Paper, TextField } from "@mui/material";
-import PatientInfoCard from "../components/patient/PatientInfoCard";
 import MedicationsForm from "../components/patient/MedicationsForm";
-
-const getTodayDate = () => {
-  let date = new Date(),
-    month = '' + (date.getMonth() + 1),
-    day = '' + date.getDate(),
-    year = date.getFullYear(),
-    hours = date.getHours().toString(),
-    minutes = date.getMinutes().toString();
-
-  if (month.length < 2)
-    month = '0' + month;
-  if (day.length < 2)
-    day = '0' + day;
-  if (hours.length < 2)
-    hours = '0' + hours;
-  if (minutes.length < 2)
-    minutes = '0' + minutes;
-  return [year, month, day].join('-') + "T" + [hours, minutes].join(':');
-};
+import MedicationPatientInfoCard from "../components/patient/MedicationPatientInfoCard";
+import PatientAllergiesCard from "../components/patient/PatientAllergiesCard";
 
 const NewPrescription = () => {
   const [patient, setPatient] = useState({});
-  const [date, setDate] = useState(getTodayDate());
   const [diagnosis, setDiagnosis] = useState("");
+  const [history, setHistory] = useState("");
+  const [medicines, setMedicines] = useState([]);
+  const [error, setError] = useState("");
   const params = useParams();
   const navigate = useNavigate();
 
-  const {patientId} = params;
+  const {patientId, prescriptionId} = params;
 
-  useEffect(() => {
+  useEffect(async () => {
     async function fetchData() {
-      const response = await axios.get(`http://localhost:8080/medicare/v1/patients/${patientId}`);
-      const data = await response.data;
-      setPatient(data);
+      try {
+        const response = await axios.get(`http://localhost:8080/medicare/v1/patients/${patientId}`);
+        const data = response.data;
+        setPatient(data);
+      } catch (err) {
+        navigate("/");
+      }
+    }
+
+    async function fetchPrescriptionData() {
+      try {
+        const response = await axios.get(`http://localhost:8080/medicare/v1/prescriptions/${prescriptionId}`);
+        const data = response.data;
+        setDiagnosis(data.diagnosis);
+        setHistory(data.history);
+        setMedicines(data.medicines);
+      } catch (err) {
+        navigate("/");
+      }
     }
 
     fetchData();
-  }, [patientId]);
+    if (prescriptionId !== undefined) {
+      fetchPrescriptionData();
+    }
+  }, [patientId, prescriptionId]);
+
+  console.log("WWWW", medicines);
 
   const prescriptionSubmitHandler = async (medication) => {
-    const prescription = {...medication, date: date, diagnosis: diagnosis};
-    const response = await fetch("http://localhost:8080/medicare/v1/prescriptions", {
-      method: 'POST',
-      body: JSON.stringify(prescription),
-      headers: {
-        'Content-Type': 'application/json'
+    const prescription = {...medication, diagnosis: diagnosis, history: history};
+    try {
+      const response = await fetch("http://localhost:8080/medicare/v1/prescriptions", {
+        method: 'POST',
+        body: JSON.stringify(prescription),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`HTTP status ${response.status}: ${errorData}`);
       }
-    });
-    await response.data;
-    navigate("/patients");
+      const prescriptionId = await response.text();
+      navigate(`/patients/${patientId}/prescriptions/${prescriptionId}`);
+    } catch (error) {
+      setError('Failed to submit prescription: ' + error.message);
+    }
   };
 
   return (
     <Paper elevation={3} sx={{padding: 2}}>
-      <Grid container spacing={4}>
-        <Grid item xs={4}>
-          <PatientInfoCard patient={patient}/>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Grid container spacing={3.5}>
+            <Grid item xs={12}>
+              <MedicationPatientInfoCard patient={patient}/>
+            </Grid>
+            <Grid item xs={12}>
+              <PatientAllergiesCard allergies={patient.allergies}/>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
+        <Grid item xs={9}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
               <TextField
-                id="date"
-                label="Date"
-                type="datetime-local"
-                value={date}
-                InputLabelProps={{shrink: true}}
-                onChange={(event) => setDate(event.target.value)}
+                value={history}
+                fullWidth
+                id="history"
+                multiline
+                rows={3}
+                label="History and Management"
+                type={"text"}
+                onChange={(event) => setHistory(event.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                value={diagnosis}
                 fullWidth
                 id="diagnosis"
                 multiline
@@ -88,7 +111,8 @@ const NewPrescription = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <MedicationsForm patient={patient} onSubmit={prescriptionSubmitHandler}/>
+          <MedicationsForm patient={patient} onSubmit={prescriptionSubmitHandler} error={error}
+                           medicines={medicines}/>
         </Grid>
       </Grid>
     </Paper>

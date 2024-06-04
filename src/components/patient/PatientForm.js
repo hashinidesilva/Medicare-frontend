@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Divider, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Divider, Grid, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import useInput from "../../hooks/useInput";
 
 const genderList = [
@@ -20,8 +20,9 @@ const genderList = [
 ];
 
 const PatientForm = (props) => {
+  const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
-  const {patient} = props;
+  const {patient, error} = props;
 
   const {
     value: name,
@@ -47,23 +48,59 @@ const PatientForm = (props) => {
     inputBlurHandler: genderBlurHandler
   } = useInput(value => genderList.map(item => item.value).includes(value), genderList[0].value);
 
+  const {
+    value: nic,
+    valueChangeHandler: nicChangeHandler,
+    inputBlurHandler: nicBlurHandler
+  } = useInput(value => value?.trim() === '' || value?.trim().length === 10 || value?.trim().length === 12, '');
+
+  const {
+    value: address,
+    valueChangeHandler: addressChangeHandler,
+    inputBlurHandler: addressBlurHandler
+  } = useInput(() => true, '');
+
+  const {
+    value: tpNumber,
+    valueChangeHandler: tpNumberChangeHandler,
+    inputBlurHandler: tpNumberBlurHandler
+  } = useInput(value => true, '');
+
+  const {
+    value: allergies,
+    valueChangeHandler: allergiesChangeHandler,
+    inputBlurHandler: allergiesBlurHandler
+  } = useInput(() => true, '');
+
   useEffect(() => {
     if (patient) {
       nameChangeHandler(patient.name);
       ageChangeHandler(patient.age);
       genderChangeHandler(patient.gender);
+      nicChangeHandler(patient.nic ?? '');
+      addressChangeHandler(patient.address ?? '');
+      tpNumberChangeHandler(patient.tpNumber ?? '');
+      allergiesChangeHandler(patient.allergies ?? '');
+      setChecked(patient.allergies === "None");
     }
-  }, [patient, nameChangeHandler, ageChangeHandler, genderChangeHandler]);
+  }, [patient]);
 
   const formIsValid = nameIsValid && ageIsValid && genderIsValid;
 
+  const handleAllergyCheck = (event) => {
+    const value = event.target.checked;
+    if (value) {
+      allergiesChangeHandler("None");
+    } else {
+      allergiesChangeHandler("");
+    }
+    setChecked(value);
+
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
-    const newPatient = {
-      name: name,
-      age: age,
-      gender: gender,
-    };
+    const newPatient = {name, age, gender, nic, tpNumber, address, allergies};
     props.onAddPatient(newPatient);
   };
 
@@ -73,57 +110,125 @@ const PatientForm = (props) => {
         sx={{
           display: "flex",
           alignItems: 'center',
-          height: 70,
-          justifyContent: "center",
-          backgroundColor: "#1e88e5"
+          height: 40,
+          justifyContent: "flex-start",
+          backgroundColor: "#1e88e5",
+          paddingLeft: 3
         }}>
-        <Typography variant="h4" color="#ffffff">Patient Form</Typography>
+        <Typography variant="h5" color="#ffffff">Patient Form</Typography>
       </Box>
       <Divider/>
       <form onSubmit={submitHandler} style={{margin: '20px'}}>
-        <Stack spacing={4}>
-          <TextField
-            error={nameHasError}
-            fullWidth
-            required
-            id="name"
-            label="Patient name"
-            type="text"
-            value={name}
-            onChange={(event) => nameChangeHandler(event.target.value)}
-            onBlur={nameBlurHandler}
-            helperText={nameHasError && "Name must not be empty"}
-          />
-          <TextField
-            error={ageHasError}
-            fullWidth
-            required
-            id="age"
-            label="Age"
-            type="number"
-            value={age}
-            onChange={(event) => ageChangeHandler(event.target.value)}
-            onBlur={ageBlurHandler}
-            helperText={ageHasError && "Age must be > 0"}
-          />
-          <TextField
-            error={genderHasError}
-            fullWidth
-            required
-            id="gender"
-            select
-            label="Gender"
-            value={gender || genderList[0].value}
-            onChange={(event) => genderChangeHandler(event.target.value)}
-            onBlur={genderBlurHandler}
-          >
-            {genderList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Stack direction="row" spacing={4}>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              error={nameHasError}
+              fullWidth
+              required
+              id="name"
+              label="Patient name"
+              type="text"
+              value={name}
+              onChange={(event) => nameChangeHandler(event.target.value)}
+              onBlur={nameBlurHandler}
+              helperText={nameHasError && "Name must not be empty"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              error={ageHasError}
+              fullWidth
+              required
+              id="age"
+              label="Age"
+              type="number"
+              value={age}
+              onChange={(event) => ageChangeHandler(event.target.value)}
+              onBlur={ageBlurHandler}
+              helperText={ageHasError && "Age must be > 0"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              error={genderHasError}
+              fullWidth
+              required
+              id="gender"
+              select
+              label="Gender"
+              value={gender || genderList[0].value}
+              onChange={(event) => genderChangeHandler(event.target.value)}
+              onBlur={genderBlurHandler}
+            >
+              {genderList.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              id="nic"
+              label="NIC"
+              type="text"
+              value={nic}
+              onChange={(event) => nicChangeHandler(event.target.value)}
+              onBlur={nicBlurHandler}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              id="address"
+              label="Address"
+              type="text"
+              value={address}
+              onChange={(event) => addressChangeHandler(event.target.value)}
+              onBlur={addressBlurHandler}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              id="tpnumber"
+              label="Telephone Number"
+              type="number"
+              value={tpNumber}
+              onChange={(event) => tpNumberChangeHandler(event.target.value)}
+              onBlur={tpNumberBlurHandler}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={12}>
+                <TextField
+                  disabled={checked}
+                  fullWidth
+                  multiline
+                  id="allergies"
+                  label="Allergies"
+                  type="text"
+                  value={allergies}
+                  onChange={(event) => allergiesChangeHandler(event.target.value)}
+                  onBlur={allergiesBlurHandler}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Stack direction={"row"} alignItems={"center"} sx={{paddingLeft: 0}}>
+                  <Checkbox
+                    size="small"
+                    checked={checked}
+                    onChange={handleAllergyCheck}
+                    inputProps={{'aria-label': 'controlled'}}
+                  />
+                  <Typography variant="caption">No allergies</Typography>
+                </Stack>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={1.3}>
             <Button
               variant="contained"
               type="submit"
@@ -132,6 +237,8 @@ const PatientForm = (props) => {
             >
               Save
             </Button>
+          </Grid>
+          <Grid item xs={1}>
             <Button
               variant="contained"
               onClick={() => navigate(-1)}
@@ -139,8 +246,9 @@ const PatientForm = (props) => {
             >
               Cancel
             </Button>
-          </Stack>
-        </Stack>
+          </Grid>
+          {error && <Typography color={"red"}>{error}</Typography>}
+        </Grid>
       </form>
     </Box>
   );

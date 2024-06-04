@@ -1,24 +1,31 @@
-import { Card, CardContent, CardHeader, Divider, Stack, Typography } from "@mui/material";
+import { Card, CardContent, Divider, Stack, Typography } from "@mui/material";
 
 const PatientInfoCard = ({patient = {}}) => {
 
   return (
-    <Card variant="outlined" sx={{backgroundColor: "#00b2af", minWidth: 300}}>
+    <Card
+      sx={{
+        backgroundColor: "#bfdef8",
+        border: 1,
+        borderColor: "#bfdef8",
+        minWidth: 300,
+        "&:hover": {border: 1, borderColor: "#95b9d7"}
+      }}>
       <CardContent>
-        {/*<CardHeader title={"Patient Information"} titleTypographyProps={{textAlign: "center", color: "#ffffff",fontSize: 20}}/>*/}
-        <Typography color="#ffffff" sx={{fontSize: 20}}>Patient Information</Typography>
-        <Divider color="#ffffff"/>
+        <Typography sx={{fontSize: 19, textAlign: "flex-start", fontWeight: 600}} gutterBottom>Patient
+          Information</Typography>
+        <Divider/>
         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={3}>
-          <Typography color="#ffffff">Name</Typography>
-          <Typography color="#ffffff">{patient.name}</Typography>
+          <Typography>Name</Typography>
+          <Typography>{patient.name}</Typography>
         </Stack>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography color="#ffffff">Age</Typography>
-          <Typography color="#ffffff">{patient.age}</Typography>
+          <Typography>Age</Typography>
+          <Typography>{patient.age}</Typography>
         </Stack>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography color="#ffffff">Gender</Typography>
-          <Typography color="#ffffff">{patient.gender}</Typography>
+          <Typography>Gender</Typography>
+          <Typography>{patient.gender}</Typography>
         </Stack>
       </CardContent>
     </Card>

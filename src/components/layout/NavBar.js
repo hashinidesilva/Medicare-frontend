@@ -1,30 +1,13 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+import { AppBar, Toolbar } from "@mui/material";
 
 const NavBar = () => {
+  const navigate = useNavigate();
   return (
-    <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#005cb2"}}>
+    <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#ffffff"}}>
       <Toolbar>
-        <Typography
-          component="div"
-          sx={{
-            flexGrow: 1,
-            fontSize: 42,
-            fontFamily: [
-              '-apple-system',
-              'BlinkMacSystemFont',
-              '"Segoe UI"',
-              'Roboto',
-              '"Helvetica Neue"',
-              'Arial',
-              'sans-serif',
-              '"Apple Color Emoji"',
-              '"Segoe UI Emoji"',
-              '"Segoe UI Symbol"',
-            ].join(','),
-          }}
-        >
-          Medicare
-        </Typography>
+        <img src="/bklogo.jpeg" alt="Logo" style={{height: 55, cursor: 'pointer'}} onClick={() => navigate("/")}/>
         {/*<IconButton aria-label="notifications" sx={{color: "white"}}>*/}
         {/*  <Notifications fontSize="large"/>*/}
         {/*</IconButton>*/}

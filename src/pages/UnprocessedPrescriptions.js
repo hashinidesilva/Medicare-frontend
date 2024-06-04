@@ -14,7 +14,7 @@ const UnprocessedPrescriptions = () => {
         params: {processed: false}
       });
     const data = await response.data;
-    setPrescriptions(data.sort((p1,p2) => p1.id - p2.id));
+    setPrescriptions(data.sort((p1, p2) => p1.id - p2.id));
   }, []);
 
   if (prescriptions.length === 0) {
@@ -35,9 +35,9 @@ const UnprocessedPrescriptions = () => {
             component={Link}
             to={`${prescription.id}`}
           >
-            <Paper elevation={15}>
+            {/*<Paper elevation={2}>*/}
               <PatientInfoCard patient={prescription.patient}/>
-            </Paper>
+            {/*</Paper>*/}
           </ButtonBase>
         </Grid>
       ))}

@@ -8,6 +8,7 @@ const MedicationsTable = ({medications = []}) => {
       name: medication.medicine.name,
       dose: medication.dose,
       frequency: medication.frequency,
+      frequencyText: medication.frequencyText,
       duration: medication.duration,
       quantity: medication.quantity,
       additionalInfo: medication.additionalInfo,
@@ -16,6 +17,7 @@ const MedicationsTable = ({medications = []}) => {
 
   const columns = [
     {field: 'name', headerName: 'Medicine', width: '300'},
+    {field: 'frequencyText', headerName: 'Frequency', flex: 0.75},
     {field: 'dose', headerName: 'Dose', flex: 0.75},
     {field: 'frequency', headerName: 'Frequency', flex: 0.75},
     {field: 'duration', headerName: 'Duration', flex: 0.75},

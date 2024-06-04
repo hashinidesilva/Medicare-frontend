@@ -23,14 +23,14 @@ const UnprocessedPrescriptionInfo = () => {
     fetchData();
   }, [prescriptionId]);
 
-  const {patient, date, diagnosis, medicines} = prescription;
+  const {patient, diagnosis, history, medicines} = prescription;
 
   const prescriptionUpdateHandler = async () => {
     const updatedPrescription = {
       id: prescriptionId,
       patientId: patient.id,
-      date: date,
       diagnosis: diagnosis,
+      history: history,
       processed: true
     };
     const response = await fetch(`http://localhost:8080/medicare/v1/prescriptions/${prescriptionId}`, {
@@ -42,7 +42,7 @@ const UnprocessedPrescriptionInfo = () => {
     });
     await response.data;
     setOpen(false);
-    navigate("/prescriptions");
+    navigate(`/prescriptions/${prescriptionId}/pdf`);
   };
 
   const handleClickOpen = () => {

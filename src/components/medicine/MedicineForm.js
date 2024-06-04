@@ -6,11 +6,11 @@ import {
   Button,
   FormControl,
   FormHelperText,
+  Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Stack,
   TextField,
   Typography
 } from "@mui/material";
@@ -113,70 +113,80 @@ const MedicineForm = (props) => {
         <Typography variant="h4" color="#ffffff">Medicine Form</Typography>
       </Box>
       <form onSubmit={submitHandler} style={{margin: '20px'}}>
-        <Stack spacing={4}>
-          <TextField
-            error={nameHasError}
-            fullWidth
-            id="name"
-            label="Medicine name"
-            type="text"
-            value={name}
-            onChange={(event) => nameChangeHandler(event.target.value)}
-            onBlur={nameBlurHandler}
-            helperText={nameHasError && "Name must not be empty"}
-          />
-          <FormControl fullWidth>
-            <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
-            <OutlinedInput
-              error={unitPriceHasError}
-              id="unit-price"
-              startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
-              label="Unit Price"
-              value={unitPrice}
-              onChange={(event) => unitPriceChangeHandler(event.target.value)}
-              onBlur={unitPriceBlurHandler}
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <TextField
+              error={nameHasError}
+              fullWidth
+              id="name"
+              label="Medicine name"
+              type="text"
+              value={name}
+              onChange={(event) => nameChangeHandler(event.target.value)}
+              onBlur={nameBlurHandler}
+              helperText={nameHasError && "Name must not be empty"}
             />
-            {unitPriceHasError && <FormHelperText error>Unit price must be > 0</FormHelperText>}
-          </FormControl>
-          <TextField
-            error={unitsHasError}
-            fullWidth
-            id="units"
-            label="Units"
-            type="number"
-            value={units}
-            onChange={(event) => unitsChangeHandler(event.target.value)}
-            onBlur={unitsBlurHandler}
-            helperText={unitsHasError && "Units must be > 0"}
-          />
-          <TextField
-            error={minUnitsHasError}
-            fullWidth
-            id="minUnits"
-            label="Minimum Units"
-            type="number"
-            value={minUnits}
-            onChange={(event) => minUnitsChangeHandler(event.target.value)}
-            onBlur={minUnitsBlurHandler}
-            helperText={minUnitsHasError && "Minimum Units must be > 0"}
-          />
-          <TextField
-            error={typeHasError}
-            fullWidth
-            id="type"
-            select
-            label="Medicine type"
-            value={type || medicineTypeList[0].value}
-            onChange={(event) => typeChangeHandler(event.target.value)}
-            onBlur={typeBlurHandler}
-          >
-            {medicineTypeList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Stack direction="row" spacing={4}>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              error={typeHasError}
+              fullWidth
+              id="type"
+              select
+              label="Medicine type"
+              value={type || medicineTypeList[0].value}
+              onChange={(event) => typeChangeHandler(event.target.value)}
+              onBlur={typeBlurHandler}
+            >
+              {medicineTypeList.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="unit-price">Unit Price</InputLabel>
+              <OutlinedInput
+                error={unitPriceHasError}
+                id="unit-price"
+                startAdornment={<InputAdornment position="start">Rs</InputAdornment>}
+                label="Unit Price"
+                value={unitPrice}
+                onChange={(event) => unitPriceChangeHandler(event.target.value)}
+                onBlur={unitPriceBlurHandler}
+              />
+              {unitPriceHasError && <FormHelperText error>Unit price must be > 0</FormHelperText>}
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              error={unitsHasError}
+              fullWidth
+              id="units"
+              label="Units"
+              type="number"
+              value={units}
+              onChange={(event) => unitsChangeHandler(event.target.value)}
+              onBlur={unitsBlurHandler}
+              helperText={unitsHasError && "Units must be > 0"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              error={minUnitsHasError}
+              fullWidth
+              id="minUnits"
+              label="Minimum Units"
+              type="number"
+              value={minUnits}
+              onChange={(event) => minUnitsChangeHandler(event.target.value)}
+              onBlur={minUnitsBlurHandler}
+              helperText={minUnitsHasError && "Minimum Units must be > 0"}
+            />
+          </Grid>
+          <Grid item xs={1.3}>
             <Button
               variant="contained"
               type="submit"
@@ -185,6 +195,8 @@ const MedicineForm = (props) => {
             >
               Save
             </Button>
+          </Grid>
+          <Grid item xs={1}>
             <Button
               variant="contained"
               onClick={() => navigate(-1)}
@@ -192,8 +204,8 @@ const MedicineForm = (props) => {
             >
               Cancel
             </Button>
-          </Stack>
-        </Stack>
+          </Grid>
+        </Grid>
       </form>
     </Box>
   );

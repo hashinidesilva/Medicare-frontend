@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from "react";
 
 import {
@@ -5,7 +6,6 @@ import {
   Box,
   Button,
   IconButton,
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -14,7 +14,8 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip
+  Tooltip,
+  Typography
 } from "@mui/material";
 import axios from "axios";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -26,6 +27,7 @@ const emptyRow = {
   availableUnits: 0,
   dose: "",
   frequency: 0,
+  frequencyText: '',
   duration: 0,
   quantity: 0,
   additionalInfo: ""
@@ -33,23 +35,43 @@ const emptyRow = {
 
 const columns = [
   {field: 'medicineName', headerName: 'Medicine Name'},
+  {field: 'frequencyText', headerName: 'Frequency'},
   {field: 'dose', headerName: 'Dose'},
-  {field: 'frequency', headerName: 'Frequency'},
+  {field: 'frequency', headerName: 'Frequency \n(in num)'},
   {field: 'duration', headerName: 'Duration \n(in days)'},
   {field: 'quantity', headerName: 'Quantity'},
   {field: 'additionalInfo', headerName: 'Additional Information'},
 ];
 
-const MedicationsForm = (props) => {
-  const [prescriptions, setPrescriptions] = useState([emptyRow]);
-  const [medicines, setMedicines] = useState([]);
+const getPrescriptions = (prescription, key) => {
+  return {
+    key,
+    medicineName: prescription.medicine.name,
+    medicineType: prescription.medicine.type,
+    availableUnits: prescription.medicine.minimumUnits,
+    dose: prescription.dose,
+    frequency: prescription.frequency,
+    frequencyText: prescription.frequencyText,
+    duration: prescription.duration,
+    quantity: prescription.quantity,
+    additionalInfo: prescription.additionalInfo,
+  };
+};
 
-  const patient = props.patient;
+const MedicationsForm = React.memo((props) => {
+  const [prescriptions, setPrescriptions] = useState([emptyRow]);
+  const [availableMedicines, setAvailableMedicines] = useState([]);
+  const {medicines} = props;
+
+  const {patient, error} = props;
+  console.log("MED", medicines);
+  console.log("MEDIII", availableMedicines);
+  console.log("PRESS", prescriptions);
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicare/v1/medicines");
     const data = await response.data;
-    setMedicines(data.map(medicine => {
+    setAvailableMedicines(data.map(medicine => {
       return {
         id: medicine.id,
         label: medicine.name,
@@ -58,6 +80,13 @@ const MedicationsForm = (props) => {
       };
     }));
   }, []);
+
+  useEffect(() => {
+    if (medicines && medicines.length > 0) {
+      console.log("QQQQQ", medicines);
+      setPrescriptions(medicines.map((value, key) => getPrescriptions(value, key)));
+    }
+  }, [medicines]);
 
   const medicineNameChangeHandler = (value, index) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
@@ -125,6 +154,12 @@ const MedicationsForm = (props) => {
       {...row, additionalInfo: newValue} : row));
   };
 
+  const frequencyTextChangeHandler = (event, index) => {
+    const newValue = event.target.value;
+    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
+      {...row, frequencyText: newValue} : row));
+  };
+
   const savePrescriptionData = async () => {
     const prescription = {
       patientId: patient.id,
@@ -133,6 +168,7 @@ const MedicationsForm = (props) => {
           medicineName: pres.medicineName,
           dose: pres.dose,
           frequency: pres.frequency,
+          frequencyText: pres.frequencyText,
           duration: pres.duration,
           quantity: pres.quantity,
           additionalInfo: pres.additionalInfo,
@@ -144,12 +180,14 @@ const MedicationsForm = (props) => {
 
   return (
     <Box>
-      <TableContainer component={Paper}>
-        <Table sx={{minWidth: 650}} aria-label="simple table">
+      <TableContainer>
+        <Table sx={{minWidth: 650, border: 1, borderColor: 'grey.400'}}>
           <TableHead>
             <TableRow>
               {columns.map(column => (
-                <TableCell key={column.field} sx={{fontSize: 16}}>{column.headerName}</TableCell>
+                <TableCell key={column.field} sx={{fontSize: 15, paddingRight: 0, fontWeight: 600}}>
+                  {column.headerName}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -157,12 +195,13 @@ const MedicationsForm = (props) => {
             {prescriptions.map((prescription, index) => (
               <TableRow
                 key={prescription.key}
-                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                sx={{'&:last-child td, &:last-child th': {border: 0, paddingY: 1}}}
               >
-                <TableCell width="250px">
+                <TableCell width="250px" sx={{paddingRight: 0}}>
                   <Autocomplete
+                    // value={availableMedicines.find(med => med.label === prescription.medicineName)}
                     disableClearable
-                    options={medicines}
+                    options={availableMedicines}
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     onChange={(event, value) =>
                       medicineNameChangeHandler(value, index)}
@@ -174,26 +213,32 @@ const MedicationsForm = (props) => {
                       />
                     }/>
                 </TableCell>
-                <TableCell width="70px">
+                <TableCell width="50px" sx={{paddingRight: 0}}>
+                  <TextField
+                    size="small"
+                    value={prescription.frequencyText}
+                    onChange={event => frequencyTextChangeHandler(event, index)}/>
+                </TableCell>
+                <TableCell width="70px" sx={{paddingRight: 0}}>
                   <TextField
                     disabled={prescription.medicineType === 'Cream'}
                     size="small"
                     value={prescription.dose}
                     onChange={event => doseChangeHandler(event, index, prescription.medicineType)}/>
                 </TableCell>
-                <TableCell width="70px">
+                <TableCell width="50px" sx={{paddingRight: 0}}>
                   <TextField
                     size="small"
                     value={prescription.frequency}
                     onChange={event => frequencyChangeHandler(event, index, prescription.medicineType)}/>
                 </TableCell>
-                <TableCell width="70px">
+                <TableCell width="50px" sx={{paddingRight: 0}}>
                   <TextField
                     size="small"
                     value={prescription.duration}
                     onChange={event => durationChangeHandler(event, index, prescription.medicineType)}/>
                 </TableCell>
-                <TableCell width="70px">
+                <TableCell width="70px" sx={{paddingRight: 0}}>
                   <TextField
                     error={prescription.availableUnits < prescription.quantity}
                     disabled={prescription.medicineType === 'Pill'}
@@ -203,7 +248,7 @@ const MedicationsForm = (props) => {
                     helperText={prescription.quantity !== 0 && prescription.availableUnits < prescription.quantity &&
                       ("Available quantity:" + prescription.availableUnits)}/>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{paddingRight: 0}}>
                   <TextField
                     fullWidth
                     multiline
@@ -212,7 +257,7 @@ const MedicationsForm = (props) => {
                     value={prescription.additionalInfo}
                     onChange={event => additionalInfoChangeHandler(event, index)}/>
                 </TableCell>
-                <TableCell align="right" width={'10px'}>
+                <TableCell align="right" sx={{paddingX: 0, alignItems: 'flex-start'}}>
                   <Tooltip title="Delete">
                     <IconButton onClick={() => {
                       setPrescriptions((prevState) => prevState.filter(pres => pres.key !== prescription.key));
@@ -244,8 +289,9 @@ const MedicationsForm = (props) => {
           Save
         </Button>
       </Stack>
+      {error && <Typography color={"red"}>{error}</Typography>}
     </Box>
   );
-};
+});
 
 export default MedicationsForm;

@@ -1,11 +1,30 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
-import DescriptionIcon from '@mui/icons-material/Description';
-import PersonIcon from '@mui/icons-material/Person';
-import VaccinesRoundedIcon from '@mui/icons-material/VaccinesRounded';
+import { Box, Button, Drawer, Grid, Toolbar } from "@mui/material";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import VaccinesOutlinedIcon from '@mui/icons-material/VaccinesOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 const SideBar = () => {
+  const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
+
+  const handleButtonClick = (index, path) => {
+    setSelected(index);
+    navigate(path);
+  };
+
+  const buttonStyles = (index) => ({
+    backgroundColor: selected === index ? "#7c93ee" : "#4860bd",
+    justifyContent: 'flex-start',
+    paddingX: 2,
+    color: 'white',
+    '&:hover': {
+      backgroundColor: selected === index ? "#7c93ee" : "#687fdc",
+    }
+  });
+
   return (
     <Drawer
       sx={{
@@ -20,33 +39,35 @@ const SideBar = () => {
       anchor="left"
     >
       <Toolbar/>
-      <Box sx={{height: "100%", backgroundColor: 'rgb(5, 30, 52)'}}>
-        <List>
-          <ListItem component={Link} to="/patients">
-            <ListItemIcon>
-              <PersonIcon sx={{color: "#FFFFFF"}}/>
-            </ListItemIcon>
-            <ListItemText
-              disableTypography
-              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Patients</Typography>}/>
-          </ListItem>
-          <ListItem component={Link} to="/medicines">
-            <ListItemIcon>
-              <VaccinesRoundedIcon sx={{color: "#FFFFFF"}}/>
-            </ListItemIcon>
-            <ListItemText
-              disableTypography
-              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Inventory</Typography>}/>
-          </ListItem>
-          <ListItem component={Link} to="/prescriptions">
-            <ListItemIcon>
-              <DescriptionIcon sx={{color: "#FFFFFF"}}/>
-            </ListItemIcon>
-            <ListItemText
-              disableTypography
-              primary={<Typography variant="h7" style={{color: '#FFFFFF'}}>Prescriptions</Typography>}/>
-          </ListItem>
-        </List>
+      <Box sx={{
+        height: "100%", backgroundColor: "#4860bd",
+        display: 'flex', alignItems: 'center',
+        flexDirection: 'column', paddingY: 2, paddingX: 1.5
+      }}>
+        <Grid container justifyContent={'flex-start'} alignItems={'flex-start'} spacing={2}>
+          <Grid item xs={12}>
+            <Button size="medium" startIcon={<PersonOutlineOutlinedIcon/>}
+                    justifyContent={'flex-start'} alignItems={'flex-start'}
+                    onClick={() => handleButtonClick(0, "/patients")}
+                    sx={buttonStyles(0)} fullWidth>
+              Patients
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button size="medium" startIcon={<VaccinesOutlinedIcon/>}
+                    onClick={() => handleButtonClick(1, "/medicines")}
+                    sx={buttonStyles(1)} fullWidth>
+              Inventory
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button size="medium" startIcon={<DescriptionOutlinedIcon/>}
+                    onClick={() => handleButtonClick(2, "/prescriptions")}
+                    sx={buttonStyles(2)} fullWidth>
+              Prescriptions
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
     </Drawer>
   );

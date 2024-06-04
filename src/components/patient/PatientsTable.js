@@ -7,7 +7,7 @@ import MedicationIcon from '@mui/icons-material/Medication';
 import HistoryIcon from '@mui/icons-material/History';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from "@mui/material";
 import Table from "../UI/Table";
 
 const PatientsTable = (props) => {
@@ -35,10 +35,29 @@ const PatientsTable = (props) => {
   };
 
   const columns = [
-    {field: 'name', headerName: 'Name', width: '400'},
-    {field: 'age', headerName: 'Age', flex: 0.35},
-    {field: 'gender', headerName: 'Gender', flex: 0.5},
-    // {field: 'nationalID', headerName: 'ID', flex: 0.5},
+    {field: 'name', headerName: 'Name', flex: 1},
+    {field: 'age', headerName: 'Age', flex: 0.2},
+    {field: 'gender', headerName: 'Gender', flex: 0.3},
+    {field: 'nic', headerName: 'NIC', flex: 0.45},
+    {field: 'address', headerName: 'Address', flex: 0.75},
+    {field: 'tpNumber', headerName: 'TP Number', flex: 0.5},
+    {
+      field: 'allergies', headerName: 'Allergies', flex: 0.5, renderCell: (params) => (
+        <Tooltip title={params.value || ''} placement="top-start" enterDelay={500} leaveDelay={200}>
+          <Box
+            sx={{
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              width: '100%',
+              cursor: 'default',
+            }}
+          >
+            {params.value}
+          </Box>
+        </Tooltip>
+      )
+    },
     {
       field: 'actions',
       type: 'actions',
@@ -47,41 +66,45 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Add prescription">
-              <MedicationIcon fontSize="large" sx={{color: "#5600b2"}}/>
+              <MedicationIcon sx={{color: "#5600b2", fontSize: 30}}/>
             </Tooltip>
           }
           label="Add prescription"
           component={Link}
           to={`${params.id}/prescriptions/create`}
+          sx={{p: 0}}
         />,
         <GridActionsCellItem
           icon={
             <Tooltip title={"Edit"}>
-              <EditIcon fontSize="large" sx={{color: "#b25600"}}/>
+              <EditIcon sx={{color: "#b25600", fontSize: 30}}/>
             </Tooltip>
           }
+          label="Edit"
           component={Link}
           to={`${params.id}/edit`}
-          label="Edit"
+          sx={{p: 0}}
         />,
         <GridActionsCellItem
           icon={
             <Tooltip title="Show history">
-              <HistoryIcon fontSize="large" sx={{color: "#c21465"}}/>
+              <HistoryIcon sx={{color: "#8a17e2", fontSize: 30}}/>
             </Tooltip>
           }
           label="Show history"
           component={Link}
-          to={`${params.id}/prescriptions`}
+          to={`${params.id}/prescriptions/history`}
+          sx={{p: 0}}
         />,
         <GridActionsCellItem
           icon={
             <Tooltip title="Delete">
-              <DeleteForeverIcon fontSize="large" color="error"/>
+              <DeleteForeverIcon color="error" sx={{fontSize: 30}}/>
             </Tooltip>
           }
-          onClick={handleClickOpen.bind(null, params.id)}
           label="Delete"
+          onClick={handleClickOpen.bind(null, params.id)}
+          sx={{p: 0}}
         />,
       ],
     },
