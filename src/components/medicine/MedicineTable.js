@@ -21,7 +21,7 @@ const MedicineTable = (props) => {
       });
     const data = await response.data;
     setMedicines(data.sort((med1, med2) => med2.id - med1.id));
-  }, [searchText]);
+  }, [searchText, showLowInventory]);
 
   const columns = [
     {field: 'name', headerName: 'Medicine', flex: 3},

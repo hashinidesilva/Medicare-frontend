@@ -1,14 +1,12 @@
 import { Card, CardContent, Divider, Stack, Typography } from "@mui/material";
 
 const PatientInfoCard = ({patient = {}}) => {
-
   return (
     <Card
       sx={{
         backgroundColor: "#bfdef8",
         border: 1,
         borderColor: "#bfdef8",
-        minWidth: 300,
         "&:hover": {border: 1, borderColor: "#95b9d7"}
       }}>
       <CardContent>

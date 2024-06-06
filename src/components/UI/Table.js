@@ -1,7 +1,7 @@
 import { styled } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-const Table = ({rows, columns}) => {
+const Table = ({rows, columns, pageSize = 8}) => {
   const StyledDataGrid = styled(DataGrid)(({theme}) => ({
     color:
       theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
@@ -57,11 +57,11 @@ const Table = ({rows, columns}) => {
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 8,
+            pageSize: pageSize,
           },
         },
       }}
-      pageSizeOptions={[8, 10, 15]}
+      pageSizeOptions={[pageSize, pageSize * 2]}
       autoHeight
       getRowClassName={(params) => {
         const {allergies} = params.row;

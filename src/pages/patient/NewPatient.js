@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Paper } from "@mui/material";
-import PatientForm from "../components/patient/PatientForm";
+import PatientForm from "../../components/patient/PatientForm";
 
 const NewPatient = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const NewPatient = () => {
   };
 
   return (
-    <Box sx={{marginTop: "10px", display: "flex", justifyContent: "center"}}>
+    <Box sx={{ display: "flex", justifyContent: "center"}}>
       <Paper elevation={3} sx={{width: "75%", padding: 2}}>
         <PatientForm onAddPatient={submitHandler} error={error}/>
       </Paper>

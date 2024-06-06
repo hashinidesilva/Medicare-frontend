@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import PatientForm from "../components/patient/PatientForm";
+import PatientForm from "../../components/patient/PatientForm";
 import axios from "axios";
 import { Box, Paper } from "@mui/material";
 
@@ -20,7 +20,6 @@ const EditPatient = () => {
   }, [patientId]);
 
   const submitHandler = async (patient) => {
-    console.log("QQQ", patient);
     await fetch(`http://localhost:8080/medicare/v1/patients/${patientId}`, {
       method: 'PUT',
       body: JSON.stringify(patient),

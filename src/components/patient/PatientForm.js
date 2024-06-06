@@ -113,7 +113,7 @@ const PatientForm = (props) => {
           height: 40,
           justifyContent: "flex-start",
           backgroundColor: "#1e88e5",
-          paddingLeft: 3
+          paddingLeft: '20px'
         }}>
         <Typography variant="h5" color="#ffffff">Patient Form</Typography>
       </Box>
@@ -228,26 +228,26 @@ const PatientForm = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={1.3}>
-            <Button
-              variant="contained"
-              type="submit"
-              disabled={!formIsValid}
-              sx={{backgroundColor: "#0003b2"}}
-            >
-              Save
-            </Button>
+          <Grid item xs={12}>
+            <Stack spacing={2} direction={"row"}>
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={!formIsValid}
+                sx={{backgroundColor: "#0003b2"}}
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => navigate(-1)}
+                sx={{backgroundColor: "#b25600"}}
+              >
+                Cancel
+              </Button>
+            </Stack>
           </Grid>
-          <Grid item xs={1}>
-            <Button
-              variant="contained"
-              onClick={() => navigate(-1)}
-              sx={{backgroundColor: "#b25600"}}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          {error && <Typography color={"red"}>{error}</Typography>}
+          {error && <Typography color={"red"} sx={{margin: "20px"}}>{error}</Typography>}
         </Grid>
       </form>
     </Box>

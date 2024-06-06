@@ -11,6 +11,7 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
+  Stack,
   TextField,
   Typography
 } from "@mui/material";
@@ -33,7 +34,7 @@ const medicineTypeList = [
 
 const MedicineForm = (props) => {
   const navigate = useNavigate();
-  const {medicine} = props;
+  const {medicine, error} = props;
 
   const {
     value: name,
@@ -101,16 +102,17 @@ const MedicineForm = (props) => {
   };
 
   return (
-    <Box sx={{border: 1, borderColor: "#1e88e5"}}>
+    <Box sx={{border: 1, borderColor: "#1e88e5", width: '100%'}}>
       <Box
         sx={{
           display: "flex",
           alignItems: 'center',
-          height: 70,
-          justifyContent: "center",
-          backgroundColor: "#1e88e5"
+          height: 40,
+          justifyContent: "flex-start",
+          backgroundColor: "#1e88e5",
+          paddingLeft: '20px'
         }}>
-        <Typography variant="h4" color="#ffffff">Medicine Form</Typography>
+        <Typography variant="h5" color="#ffffff">Medicine Form</Typography>
       </Box>
       <form onSubmit={submitHandler} style={{margin: '20px'}}>
         <Grid container spacing={4}>
@@ -186,25 +188,26 @@ const MedicineForm = (props) => {
               helperText={minUnitsHasError && "Minimum Units must be > 0"}
             />
           </Grid>
-          <Grid item xs={1.3}>
-            <Button
-              variant="contained"
-              type="submit"
-              disabled={!formIsValid}
-              sx={{backgroundColor: "#0003b2"}}
-            >
-              Save
-            </Button>
+          <Grid item xs={12}>
+            <Stack spacing={2} direction={"row"}>
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={!formIsValid}
+                sx={{backgroundColor: "#0003b2"}}
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => navigate(-1)}
+                sx={{backgroundColor: "#b25600"}}
+              >
+                Cancel
+              </Button>
+            </Stack>
           </Grid>
-          <Grid item xs={1}>
-            <Button
-              variant="contained"
-              onClick={() => navigate(-1)}
-              sx={{backgroundColor: "#b25600"}}
-            >
-              Cancel
-            </Button>
-          </Grid>
+          {error && <Typography color={"red"} sx={{margin: '20px'}}>{error}</Typography>}
         </Grid>
       </form>
     </Box>

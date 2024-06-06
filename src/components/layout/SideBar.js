@@ -47,7 +47,6 @@ const SideBar = () => {
         <Grid container justifyContent={'flex-start'} alignItems={'flex-start'} spacing={2}>
           <Grid item xs={12}>
             <Button size="medium" startIcon={<PersonOutlineOutlinedIcon/>}
-                    justifyContent={'flex-start'} alignItems={'flex-start'}
                     onClick={() => handleButtonClick(0, "/patients")}
                     sx={buttonStyles(0)} fullWidth>
               Patients

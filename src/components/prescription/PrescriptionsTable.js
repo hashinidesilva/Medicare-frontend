@@ -1,11 +1,10 @@
 import Table from "../UI/Table";
 
-const MedicationsTable = ({medications = []}) => {
-
-  const medicines = medications.map(medication => {
+const PrescriptionsTable = ({medications = []}) => {
+  const medicines = medications.map((medication, index) => {
     return {
-      id: medication.medicine.id,
-      name: medication.medicine.name,
+      id: index,
+      name: medication.medicineName ?? medication?.medicine?.name,
       dose: medication.dose,
       frequency: medication.frequency,
       frequencyText: medication.frequencyText,
@@ -30,4 +29,4 @@ const MedicationsTable = ({medications = []}) => {
   );
 };
 
-export default MedicationsTable;
+export default PrescriptionsTable;

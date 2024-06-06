@@ -7,7 +7,8 @@ const NavBar = () => {
   return (
     <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#ffffff"}}>
       <Toolbar>
-        <img src="/bklogo.jpeg" alt="Logo" style={{height: 55, cursor: 'pointer'}} onClick={() => navigate("/")}/>
+        <img src="/bklogo.jpeg" alt="Logo" style={{height: 50, width: 100, cursor: 'pointer'}}
+             onClick={() => navigate("/")}/>
         {/*<IconButton aria-label="notifications" sx={{color: "white"}}>*/}
         {/*  <Notifications fontSize="large"/>*/}
         {/*</IconButton>*/}

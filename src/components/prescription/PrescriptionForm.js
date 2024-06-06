@@ -1,5 +1,5 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import {
   Autocomplete,
@@ -22,15 +22,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const emptyRow = {
   key: 0,
-  medicineName: "",
-  medicineType: "",
-  availableUnits: 0,
   dose: "",
   frequency: 0,
   frequencyText: '',
   duration: 0,
   quantity: 0,
-  additionalInfo: ""
+  additionalInfo: "",
+  medicine: {
+    id: 0,
+    name: "",
+    type: "",
+    units: 0
+  }
 };
 
 const columns = [
@@ -43,47 +46,53 @@ const columns = [
   {field: 'additionalInfo', headerName: 'Additional Information'},
 ];
 
+const emptyMedicineOption = {
+  id: 0,
+  label: "",
+  type: "",
+  units: 0
+};
+
 const getPrescriptions = (prescription, key) => {
   return {
     key,
-    medicineName: prescription.medicine.name,
-    medicineType: prescription.medicine.type,
-    availableUnits: prescription.medicine.minimumUnits,
     dose: prescription.dose,
     frequency: prescription.frequency,
     frequencyText: prescription.frequencyText,
     duration: prescription.duration,
     quantity: prescription.quantity,
     additionalInfo: prescription.additionalInfo,
+    medicine: {
+      id: prescription.medicine.id,
+      name: prescription.medicine.name,
+      type: prescription.medicine.type,
+      units: prescription.medicine.units,
+    }
   };
 };
 
-const MedicationsForm = React.memo((props) => {
+const PrescriptionForm = React.memo((props) => {
   const [prescriptions, setPrescriptions] = useState([emptyRow]);
   const [availableMedicines, setAvailableMedicines] = useState([]);
-  const {medicines} = props;
-
-  const {patient, error} = props;
-  console.log("MED", medicines);
-  console.log("MEDIII", availableMedicines);
-  console.log("PRESS", prescriptions);
+  const navigate = useNavigate();
+  const {medicines, onShowSummary, patient} = props;
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicare/v1/medicines");
     const data = await response.data;
-    setAvailableMedicines(data.map(medicine => {
+    const options = data.map(medicine => {
       return {
         id: medicine.id,
         label: medicine.name,
         type: medicine.type,
         units: medicine.units
       };
-    }));
+    });
+    setAvailableMedicines([...options, emptyMedicineOption]);
   }, []);
 
   useEffect(() => {
     if (medicines && medicines.length > 0) {
-      console.log("QQQQQ", medicines);
       setPrescriptions(medicines.map((value, key) => getPrescriptions(value, key)));
     }
   }, [medicines]);
@@ -92,9 +101,26 @@ const MedicationsForm = React.memo((props) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
         if (value.type === 'Cream') {
-          return {...row, medicineName: value.label, medicineType: value.type, availableUnits: value.units, dose: ""};
+          return {
+            ...row,
+            medicine: {
+              id: value.id,
+              name: value.label,
+              units: value.units,
+              type: value.type
+            },
+            dose: ""
+          };
         }
-        return {...row, medicineName: value.label, medicineType: value.type, availableUnits: value.units};
+        return {
+          ...row,
+          medicine: {
+            id: value.id,
+            name: value.label,
+            units: value.units,
+            type: value.type
+          }
+        };
       }
       return row;
     }));
@@ -160,22 +186,28 @@ const MedicationsForm = React.memo((props) => {
       {...row, frequencyText: newValue} : row));
   };
 
-  const savePrescriptionData = async () => {
+  const handleClick = () => {
     const prescription = {
       patientId: patient.id,
       medicines: prescriptions.map(pres => {
         return {
-          medicineName: pres.medicineName,
+          // medicineName: pres.medicineName,
           dose: pres.dose,
           frequency: pres.frequency,
           frequencyText: pres.frequencyText,
           duration: pres.duration,
           quantity: pres.quantity,
           additionalInfo: pres.additionalInfo,
+          medicine: {
+            id: pres.medicine.id,
+            name: pres.medicine.name,
+            type: pres.medicine.type,
+            units: pres.medicine.units
+          }
         };
       })
     };
-    props.onSubmit(prescription);
+    onShowSummary(prescription);
   };
 
   return (
@@ -192,14 +224,14 @@ const MedicationsForm = React.memo((props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {prescriptions.map((prescription, index) => (
+            {prescriptions.length > 0 && prescriptions.map((prescription, index) => (
               <TableRow
                 key={prescription.key}
                 sx={{'&:last-child td, &:last-child th': {border: 0, paddingY: 1}}}
               >
                 <TableCell width="250px" sx={{paddingRight: 0}}>
                   <Autocomplete
-                    // value={availableMedicines.find(med => med.label === prescription.medicineName)}
+                    value={availableMedicines.find(med => med.label === prescription.medicine.name) ?? emptyMedicineOption}
                     disableClearable
                     options={availableMedicines}
                     isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -221,32 +253,32 @@ const MedicationsForm = React.memo((props) => {
                 </TableCell>
                 <TableCell width="70px" sx={{paddingRight: 0}}>
                   <TextField
-                    disabled={prescription.medicineType === 'Cream'}
+                    disabled={prescription.medicine.type === 'Cream'}
                     size="small"
                     value={prescription.dose}
-                    onChange={event => doseChangeHandler(event, index, prescription.medicineType)}/>
+                    onChange={event => doseChangeHandler(event, index, prescription.medicine.type)}/>
                 </TableCell>
                 <TableCell width="50px" sx={{paddingRight: 0}}>
                   <TextField
                     size="small"
                     value={prescription.frequency}
-                    onChange={event => frequencyChangeHandler(event, index, prescription.medicineType)}/>
+                    onChange={event => frequencyChangeHandler(event, index, prescription.medicine.type)}/>
                 </TableCell>
                 <TableCell width="50px" sx={{paddingRight: 0}}>
                   <TextField
                     size="small"
                     value={prescription.duration}
-                    onChange={event => durationChangeHandler(event, index, prescription.medicineType)}/>
+                    onChange={event => durationChangeHandler(event, index, prescription.medicine.type)}/>
                 </TableCell>
                 <TableCell width="70px" sx={{paddingRight: 0}}>
                   <TextField
-                    error={prescription.availableUnits < prescription.quantity}
-                    disabled={prescription.medicineType === 'Pill'}
+                    error={prescription.medicine.units < prescription.quantity}
+                    disabled={prescription.medicine.type === 'Pill'}
                     size="small"
                     value={prescription.quantity}
                     onChange={event => quantityChangeHandler(event, index)}
-                    helperText={prescription.quantity !== 0 && prescription.availableUnits < prescription.quantity &&
-                      ("Available quantity:" + prescription.availableUnits)}/>
+                    helperText={prescription.quantity !== 0 && prescription.medicine.units < prescription.quantity &&
+                      ("Available quantity:" + prescription.medicine.units)}/>
                 </TableCell>
                 <TableCell sx={{paddingRight: 0}}>
                   <TextField
@@ -271,7 +303,7 @@ const MedicationsForm = React.memo((props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack direction={"row"} spacing={4} marginTop={3}>
+      <Stack direction={"row"} spacing={3} marginTop={3}>
         <Button
           variant="contained"
           sx={{backgroundColor: "#b25600"}}
@@ -282,16 +314,28 @@ const MedicationsForm = React.memo((props) => {
         <Button
           variant="contained"
           sx={{backgroundColor: "#0003b2"}}
-          onClick={savePrescriptionData}
+          onClick={handleClick}
           disabled={prescriptions.length === 0 ||
-            prescriptions.find(prescription => prescription.medicineName === '') !== undefined}
+            prescriptions.find(prescription => prescription.medicine.name === '') !== undefined}
         >
-          Save
+          Next
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "white",
+            color: '#4860bd',
+            border: 1,
+            borderColor: '#6379d0',
+            "&:hover": {backgroundColor: "white", borderColor: "#3d4f96", elevation: 0}
+          }}
+          onClick={() => navigate("/patients")}
+        >
+          Cancel
         </Button>
       </Stack>
-      {error && <Typography color={"red"}>{error}</Typography>}
     </Box>
   );
 });
 
-export default MedicationsForm;
+export default PrescriptionForm;

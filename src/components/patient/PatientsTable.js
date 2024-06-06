@@ -42,7 +42,8 @@ const PatientsTable = (props) => {
     {field: 'address', headerName: 'Address', flex: 0.75},
     {field: 'tpNumber', headerName: 'TP Number', flex: 0.5},
     {
-      field: 'allergies', headerName: 'Allergies', flex: 0.5, renderCell: (params) => (
+      field: 'allergies', headerName: 'Allergies', flex: 0.5,
+      renderCell: (params) => (
         <Tooltip title={params.value || ''} placement="top-start" enterDelay={500} leaveDelay={200}>
           <Box
             sx={{
@@ -93,7 +94,7 @@ const PatientsTable = (props) => {
           }
           label="Show history"
           component={Link}
-          to={`${params.id}/prescriptions/history`}
+          to={`${params.id}/prescriptions`}
           sx={{p: 0}}
         />,
         <GridActionsCellItem

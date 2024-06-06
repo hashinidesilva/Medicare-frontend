@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
 import { Box, Paper } from "@mui/material";
-import MedicineForm from "../components/medicine/MedicineForm";
+import MedicineForm from "../../components/medicine/MedicineForm";
 
 const EditMedicine = () => {
   const [medicine, setMedicine] = useState({name: '', unitPrice: 0, units: 0});

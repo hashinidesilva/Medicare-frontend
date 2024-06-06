@@ -2,11 +2,19 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Grid, Paper } from "@mui/material";
-import PatientInfoCard from "../components/patient/PatientInfoCard";
-import MedicationsTable from "../components/patient/MedicationsTable";
+import {
+  Button, Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Grid,
+  Paper, Typography
+} from "@mui/material";
+import PatientInfoCard from "../../components/patient/PatientInfoCard";
+import PrescriptionsTable from "../../components/prescription/PrescriptionsTable";
 
-const UnprocessedPrescriptionInfo = () => {
+const PrescriptionInfo = () => {
   const [prescription, setPrescription] = useState({});
   const [open, setOpen] = useState(false);
   const params = useParams();
@@ -62,33 +70,58 @@ const UnprocessedPrescriptionInfo = () => {
       aria-describedby="alert-dialog-description"
     >
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        {/*<DialogContentText id="alert-dialog-description">*/}
+        <Typography variant="h7">
           Mark prescription as Done
-        </DialogContentText>
+        </Typography>
+        {/*</DialogContentText>*/}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={prescriptionUpdateHandler} autoFocus>Yes</Button>
+        <Button
+          variant="contained"
+          sx={{backgroundColor: "#b25600"}}
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          sx={{backgroundColor: "#0003b2"}}
+          onClick={prescriptionUpdateHandler}
+          autoFocus
+        >Yes
+        </Button>
       </DialogActions>
     </Dialog>
   );
 
   return (
     <Paper elevation={3} sx={{padding: 2}}>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={4}>
-          <PatientInfoCard patient={patient}/>
+      <Grid container spacing={2} justifyContent="flex-start">
+        <Grid item xs={12}>
+          <Grid container spacing={5} justifyContent="space-between" alignItems="flex-start">
+            <Grid item xs={5}>
+              <PatientInfoCard patient={patient}/>
+            </Grid>
+            <Grid item>
+              <Chip label={`No of Items: ${medicines?.length}`} color="warning" sx={{fontSize: 20}}>
+              </Chip>
+
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
-          <MedicationsTable medications={medicines}/>
+          <PrescriptionsTable medications={medicines}/>
         </Grid>
-        <Grid item>
-          <Button variant="contained" size="large" onClick={handleClickOpen}>Processed</Button>
-          {confirmationPopup}
-        </Grid>
+        {!prescription?.processed &&
+          <Grid item>
+            <Button variant="contained" size="large" onClick={handleClickOpen}>Processed</Button>
+            {confirmationPopup}
+          </Grid>
+        }
       </Grid>
     </Paper>
   );
 };
 
-export default UnprocessedPrescriptionInfo;
+export default PrescriptionInfo;
