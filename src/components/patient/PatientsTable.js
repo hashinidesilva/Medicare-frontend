@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
-import EditIcon from '@mui/icons-material/Edit';
-import MedicationIcon from '@mui/icons-material/Medication';
-import HistoryIcon from '@mui/icons-material/History';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import MedicationOutlinedIcon from '@mui/icons-material/MedicationOutlined';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from "@mui/material";
 import Table from "../UI/Table";
@@ -14,16 +14,16 @@ const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [open, setOpen] = useState(false);
-  const {searchText} = props;
+  const {searchTerm} = props;
 
   useEffect(async () => {
     const response = await axios.get("http://localhost:8080/medicare/v1/patients",
       {
-        params: {patientName: searchText === '' ? null : searchText}
+        params: {searchTerm: searchTerm === '' ? null : searchTerm}
       });
     const data = await response.data;
     setPatients(data.sort((patient1, patient2) => patient2.id - patient1.id));
-  }, [searchText]);
+  }, [searchTerm]);
 
   const deletePatientHandler = async () => {
     const response = await axios.delete(`http://localhost:8080/medicare/v1/patients/${selectedPatientId}`);
@@ -67,7 +67,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Add prescription">
-              <MedicationIcon sx={{color: "#5600b2", fontSize: 30}}/>
+              <MedicationOutlinedIcon color={"primary"} sx={{fontSize: 30}}/>
             </Tooltip>
           }
           label="Add prescription"
@@ -78,7 +78,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title={"Edit"}>
-              <EditIcon sx={{color: "#b25600", fontSize: 30}}/>
+              <EditOutlinedIcon sx={{color: "#b25600", fontSize: 30}}/>
             </Tooltip>
           }
           label="Edit"
@@ -89,7 +89,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Show history">
-              <HistoryIcon sx={{color: "#8a17e2", fontSize: 30}}/>
+              <HistoryRoundedIcon sx={{color: "#8a17e2", fontSize: 30}}/>
             </Tooltip>
           }
           label="Show history"
@@ -100,7 +100,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title="Delete">
-              <DeleteForeverIcon color="error" sx={{fontSize: 30}}/>
+              <DeleteForeverOutlinedIcon color="error" sx={{fontSize: 30}}/>
             </Tooltip>
           }
           label="Delete"

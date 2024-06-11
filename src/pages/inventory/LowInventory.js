@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Grid, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material";
+import { InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MedicineTable from "../../components/medicine/MedicineTable";
 
@@ -8,33 +8,28 @@ const LowInventory = () => {
   const [searchText, setSearchText] = useState('');
 
   return (
-    <Stack spacing={5}>
-      <Typography fontSize={30} fontWeight={400}>Low Inventory</Typography>
+    <>
+      <Typography fontSize={30} fontWeight={550} sx={{mb: 4}}>Low Inventory</Typography>
+      <TextField
+        autoFocus
+        id="search-text"
+        label="Search"
+        type="text"
+        value={searchText}
+        onChange={(event) => setSearchText(event.target.value)}
+        sx={{mb: 3}}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon/>
+            </InputAdornment>
+          ),
+        }}
+      />
       <Paper elevation={3} sx={{padding: 2}}>
-        <Grid container direction="column" spacing={5}>
-          <Grid item>
-            <TextField
-              autoFocus
-              id="search-text"
-              placeholder="Search medicines..."
-              type="text"
-              value={searchText}
-              onChange={(event) => setSearchText(event.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon/>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item>
-            <MedicineTable searchText={searchText} showLowInventory={true}/>
-          </Grid>
-        </Grid>
+        <MedicineTable searchText={searchText} showLowInventory={true}/>
       </Paper>
-    </Stack>
+    </>
   );
 };
 

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import axios from "axios";
 import PrescriptionSummary from "../../components/prescription/PrescriptionSummary";
 
 const PrescriptionHistory = () => {
   const [prescription, setPrescription] = useState({});
-  const navigate = useNavigate();
   const params = useParams();
-  const {prescriptionId, patientId} = params;
+  const {prescriptionId} = params;
 
   useEffect(() => {
     async function fetchData() {

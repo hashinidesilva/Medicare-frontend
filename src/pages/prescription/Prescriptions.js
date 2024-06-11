@@ -5,20 +5,21 @@ import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
 import {
-  Button,
+  Button, CircularProgress,
   FormControlLabel,
-  Grid,
+  Grid, IconButton, InputAdornment,
   MenuItem,
   Paper,
-  Select,
+  Select, Stack,
   Switch,
-  TextField,
+  TextField, Tooltip,
   Typography
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import SearchIcon from "@mui/icons-material/Search";
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import Table from "../../components/UI/Table";
 
 const dateRanges = [
@@ -44,9 +45,16 @@ const dateRanges = [
   },
   {
     label: 'Last Month',
-    range: [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')]
+    range: [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
   }
 ];
+
+const dateRangeOptions = dateRanges.map(range => range.label);
+
+const customDateRange = {
+  label: 'Custom Range',
+  range: 'Custom'
+};
 
 const columns = [
   {field: 'prescriptionId', headerName: 'Prescription ID', flex: 1},
@@ -80,106 +88,155 @@ const mappedPrescriptions = (prescription) => {
   };
 };
 const Prescriptions = () => {
-  const [searchText, setSearchText] = useState("");
+  const [searchTerm, setSearchTerm] = useState(null);
   const [prescriptions, setPrescriptions] = useState([]);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
+  const [selectedDateRange, setSelectedDateRange] = useState(dateRanges[0].label);
+  const [startDate, setStartDate] = useState(dayjs().startOf('day'));
+  const [endDate, setEndDate] = useState(dayjs().endOf('day'));
+
+  const fetchPrescriptions = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("http://localhost:8080/medicare/v1/prescriptions", {
+        params: {
+          processed: checked,
+          startDate: startDate.format('YYYY-MM-DD HH:mm:ss'),
+          endDate: endDate.format('YYYY-MM-DD HH:mm:ss'),
+          searchTerm
+        }
+      });
+      setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).map(pres => mappedPrescriptions(pres)));
+    } catch (err) {
+      console.error("Error fetching prescriptions:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setLoading(true);
-    const fetchPrescriptions = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/medicare/v1/prescriptions",
-          {
-            params: {processed: checked}
-          });
-        setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).map(pres => mappedPrescriptions(pres)));
-
-      } catch (err) {
-        console.log("ERROR MM", err);
-      }
-      setLoading(false);
-    };
-
     fetchPrescriptions();
 
     return () => {
       setPrescriptions([]);
     };
 
-  }, [checked]);
+  }, [checked, startDate, endDate, searchTerm]);
 
   const handleSearch = (event) => {
-    setSearchText(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   const handleDateRangeSelect = (event) => {
     const selectedRange = event.target.value;
-    const range = dateRanges.find((range) => range.label === selectedRange);
-    setSelectedDateRange(range);
+    setSelectedDateRange(selectedRange);
+    if (dateRangeOptions.includes(selectedRange)) {
+      const range = dateRanges.find((range) => range.label === selectedRange);
+      setStartDate(range.range[0]);
+      setEndDate(range.range[1]);
+    }
   };
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
 
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    const range = dateRanges.find((range) => range.range[0].isSame(date, 'day') &&
+      range.range[1].isSame(endDate, 'day')) ?? customDateRange;
+    setSelectedDateRange(range.label);
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+    const range = dateRanges.find((range) => range.range[0].isSame(startDate, 'day') &&
+      range.range[1].isSame(date, 'day')) ?? customDateRange;
+    setSelectedDateRange(range.label);
+  };
+
+  const handleRefresh = () => {
+    fetchPrescriptions();
+  };
+
   return (
     <>
-      <Typography variant="h4" sx={{mb: 4}}>
-        {`${checked ? "Processed Prescriptions" : "New Prescriptions"}`}
-      < /Typography>
-      <Grid container justifyContent="space-between" alignItems={"center"} sx={{mb: 3}} direction={"row"} spacing={2}>
-        <Grid item>
-          <TextField
-            label="Search"
-            variant="outlined"
-            value={searchText}
-            onChange={handleSearch}
-            InputProps={{
-              startAdornment: <Search/>,
-            }}
-          />
+      <Stack direction={"row"} alignItems={"center"} justifyContent={"flex-start"} spacing={1} sx={{mb: 4}}>
+        <Typography fontSize={30} fontWeight={550}>
+          {`${checked ? "Processed Prescriptions" : "New Prescriptions"}`}
+        < /Typography>
+        {!loading &&
+          <Tooltip title="Refresh prescriptions">
+            <IconButton onClick={handleRefresh} color={"primary"}>
+              <RefreshRoundedIcon/>
+            </IconButton>
+          </Tooltip>
+        }
+        {loading && <CircularProgress size={15}/>}
+        {loading && <Typography fontSize={13}>Refetching prescriptions...</Typography>}
+      </Stack>
+      <Stack direction={"row"} justifyContent="space-between" alignItems="center">
+        <Grid container justifyContent="flex-start" alignItems="flex-end" sx={{mb: 3}} direction={"row"}
+              spacing={3}>
+          <Grid item>
+            <TextField
+              id="search-prescriptions"
+              label="Search"
+              value={searchTerm}
+              onChange={handleSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon/>
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <Select
+              value={selectedDateRange ?? ''}
+              onChange={handleDateRangeSelect}
+              sx={{minWidth: 160}}
+            >
+              {dateRangeOptions.map((range, index) => (
+                <MenuItem key={index} value={range}>
+                  {range}
+                </MenuItem>
+              ))}
+              <MenuItem value={customDateRange.label}>
+                {customDateRange.label}
+              </MenuItem>
+            </Select>
+          </Grid>
+          <Grid item>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  maxDate={endDate || undefined}
+                  renderInput={(params) => <TextField {...params} sx={{width: '100%'}}/>}
+                  sx={{paddingRight: 1}}
+                />
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  minDate={startDate || undefined}
+                  renderInput={(params) => <TextField {...params} sx={{width: '100%'}}/>}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Grid>
         </Grid>
-        <Grid item>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
-              <Select
-                value={selectedDateRange ? selectedDateRange.label : ''}
-                onChange={handleDateRangeSelect}
-              >
-                {dateRanges.map((range, index) => (
-                  <MenuItem key={index} value={range.label}>
-                    {range.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              <DatePicker
-                label="Start Date"
-                value={selectedDateRange ? selectedDateRange.range[0] : null}
-                onChange={(date) => setSelectedDateRange({
-                  ...selectedDateRange,
-                  range: [date, selectedDateRange ? selectedDateRange.range[1] : null]
-                })}
-              />
-              <DatePicker
-                label="End Date"
-                value={selectedDateRange ? selectedDateRange.range[1] : null}
-                onChange={(date) => setSelectedDateRange({
-                  ...selectedDateRange,
-                  range: [selectedDateRange ? selectedDateRange.range[0] : null, date]
-                })}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-        </Grid>
-        <Grid item>
-          <FormControlLabel
-            control={<Switch checked={checked} onChange={handleChange}/>}
-            label={'Processed'}
-          />
-        </Grid>
-      </Grid>
+        <FormControlLabel
+          control={<Switch checked={checked} onChange={handleChange}/>}
+          label={'Processed'}
+        />
+      </Stack>
       <Paper elevation={1} sx={{padding: 2}}>
         {loading && <Typography>Loading ...</Typography>}
         {!loading && <Table columns={columns} rows={prescriptions}/>}

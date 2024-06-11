@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
-import EditIcon from "@mui/icons-material/Edit";
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Table from "../UI/Table";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { Tooltip } from "@mui/material";
@@ -36,7 +36,7 @@ const MedicineTable = (props) => {
         <GridActionsCellItem
           icon={
             <Tooltip title={"Edit"}>
-              <EditIcon fontSize="large" sx={{color: "#b25600"}}/>
+              <EditOutlinedIcon fontSize="large" sx={{color: "#b25600"}}/>
             </Tooltip>
           }
           component={Link}

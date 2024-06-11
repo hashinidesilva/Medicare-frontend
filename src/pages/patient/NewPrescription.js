@@ -19,7 +19,7 @@ const NewPrescription = () => {
 
   const {patientId} = params;
 
-  useEffect(async () => {
+  useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get(`http://localhost:8080/medicare/v1/patients/${patientId}`);

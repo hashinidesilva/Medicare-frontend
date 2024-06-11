@@ -46,7 +46,8 @@ const Table = ({rows, columns, pageSize = 8}) => {
       borderRadius: 0,
     },
     '& .allergy': {
-      backgroundColor: theme.palette.mode === 'light' ? '#fcd4da' : '#622',
+      backgroundColor: theme.palette.mode === 'light' ? '#fcd4da' : '#e8a1a1',
+      borderColor: theme.palette.mode === 'light' ? '#fcd4da' : '#e8a1a1',
     }
   }));
 

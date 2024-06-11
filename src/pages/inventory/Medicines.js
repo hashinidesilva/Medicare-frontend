@@ -1,38 +1,24 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import {
-  Button,
-  FormControlLabel,
-  Grid,
-  InputAdornment,
-  Paper,
-  Stack,
-  Switch,
-  TextField,
-  Typography
-} from "@mui/material";
+import { Button, Grid, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import MedicineTable from "../../components/medicine/MedicineTable";
 
 const Medicines = () => {
   const [searchText, setSearchText] = useState('');
-  const [checked, setChecked] = useState(false);
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
 
   return (
     <>
-      <Typography variant="h4" sx={{mb: 4}}>{`${checked ? "Low Inventory" : "Inventory"}`}< /Typography>
+      <Typography fontSize={30} fontWeight={550}
+                  sx={{mb: 4}}>Inventory< /Typography>
       <Grid container justifyContent="space-between" alignItems={"center"} sx={{mb: 3}} direction={"row"} spacing={2}>
         <Grid item>
           <TextField
             autoFocus
-            id="search-text"
-            placeholder="Search medicines..."
+            id="search-medicines"
+            label="Search"
             type="text"
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
@@ -47,19 +33,15 @@ const Medicines = () => {
         </Grid>
         <Grid item>
           <Stack direction={"row"} justifyContent={"flex-end"} alignItems={"center"} spacing={3}>
-            <FormControlLabel
-              control={<Switch checked={checked} onChange={handleChange}
-              />}
-              color="warning"
-              label={<Typography variant="subtitle1" sx={{fontSize: '1.25rem'}}>Low Inventory</Typography>}
-            />
+            <Button variant="contained" sx={{backgroundColor: "#b25600"}} component={Link} to="low-inventory">
+              View Low Inventory
+            </Button>
             <Button
               variant="contained"
               startIcon={<AddIcon/>}
-              size="large"
-              sx={{backgroundColor: "#0003b2"}}
+              color="primary"
               component={Link}
-              to="/medicines/create"
+              to="create"
             >
               Add Medicine
             </Button>
@@ -67,7 +49,7 @@ const Medicines = () => {
         </Grid>
       </Grid>
       <Paper elevation={3} sx={{padding: 2}}>
-        <MedicineTable searchText={searchText} showLowInventory={checked}/>
+        <MedicineTable searchText={searchText}/>
       </Paper>
     </>
   );

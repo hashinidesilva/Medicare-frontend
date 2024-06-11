@@ -10,17 +10,20 @@ import PrescriptionHistory from "./pages/patient/PrescriptionHistory";
 import EditMedicine from "./pages/inventory/EditMedicine";
 import NewMedicine from "./pages/inventory/NewMedicine";
 import Medicines from "./pages/inventory/Medicines";
+import LowInventory from "./pages/inventory/LowInventory";
 import PrescriptionInfo from "./pages/prescription/PrescriptionInfo";
 import PrescriptionPdfGenerator from "./pages/prescription/PrescriptionPdfGenerator";
 import Prescriptions from "./pages/prescription/Prescriptions";
-import HomePage from "./pages/HomePage";
+import DashBoard from "./pages/DashBoard";
+import PdfMakerComponent from "./pages/prescription/PdfMakerComponent";
 
 function App() {
   return (
     // <PrescriptionProvider>
     <Layout>
       <Routes>
-        <Route path="/" element={<HomePage/>}/>
+        <Route path="/home" element={<DashBoard/>}/>
+        <Route path="/" element={<Navigate to="/home"/>}/>
         <Route path="/patients">
           <Route index element={<Patients/>}/>
           <Route path="create" element={<NewPatient/>}/>
@@ -34,14 +37,14 @@ function App() {
           <Route index element={<Medicines/>}/>
           <Route path="create" element={<NewMedicine/>}/>
           <Route path=":medicineId/edit" element={<EditMedicine/>}/>
-          {/*<Route path="low-inventory" element={<LowInventory/>}/>*/}
+          <Route path="low-inventory" element={<LowInventory/>}/>
         </Route>
         <Route path="/prescriptions">
           <Route index element={<Prescriptions/>}/>
           <Route path=":prescriptionId" element={<PrescriptionInfo/>}/>
-          <Route path=":prescriptionId/pdf" element={<PrescriptionPdfGenerator/>}/>
+          <Route path=":prescriptionId/pdf" element={<PdfMakerComponent/>}/>
         </Route>
-        <Route path="*" element={<Navigate to="/patients"/>}/>
+        <Route path="*" element={<Navigate to="/home"/>}/>
       </Routes>
     </Layout>
     // </PrescriptionProvider>
