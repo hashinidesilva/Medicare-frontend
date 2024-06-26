@@ -51,10 +51,17 @@ const PrescriptionInfo = () => {
     await response.data;
     setOpen(false);
     navigate(`/prescriptions/${prescriptionId}/pdf`);
+    return () => {
+      setPrescription({});
+    };
   };
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handlePdfOpen = () => {
+    navigate(`/prescriptions/${prescriptionId}/pdf`);
   };
 
   const handleClose = () => {
@@ -117,6 +124,11 @@ const PrescriptionInfo = () => {
           <Grid item>
             <Button variant="contained" size="large" onClick={handleClickOpen}>Processed</Button>
             {confirmationPopup}
+          </Grid>
+        }
+        {prescription?.processed &&
+          <Grid item>
+            <Button variant="contained" sx={{backgroundColor: "#0003b2"}} onClick={handlePdfOpen}>Show PDF</Button>
           </Grid>
         }
       </Grid>

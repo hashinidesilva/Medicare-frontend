@@ -66,6 +66,9 @@ const NewPrescription = () => {
     } catch (error) {
       setError('Failed to submit prescription: ' + error.message);
     }
+    return () => {
+      setPrescription({});
+    };
   };
 
   const handleSummary = (medication) => {
@@ -84,11 +87,12 @@ const NewPrescription = () => {
         <Paper elevation={3} sx={{padding: 2}}>
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              <Grid container spacing={3.5}>
+              <Grid container spacing={1.5}>
                 <Grid item xs={12}>
                   <Card variant="outlined" sx={{backgroundColor: "#bfdef8"}}>
                     <CardContent>
                       <Typography>{patient.name}</Typography>
+                      <Typography>{patient.regNo}</Typography>
                       <Typography>{`${patient.age} years`}</Typography>
                     </CardContent>
                   </Card>

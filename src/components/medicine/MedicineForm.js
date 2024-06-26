@@ -23,12 +23,20 @@ const medicineTypeList = [
     label: 'Pill',
   },
   {
+    value: 'Capsule',
+    label: 'Capsule',
+  },
+  {
     value: 'Cream',
     label: 'Cream',
   },
   {
     value: 'Syrup',
     label: 'Syrup',
+  },
+  {
+    value: 'Drops',
+    label: 'Drops',
   }
 ];
 

@@ -88,7 +88,7 @@ const mappedPrescriptions = (prescription) => {
   };
 };
 const Prescriptions = () => {
-  const [searchTerm, setSearchTerm] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [prescriptions, setPrescriptions] = useState([]);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -104,7 +104,7 @@ const Prescriptions = () => {
           processed: checked,
           startDate: startDate.format('YYYY-MM-DD HH:mm:ss'),
           endDate: endDate.format('YYYY-MM-DD HH:mm:ss'),
-          searchTerm
+          searchTerm: searchTerm?.length > 0 ? searchTerm : null
         }
       });
       setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).map(pres => mappedPrescriptions(pres)));
@@ -218,7 +218,8 @@ const Prescriptions = () => {
                   value={startDate}
                   onChange={handleStartDateChange}
                   maxDate={endDate || undefined}
-                  renderInput={(params) => <TextField {...params} sx={{width: '100%'}}/>}
+                  // renderInput={(params) => <TextField {...params} sx={{width: '100%'}}/>}
+                  slotProps={{textField: {variant: 'outlined'}}}
                   sx={{paddingRight: 1}}
                 />
                 <DatePicker
@@ -226,7 +227,8 @@ const Prescriptions = () => {
                   value={endDate}
                   onChange={handleEndDateChange}
                   minDate={startDate || undefined}
-                  renderInput={(params) => <TextField {...params} sx={{width: '100%'}}/>}
+                  // renderInput={(params) => <TextField {...params} sx={{width: '100%'}}/>}
+                  slotProps={{textField: {variant: 'outlined'}}}
                 />
               </DemoContainer>
             </LocalizationProvider>

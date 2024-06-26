@@ -22,7 +22,7 @@ const SideBar = () => {
     } else if (location.pathname.includes('/prescriptions')) {
       setSelected(3);
     }
-  }, []);
+  }, [location.pathname]);
 
   const handleButtonClick = (index, path) => {
     setSelected(index);

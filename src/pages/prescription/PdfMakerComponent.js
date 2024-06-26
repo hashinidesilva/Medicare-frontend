@@ -44,6 +44,16 @@ const PdfMakerComponent = () => {
     }
   }, [base64Image, prescription]);
 
+  useEffect(() => {
+    return () => {
+      // Clean up the blob URL
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+        setPdfUrl(null);
+      }
+    };
+  }, [pdfUrl]);
+
   const generatePdf = () => {
     const {patient, diagnosis, history, medicines, createdTime} = prescription;
     const medicineList = medicines?.map(item => item.medicine.name);
@@ -130,7 +140,10 @@ const PdfMakerComponent = () => {
                 bold: true,
                 margin: [0, 5, 0, 5]
               }, {text: format(new Date(createdTime), 'yyyy-MM-dd HH:mm'), margin: [5, 5, 0, 5]}],
-              [{text: 'Patient ID # : ', bold: true, margin: [0, 5, 0, 5]}, {text: patient.nic, margin: [5, 5, 0, 5]}],
+              [{text: 'Patient ID # : ', bold: true, margin: [0, 5, 0, 5]}, {
+                text: patient.regNo,
+                margin: [5, 5, 0, 5]
+              }],
               [{text: 'Name of the client : ', bold: true, margin: [0, 5, 0, 5]}, {
                 text: patient.name,
                 margin: [5, 5, 0, 5]
@@ -145,7 +158,7 @@ const PdfMakerComponent = () => {
               [{text: 'Prescription : ', bold: true, margin: [0, 5, 0, 5]}, {
                 stack: medicineList.map(medicine => ({
                   text: medicine,
-                  margin: [0, 2, 0, 2]  // Adding vertical spacing
+                  margin: [0, 0, 0, 6]  // Adding vertical spacing
                 })),
                 margin: [5, 5, 0, 5]
               }],
@@ -166,7 +179,11 @@ const PdfMakerComponent = () => {
 
   return (
     <div>
-      {pdfUrl && <iframe src={pdfUrl} style={{width: '100%', height: '500px'}}/>}
+      {pdfUrl && <iframe title="hashini.pdf" src={pdfUrl} style={{width: '100%', height: '500px'}}/>}
+      <a href={pdfUrl} download={`${prescription?.patient?.name}_Prescription.pdf`}
+         style={{display: 'block', marginTop: '10px'}}>
+        Download PDF
+      </a>
     </div>
   );
 };

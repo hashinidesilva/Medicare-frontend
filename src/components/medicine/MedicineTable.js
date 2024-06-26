@@ -21,12 +21,16 @@ const MedicineTable = (props) => {
       });
     const data = await response.data;
     setMedicines(data.sort((med1, med2) => med2.id - med1.id));
+    return () => {
+      setMedicines([]);
+    };
   }, [searchText, showLowInventory]);
 
   const columns = [
-    {field: 'name', headerName: 'Medicine', flex: 3},
+    {field: 'id', headerName: 'ID', flex: 0.5},
+    {field: 'name', headerName: 'Medicine name', flex: 3},
     {field: 'type', headerName: 'Type', flex: 0.75},
-    {field: 'unitPrice', headerName: 'Unit Price', flex: 1},
+    {field: 'unitPrice', headerName: 'Unit Price (Rs)', flex: 1},
     {field: 'units', headerName: 'Units', flex: 1},
     {field: 'minimumUnits', headerName: 'Minimum Units', flex: 1},
     {

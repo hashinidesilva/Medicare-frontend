@@ -68,7 +68,6 @@ const CustomText = (props) => {
 };
 
 const CustomRow = ({title, value}) => {
-  console.log("VAL", value);
   return (
     <View style={styles.row}>
       <Text style={styles.titleText}>{title}</Text>

@@ -17,6 +17,10 @@ const PatientInfoCard = ({patient = {}}) => {
           <Typography>Name</Typography>
           <Typography>{patient.name}</Typography>
         </Stack>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={3}>
+          <Typography>Reg No</Typography>
+          <Typography>{patient.regNo}</Typography>
+        </Stack>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography>Age</Typography>
           <Typography>{patient.age}</Typography>
