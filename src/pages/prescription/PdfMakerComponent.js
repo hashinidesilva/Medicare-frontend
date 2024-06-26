@@ -1,38 +1,40 @@
-import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 
-import pdfMake from "pdfmake/build/pdfmake";
-import vfsFonts from "pdfmake/build/vfs_fonts";
-import axios from "axios";
-import { format } from "date-fns";
+import pdfMake from 'pdfmake/build/pdfmake';
+import vfsFonts from 'pdfmake/build/vfs_fonts';
+import {format} from 'date-fns';
+import api from '../../components/api/api';
 
-const PdfMakerComponent = () => {
+const PdfMakerComponent = () => {k
   const {vfs} = vfsFonts.pdfMake;
   pdfMake.vfs = vfs;
   const [base64Image, setBase64Image] = useState('');
   const [pdfUrl, setPdfUrl] = useState('');
   const [prescription, setPrescription] = useState({});
+  const navigate = useNavigate();
   const params = useParams();
   const {prescriptionId} = params;
 
   useEffect(() => {
-    fetch('/bklogo.jpeg')
-      .then(response => response.blob())
-      .then(blob => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setBase64Image(reader.result);
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch(e => console.log('Error loading image:', e));
+    fetch('/bklogo.jpeg').then(response => response.blob()).then(blob => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBase64Image(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    }).catch(e => console.log('Error loading image:', e));
   }, []);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(`http://localhost:8080/medicare/v1/prescriptions/${prescriptionId}`);
-      const data = await response.data;
-      setPrescription(data);
+      try {
+        const response = await api.get(`/prescriptions/${prescriptionId}`);
+        const data = await response.data;
+        setPrescription(data);
+      } catch (err) {
+        navigate('/');
+      }
     }
 
     fetchData();
@@ -68,7 +70,7 @@ const PdfMakerComponent = () => {
               height: 70,
               // style: 'logo',
               alignment: 'left',
-              margin: [0, 0, 0, 10]
+              margin: [0, 0, 0, 10],
             },
             {
               margin: [0, 12, 0, 0],
@@ -79,46 +81,55 @@ const PdfMakerComponent = () => {
                   alignment: 'right',
                   bold: true,
                   fontSize: 11,
-                  margin: [0, 0, 0, 5]
+                  margin: [0, 0, 0, 5],
                 },
                 {
                   text: 'MD (Medicine & Surgery)',
                   alignment: 'right',
                   bold: true,
                   fontSize: 11,
-                  margin: [0, 0, 0, 5] // Adjust margin to add space below this line
+                  margin: [0, 0, 0, 5], // Adjust margin to add space below this line
                 },
                 {
                   text: 'SLMC Reg No: 35436',
                   alignment: 'right',
                   bold: true,
-                  fontSize: 11
-                }
-              ]
-            }
+                  fontSize: 11,
+                },
+              ],
+            },
           ],
-          columnGap: 10
+          columnGap: 10,
         },
         {
           columns: [
             {
               // width: '*',
               text: [
-                {text: 'BR Registration: PV – 00258881', bold: true, fontSize: 11},
-              ]
+                {
+                  text: 'BR Registration: PV – 00258881',
+                  bold: true,
+                  fontSize: 11,
+                },
+              ],
             },
             {
               width: '*',
               text: [
-                {text: 'MOH Registration: PHSRC/FGP/655', alignment: 'right', bold: true, fontSize: 11}
-              ]
-            }]
+                {
+                  text: 'MOH Registration: PHSRC/FGP/655',
+                  alignment: 'right',
+                  bold: true,
+                  fontSize: 11,
+                },
+              ],
+            }],
         },
         {
           text: 'BK HEALTH CARE (PVT) LTD, SPRINGVALLEY ROAD, NAULLA, DEMODERA, SRI LANKA. Tel: +94 779569965',
           bold: true,
           margin: [0, 10, 0, 0],
-          fontSize: 10.73
+          fontSize: 10.73,
         },
         {
           canvas: [
@@ -126,47 +137,70 @@ const PdfMakerComponent = () => {
               type: 'line',
               x1: 0, y1: 5,
               x2: 515, y2: 5,
-              lineWidth: 1
-            }
+              lineWidth: 1,
+            },
           ],
-          margin: [0, 5, 0, 20] // Adjust margins as needed
+          margin: [0, 5, 0, 20], // Adjust margins as needed
         },
         {
           table: {
             widths: [150, '*'],
             body: [
-              [{
-                text: 'Date and Time : ',
-                bold: true,
-                margin: [0, 5, 0, 5]
-              }, {text: format(new Date(createdTime), 'yyyy-MM-dd HH:mm'), margin: [5, 5, 0, 5]}],
-              [{text: 'Patient ID # : ', bold: true, margin: [0, 5, 0, 5]}, {
+              [
+                {
+                  text: 'Date and Time : ',
+                  bold: true,
+                  margin: [0, 5, 0, 5],
+                },
+                {
+                  text: format(new Date(createdTime), 'yyyy-MM-dd HH:mm'),
+                  margin: [5, 5, 0, 5],
+                }],
+              [
+                {text: 'Patient ID # : ', bold: true, margin: [0, 5, 0, 5]}, {
                 text: patient.regNo,
-                margin: [5, 5, 0, 5]
+                margin: [5, 5, 0, 5],
               }],
-              [{text: 'Name of the client : ', bold: true, margin: [0, 5, 0, 5]}, {
+              [
+                {
+                  text: 'Name of the client : ',
+                  bold: true,
+                  margin: [0, 5, 0, 5],
+                }, {
                 text: patient.name,
-                margin: [5, 5, 0, 5]
+                margin: [5, 5, 0, 5],
               }],
-              [{text: 'Age : ', bold: true, margin: [0, 5, 0, 5]}, {text: patient.age, margin: [5, 5, 0, 5]}],
-              [{text: 'Sex : ', bold: true, margin: [0, 5, 0, 5]}, {text: patient.gender, margin: [5, 5, 0, 5]}],
-              [{text: 'Diagnosis : ', bold: true, margin: [0, 5, 0, 5]}, {text: diagnosis, margin: [5, 5, 0, 5]}],
-              [{text: 'Investigations and Management : ', bold: true, margin: [0, 5, 0, 5]}, {
+              [
+                {text: 'Age : ', bold: true, margin: [0, 5, 0, 5]},
+                {text: patient.age, margin: [5, 5, 0, 5]}],
+              [
+                {text: 'Sex : ', bold: true, margin: [0, 5, 0, 5]},
+                {text: patient.gender, margin: [5, 5, 0, 5]}],
+              [
+                {text: 'Diagnosis : ', bold: true, margin: [0, 5, 0, 5]},
+                {text: diagnosis, margin: [5, 5, 0, 5]}],
+              [
+                {
+                  text: 'Investigations and Management : ',
+                  bold: true,
+                  margin: [0, 5, 0, 5],
+                }, {
                 text: history,
-                margin: [5, 5, 0, 5]
+                margin: [5, 5, 0, 5],
               }],
-              [{text: 'Prescription : ', bold: true, margin: [0, 5, 0, 5]}, {
+              [
+                {text: 'Prescription : ', bold: true, margin: [0, 5, 0, 5]}, {
                 stack: medicineList.map(medicine => ({
                   text: medicine,
-                  margin: [0, 0, 0, 6]  // Adding vertical spacing
+                  margin: [0, 0, 0, 6],  // Adding vertical spacing
                 })),
-                margin: [5, 5, 0, 5]
+                margin: [5, 5, 0, 5],
               }],
-            ]
+            ],
           },
-          layout: 'noBorders'
-        }
-      ]
+          layout: 'noBorders',
+        },
+      ],
     };
 
     const pdfDocGenerator = pdfMake.createPdf(docDefinition);
@@ -178,13 +212,15 @@ const PdfMakerComponent = () => {
   };
 
   return (
-    <div>
-      {pdfUrl && <iframe title="hashini.pdf" src={pdfUrl} style={{width: '100%', height: '500px'}}/>}
-      <a href={pdfUrl} download={`${prescription?.patient?.name}_Prescription.pdf`}
-         style={{display: 'block', marginTop: '10px'}}>
-        Download PDF
-      </a>
-    </div>
+      <div>
+        {pdfUrl && <iframe title="hashini.pdf" src={pdfUrl}
+                           style={{width: '100%', height: '500px'}}/>}
+        <a href={pdfUrl}
+           download={`${prescription?.patient?.name}_Prescription.pdf`}
+           style={{display: 'block', marginTop: '10px', width: '7rem'}}>
+          Download PDF
+        </a>
+      </div>
   );
 };
 

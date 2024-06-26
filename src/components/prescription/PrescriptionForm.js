@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import {
   Autocomplete,
@@ -15,25 +15,24 @@ import {
   TableRow,
   TextField,
   Tooltip,
-  Typography
-} from "@mui/material";
-import axios from "axios";
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import api from '../api/api';
 
 const emptyRow = {
   key: 0,
-  dose: "",
+  dose: '',
   frequency: 0,
   frequencyText: '',
   duration: 0,
   quantity: 0,
-  additionalInfo: "",
+  additionalInfo: '',
   medicine: {
     id: 0,
-    name: "",
-    type: "",
-    units: 0
-  }
+    name: '',
+    type: '',
+    units: 0,
+  },
 };
 
 const columns = [
@@ -48,9 +47,9 @@ const columns = [
 
 const emptyMedicineOption = {
   id: 0,
-  label: "",
-  type: "",
-  units: 0
+  label: '',
+  type: '',
+  units: 0,
 };
 
 const getPrescriptions = (prescription, key) => {
@@ -67,7 +66,7 @@ const getPrescriptions = (prescription, key) => {
       name: prescription.medicine.name,
       type: prescription.medicine.type,
       units: prescription.medicine.units,
-    }
+    },
   };
 };
 
@@ -78,14 +77,14 @@ const PrescriptionForm = React.memo((props) => {
   const {medicines, onShowSummary, patient} = props;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/medicare/v1/medicines");
+    const response = await api.get('/medicines');
     const data = await response.data;
     const options = data.map(medicine => {
       return {
         id: medicine.id,
         label: medicine.name,
         type: medicine.type,
-        units: medicine.units
+        units: medicine.units,
       };
     });
     setAvailableMedicines([...options, emptyMedicineOption]);
@@ -93,7 +92,8 @@ const PrescriptionForm = React.memo((props) => {
 
   useEffect(() => {
     if (medicines && medicines.length > 0) {
-      setPrescriptions(medicines.map((value, key) => getPrescriptions(value, key)));
+      setPrescriptions(
+          medicines.map((value, key) => getPrescriptions(value, key)));
     }
   }, [medicines]);
 
@@ -107,9 +107,9 @@ const PrescriptionForm = React.memo((props) => {
               id: value.id,
               name: value.label,
               units: value.units,
-              type: value.type
+              type: value.type,
             },
-            dose: ""
+            dose: '',
           };
         }
         return {
@@ -118,8 +118,8 @@ const PrescriptionForm = React.memo((props) => {
             id: value.id,
             name: value.label,
             units: value.units,
-            type: value.type
-          }
+            type: value.type,
+          },
         };
       }
       return row;
@@ -170,20 +170,23 @@ const PrescriptionForm = React.memo((props) => {
 
   const quantityChangeHandler = (event, index) => {
     const newValue = event.target.value;
-    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
-      {...row, quantity: newValue} : row));
+    setPrescriptions(
+        (prevState) => prevState.map((row, rowId) => rowId === index ?
+            {...row, quantity: newValue} : row));
   };
 
   const additionalInfoChangeHandler = (event, index) => {
     const newValue = event.target.value;
-    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
-      {...row, additionalInfo: newValue} : row));
+    setPrescriptions(
+        (prevState) => prevState.map((row, rowId) => rowId === index ?
+            {...row, additionalInfo: newValue} : row));
   };
 
   const frequencyTextChangeHandler = (event, index) => {
     const newValue = event.target.value;
-    setPrescriptions((prevState) => prevState.map((row, rowId) => rowId === index ?
-      {...row, frequencyText: newValue} : row));
+    setPrescriptions(
+        (prevState) => prevState.map((row, rowId) => rowId === index ?
+            {...row, frequencyText: newValue} : row));
   };
 
   const handleClick = () => {
@@ -202,139 +205,173 @@ const PrescriptionForm = React.memo((props) => {
             id: pres.medicine.id,
             name: pres.medicine.name,
             type: pres.medicine.type,
-            units: pres.medicine.units
-          }
+            units: pres.medicine.units,
+          },
         };
-      })
+      }),
     };
     onShowSummary(prescription);
   };
 
   return (
-    <Box>
-      <TableContainer>
-        <Table sx={{minWidth: 650, border: 1, borderColor: 'grey.400'}}>
-          <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell key={column.field} sx={{fontSize: 15, paddingRight: 0, fontWeight: 600}}>
-                  {column.headerName}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {prescriptions.length > 0 && prescriptions.map((prescription, index) => (
-              <TableRow
-                key={prescription.key}
-                sx={{'&:last-child td, &:last-child th': {border: 0, paddingY: 1}}}
-              >
-                <TableCell width="250px" sx={{paddingRight: 0}}>
-                  <Autocomplete
-                    value={availableMedicines.find(med => med.label === prescription.medicine.name) ?? emptyMedicineOption}
-                    disableClearable
-                    options={availableMedicines}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    onChange={(event, value) =>
-                      medicineNameChangeHandler(value, index)}
-                    renderInput={(params) =>
-                      <TextField
-                        {...params}
-                        placeholder="Select medicine"
-                        size="small"
-                      />
-                    }/>
-                </TableCell>
-                <TableCell width="50px" sx={{paddingRight: 0}}>
-                  <TextField
-                    size="small"
-                    value={prescription.frequencyText}
-                    onChange={event => frequencyTextChangeHandler(event, index)}/>
-                </TableCell>
-                <TableCell width="70px" sx={{paddingRight: 0}}>
-                  <TextField
-                    disabled={prescription.medicine.type === 'Cream'}
-                    size="small"
-                    value={prescription.dose}
-                    onChange={event => doseChangeHandler(event, index, prescription.medicine.type)}/>
-                </TableCell>
-                <TableCell width="50px" sx={{paddingRight: 0}}>
-                  <TextField
-                    size="small"
-                    value={prescription.frequency}
-                    onChange={event => frequencyChangeHandler(event, index, prescription.medicine.type)}/>
-                </TableCell>
-                <TableCell width="50px" sx={{paddingRight: 0}}>
-                  <TextField
-                    size="small"
-                    value={prescription.duration}
-                    onChange={event => durationChangeHandler(event, index, prescription.medicine.type)}/>
-                </TableCell>
-                <TableCell width="70px" sx={{paddingRight: 0}}>
-                  <TextField
-                    error={prescription.medicine.units < prescription.quantity}
-                    disabled={prescription.medicine.type === 'Pill'}
-                    size="small"
-                    value={prescription.quantity}
-                    onChange={event => quantityChangeHandler(event, index)}
-                    helperText={prescription.quantity !== 0 && prescription.medicine.units < prescription.quantity &&
-                      ("Available quantity:" + prescription.medicine.units)}/>
-                </TableCell>
-                <TableCell sx={{paddingRight: 0}}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={3}
-                    size="small"
-                    value={prescription.additionalInfo}
-                    onChange={event => additionalInfoChangeHandler(event, index)}/>
-                </TableCell>
-                <TableCell align="right" sx={{paddingX: 0, alignItems: 'flex-start'}}>
-                  <Tooltip title="Delete">
-                    <IconButton onClick={() => {
-                      setPrescriptions((prevState) => prevState.filter(pres => pres.key !== prescription.key));
+      <Box>
+        <TableContainer>
+          <Table sx={{minWidth: 650, border: 1, borderColor: 'grey.400'}}>
+            <TableHead>
+              <TableRow>
+                {columns.map(column => (
+                    <TableCell key={column.field} sx={{
+                      fontSize: 15,
+                      paddingRight: 0,
+                      fontWeight: 600,
                     }}>
-                      <DeleteIcon color="error"/>
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
+                      {column.headerName}
+                    </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Stack direction={"row"} spacing={3} marginTop={3}>
-        <Button
-          variant="contained"
-          sx={{backgroundColor: "#b25600"}}
-          onClick={() => setPrescriptions((prevState) => [...prevState, {...emptyRow, key: prevState.length}])}
-        >
-          Add row
-        </Button>
-        <Button
-          variant="contained"
-          sx={{backgroundColor: "#0003b2"}}
-          onClick={handleClick}
-          disabled={prescriptions.length === 0 ||
-            prescriptions.find(prescription => prescription.medicine.name === '') !== undefined}
-        >
-          Next
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "white",
-            color: '#4860bd',
-            border: 1,
-            borderColor: '#6379d0',
-            "&:hover": {backgroundColor: "white", borderColor: "#3d4f96", elevation: 0}
-          }}
-          onClick={() => navigate("/patients")}
-        >
-          Cancel
-        </Button>
-      </Stack>
-    </Box>
+            </TableHead>
+            <TableBody>
+              {prescriptions.length > 0 &&
+                  prescriptions.map((prescription, index) => (
+                      <TableRow
+                          key={prescription.key}
+                          sx={{
+                            '&:last-child td, &:last-child th': {
+                              border: 0,
+                              paddingY: 1,
+                            },
+                          }}
+                      >
+                        <TableCell width="250px" sx={{paddingRight: 0}}>
+                          <Autocomplete
+                              value={availableMedicines.find(
+                                      med => med.label ===
+                                          prescription.medicine.name) ??
+                                  emptyMedicineOption}
+                              disableClearable
+                              options={availableMedicines}
+                              isOptionEqualToValue={(
+                                  option, value) => option.id === value.id}
+                              onChange={(event, value) =>
+                                  medicineNameChangeHandler(value, index)}
+                              renderInput={(params) =>
+                                  <TextField
+                                      {...params}
+                                      placeholder="Select medicine"
+                                      size="small"
+                                  />
+                              }/>
+                        </TableCell>
+                        <TableCell width="50px" sx={{paddingRight: 0}}>
+                          <TextField
+                              size="small"
+                              value={prescription.frequencyText}
+                              onChange={event => frequencyTextChangeHandler(
+                                  event, index)}/>
+                        </TableCell>
+                        <TableCell width="70px" sx={{paddingRight: 0}}>
+                          <TextField
+                              disabled={prescription.medicine.type === 'Cream'}
+                              size="small"
+                              value={prescription.dose}
+                              onChange={event => doseChangeHandler(event, index,
+                                  prescription.medicine.type)}/>
+                        </TableCell>
+                        <TableCell width="50px" sx={{paddingRight: 0}}>
+                          <TextField
+                              size="small"
+                              value={prescription.frequency}
+                              onChange={event => frequencyChangeHandler(event,
+                                  index, prescription.medicine.type)}/>
+                        </TableCell>
+                        <TableCell width="50px" sx={{paddingRight: 0}}>
+                          <TextField
+                              size="small"
+                              value={prescription.duration}
+                              onChange={event => durationChangeHandler(event,
+                                  index, prescription.medicine.type)}/>
+                        </TableCell>
+                        <TableCell width="70px" sx={{paddingRight: 0}}>
+                          <TextField
+                              error={prescription.medicine.units <
+                                  prescription.quantity}
+                              disabled={prescription.medicine.type === 'Pill'}
+                              size="small"
+                              value={prescription.quantity}
+                              onChange={event => quantityChangeHandler(event,
+                                  index)}
+                              helperText={prescription.quantity !== 0 &&
+                                  prescription.medicine.units <
+                                  prescription.quantity &&
+                                  ('Available quantity:' +
+                                      prescription.medicine.units)}/>
+                        </TableCell>
+                        <TableCell sx={{paddingRight: 0}}>
+                          <TextField
+                              fullWidth
+                              multiline
+                              rows={3}
+                              size="small"
+                              value={prescription.additionalInfo}
+                              onChange={event => additionalInfoChangeHandler(
+                                  event, index)}/>
+                        </TableCell>
+                        <TableCell align="right"
+                                   sx={{paddingX: 0, alignItems: 'flex-start'}}>
+                          <Tooltip title="Delete">
+                            <IconButton onClick={() => {
+                              setPrescriptions((prevState) => prevState.filter(
+                                  pres => pres.key !== prescription.key));
+                            }}>
+                              <DeleteIcon color="error"/>
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Stack direction={'row'} spacing={3} marginTop={3}>
+          <Button
+              variant="contained"
+              sx={{backgroundColor: '#b25600'}}
+              onClick={() => setPrescriptions((prevState) => [
+                ...prevState,
+                {...emptyRow, key: prevState.length}])}
+          >
+            Add row
+          </Button>
+          <Button
+              variant="contained"
+              sx={{backgroundColor: '#0003b2'}}
+              onClick={handleClick}
+              disabled={prescriptions.length === 0 ||
+                  prescriptions.find(
+                      prescription => prescription.medicine.name === '') !==
+                  undefined}
+          >
+            Next
+          </Button>
+          <Button
+              variant="contained"
+              sx={{
+                backgroundColor: 'white',
+                color: '#4860bd',
+                border: 1,
+                borderColor: '#6379d0',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  borderColor: '#3d4f96',
+                  elevation: 0,
+                },
+              }}
+              onClick={() => navigate('/patients')}
+          >
+            Cancel
+          </Button>
+        </Stack>
+      </Box>
   );
 });
 

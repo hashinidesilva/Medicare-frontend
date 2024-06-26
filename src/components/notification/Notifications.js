@@ -1,10 +1,10 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+import {Fragment, useContext, useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import axios from "axios";
-import { Badge, IconButton, Menu, MenuItem } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import PrescriptionContext from "../../store/prescription-context";
-import { useNavigate } from "react-router-dom";
+import {Badge, IconButton, Menu, MenuItem} from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import PrescriptionContext from '../../store/prescription-context';
+import api from '../api/api';
 
 const Notifications = () => {
   const [anchorEl, setAnchorEl] = useState();
@@ -16,10 +16,10 @@ const Notifications = () => {
   const size = prescriptions.length;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/medicare/v1/prescriptions",
-      {
-        params: {processed: false}
-      });
+    const response = await api.get('/prescriptions',
+        {
+          params: {processed: false},
+        });
     const data = await response.data;
     setPrescriptions(data);
     prescriptionCtx.addItems(data);
@@ -39,35 +39,35 @@ const Notifications = () => {
   };
 
   return (
-    <Fragment>
-      <IconButton
-        size="large"
-        aria-label="show new notifications"
-        color="inherit"
-        onClick={handleClick}
-      >
-        <Badge badgeContent={size} color="error">
-          <NotificationsIcon/>
-        </Badge>
-      </IconButton>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        {prescriptions.map(prescription => (
-          <MenuItem
-            key={prescription.id}
-            onClick={menuItemClickHandler.bind(null, prescription.id)}>
-            {`New prescription is ready for ${prescription.patient.name}`}
-          </MenuItem>
-        ))}
-      </Menu>
-    </Fragment>
+      <Fragment>
+        <IconButton
+            size="large"
+            aria-label="show new notifications"
+            color="inherit"
+            onClick={handleClick}
+        >
+          <Badge badgeContent={size} color="error">
+            <NotificationsIcon/>
+          </Badge>
+        </IconButton>
+        <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+        >
+          {prescriptions.map(prescription => (
+              <MenuItem
+                  key={prescription.id}
+                  onClick={menuItemClickHandler.bind(null, prescription.id)}>
+                {`New prescription is ready for ${prescription.patient.name}`}
+              </MenuItem>
+          ))}
+        </Menu>
+      </Fragment>
   );
 };
 

@@ -1,29 +1,26 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 
-import axios from "axios";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import Table from "../UI/Table";
-import { GridActionsCellItem } from "@mui/x-data-grid";
-import { Tooltip } from "@mui/material";
+import {GridActionsCellItem} from '@mui/x-data-grid';
+import {Tooltip} from '@mui/material';
+import Table from '../UI/Table';
+import api from '../api/api';
 
 const MedicineTable = (props) => {
   const [medicines, setMedicines] = useState([]);
   const {searchText, showLowInventory} = props;
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8080/medicare/v1/medicines",
-      {
-        params: {
-          medicineName: searchText === '' ? null : searchText,
-          lowInventory: showLowInventory ?? null
-        }
-      });
+    const response = await api.get('/medicines',
+        {
+          params: {
+            medicineName: searchText === '' ? null : searchText,
+            lowInventory: showLowInventory ?? null,
+          },
+        });
     const data = await response.data;
     setMedicines(data.sort((med1, med2) => med2.id - med1.id));
-    return () => {
-      setMedicines([]);
-    };
   }, [searchText, showLowInventory]);
 
   const columns = [
@@ -38,21 +35,21 @@ const MedicineTable = (props) => {
       type: 'actions',
       getActions: (params) => [
         <GridActionsCellItem
-          icon={
-            <Tooltip title={"Edit"}>
-              <EditOutlinedIcon fontSize="large" sx={{color: "#b25600"}}/>
-            </Tooltip>
-          }
-          component={Link}
-          to={`${params.id}/edit`}
-          label="Edit"
+            icon={
+              <Tooltip title={'Edit'}>
+                <EditOutlinedIcon fontSize="large" sx={{color: '#b25600'}}/>
+              </Tooltip>
+            }
+            component={Link}
+            to={`/medicines/${params.id}/edit`}
+            label="Edit"
         />,
       ],
     },
   ];
 
   return (
-    <Table columns={columns} rows={medicines}/>
+      <Table columns={columns} rows={medicines}/>
   );
 };
 

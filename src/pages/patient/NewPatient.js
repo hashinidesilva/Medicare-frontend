@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import axios from "axios";
-import { Box, Paper } from "@mui/material";
-import PatientForm from "../../components/patient/PatientForm";
+import {Box, Paper} from '@mui/material';
+import PatientForm from '../../components/patient/PatientForm';
+import api from '../../components/api/api';
 
 const NewPatient = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const submitHandler = async (patient) => {
     try {
-      const response = await axios.post("http://localhost:8080/medicare/v1/patients",
-        JSON.stringify(patient), {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+      const response = await api.post('/patients',
+          JSON.stringify(patient), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
       );
       if (response.status !== 200) {
         throw new Error(`HTTP status ${response.status}: ${response.data}`);
@@ -29,11 +29,11 @@ const NewPatient = () => {
   };
 
   return (
-    <Box sx={{display: "flex", justifyContent: "center"}}>
-      <Paper elevation={3} sx={{width: "75%", padding: 2}}>
-        <PatientForm onAddPatient={submitHandler} error={error}/>
-      </Paper>
-    </Box>
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+        <Paper elevation={3} sx={{width: '75%', padding: 2}}>
+          <PatientForm onAddPatient={submitHandler} error={error}/>
+        </Paper>
+      </Box>
   );
 };
 
