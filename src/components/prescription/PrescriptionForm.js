@@ -52,6 +52,10 @@ const emptyMedicineOption = {
   units: 0,
 };
 
+const isPillOrCapsule = (type) => {
+  return type === 'Pill' || type === 'Capsule';
+};
+
 const getPrescriptions = (prescription, key) => {
   return {
     key,
@@ -130,7 +134,7 @@ const PrescriptionForm = React.memo((props) => {
     const newValue = event.target.value;
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
-        if (medicineType === 'Pill') {
+        if (isPillOrCapsule(medicineType)) {
           const quantity = parseInt(newValue) * row.frequency * row.duration;
           return {...row, dose: newValue, quantity: quantity};
         }
@@ -144,7 +148,7 @@ const PrescriptionForm = React.memo((props) => {
     const newValue = event.target.value;
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
-        if (medicineType === 'Pill') {
+        if (isPillOrCapsule(medicineType)) {
           const quantity = parseInt(row.dose) * newValue * row.duration;
           return {...row, frequency: newValue, quantity: quantity};
         }
@@ -158,7 +162,7 @@ const PrescriptionForm = React.memo((props) => {
     const newValue = event.target.value;
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
-        if (medicineType === 'Pill') {
+        if (isPillOrCapsule(medicineType)) {
           const quantity = parseInt(row.dose) * row.frequency * newValue;
           return {...row, duration: newValue, quantity: quantity};
         }
@@ -194,7 +198,6 @@ const PrescriptionForm = React.memo((props) => {
       patientId: patient.id,
       medicines: prescriptions.map(pres => {
         return {
-          // medicineName: pres.medicineName,
           dose: pres.dose,
           frequency: pres.frequency,
           frequencyText: pres.frequencyText,
@@ -295,7 +298,8 @@ const PrescriptionForm = React.memo((props) => {
                           <TextField
                               error={prescription.medicine.units <
                                   prescription.quantity}
-                              disabled={prescription.medicine.type === 'Pill'}
+                              disabled={isPillOrCapsule(
+                                  prescription.medicine.type)}
                               size="small"
                               value={prescription.quantity}
                               onChange={event => quantityChangeHandler(event,

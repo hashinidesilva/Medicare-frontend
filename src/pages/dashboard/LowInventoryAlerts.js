@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
 import {
@@ -12,16 +12,37 @@ import {
   ListItemIcon,
 } from '@mui/material';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import api from '../../components/api/api';
+import CustomProgress from '../../components/UI/CustomProgress';
+import useApi from '../../hooks/useAPI';
 
 function LowInventoryAlerts() {
   const [lowInventoryItems, setLowInventoryItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const apiRequest = useApi();
 
-  useEffect(async () => {
-    const response = await api.get('/medicines',
-        {params: {lowInventory: true}});
-    const data = await response.data;
-    setLowInventoryItems(data.sort((med1, med2) => med2.id - med1.id));
+  const fetchMedicines = async () => {
+    setLoading(true);
+    try {
+      const response = await apiRequest({
+        method: 'GET',
+        url: '/medicines', params: {lowInventory: true},
+      });
+      if (response.status === 200) {
+        setLowInventoryItems(
+            response.data.sort((med1, med2) => med2.id - med1.id));
+      }
+    } catch (err) {
+      console.error('Error fetching low inventories:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMedicines();
+    return () => {
+      setLowInventoryItems([]);
+    };
   }, []);
 
   return (
@@ -38,7 +59,8 @@ function LowInventoryAlerts() {
         <Typography sx={{fontSize: 15, fontWeight: 700}} gutterBottom>
           Low Inventory Alerts
         </Typography>
-        {lowInventoryItems.length === 0 ? (
+        {loading && <CustomProgress/>}
+        {!loading && (lowInventoryItems.length === 0 ? (
             <Box sx={{
               width: '100%',
               flexGrow: 1,
@@ -55,24 +77,29 @@ function LowInventoryAlerts() {
         ) : (
             <List sx={{marginTop: 1}}>
               {lowInventoryItems.slice(0, 3).map((item, index) => (
-                  <ListItem key={index}
-                            style={{paddingBottom: 0, paddingTop: 0}}>
+                  <ListItem
+                      key={index}
+                      style={{paddingBottom: 0, paddingTop: 0}}>
                     <ListItemIcon style={{minWidth: '20px'}}>
-                      <ReportProblemIcon color="error"
-                                         style={{marginRight: '8px'}}/>
+                      <ReportProblemIcon
+                          color="error"
+                          style={{marginRight: '8px'}}/>
                     </ListItemIcon>
-                    <ListItemText primary={item.name}
-                                  secondary={`Units left: ${item.units}`}
-                                  primaryTypographyProps={{style: {fontSize: '14px'}}}
-                                  secondaryTypographyProps={{style: {fontSize: '12px'}}}/>
+                    <ListItemText
+                        primary={item.name}
+                        secondary={`Units left: ${item.units}`}
+                        primaryTypographyProps={{style: {fontSize: '14px'}}}
+                        secondaryTypographyProps={{style: {fontSize: '12px'}}}/>
                   </ListItem>
               ))}
               {lowInventoryItems.length > 3 &&
-                  <Button component={Link} to="/medicines/low-inventory"
-                          sx={{fontSize: 12, marginTop: 2}}>Show
-                    More</Button>}
+                  <Button
+                      component={Link} to="/medicines/low-inventory"
+                      sx={{fontSize: 12, marginTop: 2}}>
+                    Show More
+                  </Button>}
             </List>
-        )}
+        ))}
       </Paper>
   );
 }

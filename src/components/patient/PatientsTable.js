@@ -7,53 +7,74 @@ import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import DeleteForeverOutlinedIcon
   from '@mui/icons-material/DeleteForeverOutlined';
 import {GridActionsCellItem} from '@mui/x-data-grid';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  Tooltip,
-} from '@mui/material';
+import {Box, Tooltip} from '@mui/material';
+import Swal from 'sweetalert2';
 import Table from '../UI/Table';
-import api from '../api/api';
+import CustomProgress from '../UI/CustomProgress';
+import useApi from '../../hooks/useAPI';
 
 const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const apiRequest = useApi();
   const {searchTerm, regNo} = props;
 
   useEffect(() => {
     const fetchPatients = async () => {
+      setLoading(true);
       try {
-        const response = await api.get(
-            '/patients', {
-              params: {
-                searchTerm: searchTerm === '' ? null : searchTerm,
-                regNo: regNo === '' ? null : regNo,
-              },
-            });
-
-        setPatients(response.data.sort((patient1, patient2) =>
-            new Date(patient2.updatedTime) - new Date(patient1.updatedTime)));
-
+        const response = await apiRequest({
+          method: 'GET',
+          url: '/patients',
+          params: {
+            searchTerm: searchTerm === '' ? null : searchTerm,
+            regNo: regNo === '' ? null : regNo,
+          },
+        });
+        if (response.status === 200) {
+          setPatients(response.data.sort((patient1, patient2) =>
+              new Date(patient2.updatedTime) - new Date(patient1.updatedTime)));
+        }
       } catch (err) {
         console.error('Error fetching Patients:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchPatients();
+    return () => {
+      setPatients([]);
+    };
   }, [searchTerm, regNo]);
 
   const deletePatientHandler = async () => {
-    const response = await api.delete(`/patients/${selectedPatientId}`);
-    await response.data;
-    const patientsResponse = await api.get('/patients');
-    const data = await patientsResponse.data;
-    setPatients(data);
-    setOpen(false);
+    try {
+      const response = await apiRequest({
+        method: 'DELETE',
+        url: `/patients/${selectedPatientId}`,
+      });
+      Swal.fire({
+        icon: 'success',
+        title: 'Patient Deleted',
+        timer: 3000,
+      });
+      await response.data;
+      const patientsResponse = await apiRequest({
+        method: 'GET',
+        url: '/patients',
+      });
+      const data = await patientsResponse.data;
+      setPatients(data);
+    } catch (err) {
+      console.error('Error Deleting patient:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error Deleting patient',
+      });
+    }
   };
 
   const columns = [
@@ -137,35 +158,21 @@ const PatientsTable = (props) => {
 
   const handleClickOpen = (patientId) => {
     setSelectedPatientId(patientId);
-    setOpen(true);
+    Swal.fire({
+      titleText: 'Are you sure you want to delete the patient?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePatientHandler();
+      }
+    });
   };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const confirmationPopup = (
-      <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-describedby="alert-dialog-description"
-      >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete patient.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={deletePatientHandler} autoFocus>Yes</Button>
-        </DialogActions>
-      </Dialog>
-  );
 
   return (
       <>
-        <Table columns={columns} rows={patients}/>
-        {confirmationPopup}
+        {loading && <CustomProgress/>}
+        {!loading && <Table columns={columns} rows={patients}/>}
       </>
   );
 };

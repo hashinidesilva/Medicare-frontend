@@ -1,26 +1,45 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import {GridActionsCellItem} from '@mui/x-data-grid';
 import {Tooltip} from '@mui/material';
 import Table from '../UI/Table';
-import api from '../api/api';
+import CustomProgress from '../UI/CustomProgress';
+import useApi from '../../hooks/useAPI';
 
 const MedicineTable = (props) => {
   const [medicines, setMedicines] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const apiRequest = useApi();
   const {searchText, showLowInventory} = props;
 
-  useEffect(async () => {
-    const response = await api.get('/medicines',
-        {
+  useEffect(() => {
+    const fetchMedicines = async () => {
+      setLoading(true);
+      try {
+        const response = await apiRequest({
+          method: 'GET',
+          url: '/medicines',
           params: {
             medicineName: searchText === '' ? null : searchText,
             lowInventory: showLowInventory ?? null,
           },
         });
-    const data = await response.data;
-    setMedicines(data.sort((med1, med2) => med2.id - med1.id));
+        if (response.status === 200) {
+          setMedicines(response.data.sort((med1, med2) => med2.id - med1.id));
+        }
+      } catch (err) {
+        console.error('Error fetching Medicines:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMedicines();
+    return () => {
+      setMedicines([]);
+    };
   }, [searchText, showLowInventory]);
 
   const columns = [
@@ -49,7 +68,10 @@ const MedicineTable = (props) => {
   ];
 
   return (
-      <Table columns={columns} rows={medicines}/>
+      <>
+        {loading && <CustomProgress/>}
+        {!loading && <Table columns={columns} rows={medicines}/>}
+      </>
   );
 };
 

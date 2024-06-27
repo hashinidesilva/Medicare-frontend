@@ -34,8 +34,8 @@ function App() {
         )}
         {isAuthenticated && selectedTownId && (
             <>
-              <Route path="/home" element={<Layout><DashBoard/></Layout>}/>
-              <Route path="/login" element={<Login/>}/>
+              <Route path="/home"
+                     element={<Layout><DashBoard/></Layout>}/>
               <Route path="/" element={<Navigate to="/home"/>}/>
               <Route path="/patients">
                 <Route index element={<Layout><Patients/></Layout>}/>
@@ -48,9 +48,11 @@ function App() {
                 <Route path=":patientId/prescriptions/create"
                        element={<Layout><NewPrescription/></Layout>}/>
                 <Route path=":patientId/prescriptions/:prescriptionId"
-                       element={<Layout><PrescriptionHistory/></Layout>}/>
-                <Route path=":patientId/prescriptions/:prescriptionId/edit"
-                       element={<Layout><NewPrescription/></Layout>}/>
+                       element={
+                         <Layout><PrescriptionHistory/></Layout>}/>
+                <Route
+                    path=":patientId/prescriptions/:prescriptionId/edit"
+                    element={<Layout><NewPrescription/></Layout>}/>
               </Route>
               <Route path="/medicines">
                 <Route index element={<Layout><Medicines/></Layout>}/>
@@ -62,11 +64,13 @@ function App() {
                        element={<Layout><LowInventory/></Layout>}/>
               </Route>
               <Route path="/prescriptions">
-                <Route index element={<Layout><Prescriptions/></Layout>}/>
+                <Route index
+                       element={<Layout><Prescriptions/></Layout>}/>
                 <Route path=":prescriptionId"
                        element={<Layout><PrescriptionInfo/></Layout>}/>
                 <Route path=":prescriptionId/pdf"
-                       element={<Layout><PdfMakerComponent/></Layout>}/>
+                       element={
+                         <Layout><PdfMakerComponent/></Layout>}/>
               </Route>
               <Route path="*" element={<Navigate to="/home"/>}/>
             </>

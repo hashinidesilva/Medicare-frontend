@@ -1,40 +1,40 @@
 import {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
-import {
-  Button, Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  Grid,
-  Paper, Typography,
-} from '@mui/material';
+import {Button, Chip, Grid, Paper} from '@mui/material';
+import Swal from 'sweetalert2';
 import PatientInfoCard from '../../components/patient/PatientInfoCard';
 import PrescriptionsTable
   from '../../components/prescription/PrescriptionsTable';
 import api from '../../components/api/api';
+import useApi from '../../hooks/useAPI';
 
 const PrescriptionInfo = () => {
   const [prescription, setPrescription] = useState({});
-  const [open, setOpen] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
+  const apiRequest = useApi();
   const {prescriptionId} = params;
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       try {
-        const response = await api.get(
-            `/prescriptions/${prescriptionId}`);
-        const data = await response.data;
-        setPrescription(data);
+        const response = await apiRequest({
+          method: 'GET',
+          url: `/prescriptions/${prescriptionId}`,
+        });
+        if (response.status === 200) {
+          setPrescription(response.data);
+        }
       } catch (err) {
         navigate('/');
       }
-    }
+    };
 
     fetchData();
+    return () => {
+      setPrescription({});
+    };
   }, [prescriptionId]);
 
   const {patient, diagnosis, history, medicines} = prescription;
@@ -47,62 +47,45 @@ const PrescriptionInfo = () => {
       history: history,
       processed: true,
     };
-    const response = await api.put(`/prescriptions/${prescriptionId}`,
-        JSON.stringify(updatedPrescription), {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-    await response.data;
-    setOpen(false);
-    navigate(`/prescriptions/${prescriptionId}/pdf`);
+    try {
+      const response = await api.put(`/prescriptions/${prescriptionId}`,
+          JSON.stringify(updatedPrescription), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      await response.data;
+      Swal.fire({
+        icon: 'success',
+        text: 'Prescription marked as Done',
+        timer: 3000,
+      }).then(() => {
+        navigate(`/prescriptions/${prescriptionId}/pdf`);
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error updating prescription',
+      });
+    }
   };
 
   const handleClickOpen = () => {
-    setOpen(true);
+    Swal.fire({
+      title: 'Mark prescription as Done',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        prescriptionUpdateHandler();
+      }
+    });
   };
 
   const handlePdfOpen = () => {
     navigate(`/prescriptions/${prescriptionId}/pdf`);
   };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const confirmationPopup = (
-      <Dialog
-          maxWidth={'sm'}
-          fullWidth={true}
-          open={open}
-          onClose={handleClose}
-          aria-describedby="alert-dialog-description"
-      >
-        <DialogContent>
-          {/*<DialogContentText id="alert-dialog-description">*/}
-          <Typography variant="h7">
-            Mark prescription as Done
-          </Typography>
-          {/*</DialogContentText>*/}
-        </DialogContent>
-        <DialogActions>
-          <Button
-              variant="contained"
-              sx={{backgroundColor: '#b25600'}}
-              onClick={handleClose}
-          >
-            Cancel
-          </Button>
-          <Button
-              variant="contained"
-              sx={{backgroundColor: '#0003b2'}}
-              onClick={prescriptionUpdateHandler}
-              autoFocus
-          >Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-  );
 
   return (
       <Paper elevation={3} sx={{padding: 2}}>
@@ -128,7 +111,6 @@ const PrescriptionInfo = () => {
               <Grid item>
                 <Button variant="contained" size="large"
                         onClick={handleClickOpen}>Processed</Button>
-                {confirmationPopup}
               </Grid>
           }
           {prescription?.processed &&

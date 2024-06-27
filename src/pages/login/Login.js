@@ -1,6 +1,7 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import axios from 'axios';
 import {
   Box,
   Button, FormControl,
@@ -19,22 +20,36 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [city, setCity] = useState(1);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    localStorage.removeItem('authenticated');
-    localStorage.removeItem('city');
-  }, []);
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
 
-  const handleLogin = () => {
-    handleAuthentication(true);
-    handleTownSelection(city);
-    localStorage.setItem('city', city);
-    localStorage.setItem('authenticated', true);
-    navigate('/');
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+          'http://localhost:8080/medicare/v1/login', {
+            username,
+            password,
+          });
+
+      if (response.status === 200) {
+        handleAuthentication(true);
+        handleTownSelection(city);
+        localStorage.setItem('city', city);
+        localStorage.setItem('authenticated', true);
+        sessionStorage.setItem('auth', JSON.stringify({username, password}));
+        console.log('Login successful', response.data);
+        navigate('/');
+      }
+    } catch (error) {
+      console.log('Login failed',
+          error.response ? error.response.data : error.message);
+      localStorage.setItem('authenticated', false);
+      setErrorMessage('Invalid username or password');
+    }
   };
 
   return (
@@ -56,14 +71,23 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
             <Stack sx={{justifyContent: 'center', alignItems: 'center'}}>
               <img src="/bklogo.jpeg" alt="Logo"
                    style={{height: 50, width: 90, paddingBottom: '0.5rem'}}/>
-              <Typography color="#3d3f94" fontSize={30} fontWeight={550}
-                          sx={{paddingBottom: '2rem'}}>Login</Typography>
+              <Typography
+                  color="#3d3f94" fontSize={30} fontWeight={550}
+                  sx={{paddingBottom: `${errorMessage ? '1rem' : '2rem'}`}}>
+                Login
+              </Typography>
             </Stack>
+            {errorMessage?.trim().length > 0 && (
+                <Typography color="red" variant={'body1'}
+                            sx={{paddingBottom: '1rem'}}>
+                  {errorMessage}
+                </Typography>
+            )}
             <Stack spacing={4}>
               <TextField
                   fullWidth
-                  id="email"
-                  label="Email"
+                  id="username"
+                  label="Username"
                   type="text"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}

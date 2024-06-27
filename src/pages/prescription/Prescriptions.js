@@ -20,7 +20,8 @@ import {DemoContainer} from '@mui/x-date-pickers/internals/demo';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import Table from '../../components/UI/Table';
-import api from '../../components/api/api';
+import CustomProgress from '../../components/UI/CustomProgress';
+import useApi from '../../hooks/useAPI';
 
 const dateRanges = [
   {
@@ -100,11 +101,14 @@ const Prescriptions = () => {
       dateRanges[0].label);
   const [startDate, setStartDate] = useState(dayjs().startOf('day'));
   const [endDate, setEndDate] = useState(dayjs().endOf('day'));
+  const apiRequest = useApi();
 
   const fetchPrescriptions = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/prescriptions', {
+      const response = await apiRequest({
+        method: 'GET',
+        url: '/prescriptions',
         params: {
           processed: checked,
           startDate: startDate.format('YYYY-MM-DD HH:mm:ss'),
@@ -112,8 +116,10 @@ const Prescriptions = () => {
           searchTerm: searchTerm?.length > 0 ? searchTerm : null,
         },
       });
-      setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).
-          map(pres => mappedPrescriptions(pres)));
+      if (response.status === 200) {
+        setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).
+            map(pres => mappedPrescriptions(pres)));
+      }
     } catch (err) {
       console.error('Error fetching prescriptions:', err);
     } finally {
@@ -123,6 +129,9 @@ const Prescriptions = () => {
 
   useEffect(() => {
     fetchPrescriptions();
+    return () => {
+      setPrescriptions([]);
+    };
   }, [checked, startDate, endDate, searchTerm]);
 
   const handleSearch = (event) => {
@@ -178,8 +187,8 @@ const Prescriptions = () => {
               </Tooltip>
           }
           {loading && <CircularProgress size={15}/>}
-          {loading && <Typography fontSize={13}>Refetching
-            prescriptions...</Typography>}
+          {loading && <Typography fontSize={13}>
+            Refetching prescriptions...</Typography>}
         </Stack>
         <Stack direction={'row'} justifyContent="space-between"
                alignItems="center">
@@ -192,6 +201,7 @@ const Prescriptions = () => {
                   label="Search"
                   value={searchTerm}
                   onChange={handleSearch}
+                  placeholder="Enter patient name"
                   InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -245,7 +255,7 @@ const Prescriptions = () => {
           />
         </Stack>
         <Paper elevation={1} sx={{padding: 2}}>
-          {loading && <Typography>Loading ...</Typography>}
+          {loading && <CustomProgress/>}
           {!loading && <Table columns={columns} rows={prescriptions}/>}
         </Paper>
       </>

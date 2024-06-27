@@ -6,7 +6,7 @@ import vfsFonts from 'pdfmake/build/vfs_fonts';
 import {format} from 'date-fns';
 import api from '../../components/api/api';
 
-const PdfMakerComponent = () => {k
+const PdfMakerComponent = () => {
   const {vfs} = vfsFonts.pdfMake;
   pdfMake.vfs = vfs;
   const [base64Image, setBase64Image] = useState('');
@@ -68,7 +68,6 @@ const PdfMakerComponent = () => {k
               image: base64Image,
               width: 150,
               height: 70,
-              // style: 'logo',
               alignment: 'left',
               margin: [0, 0, 0, 10],
             },
@@ -104,7 +103,6 @@ const PdfMakerComponent = () => {k
         {
           columns: [
             {
-              // width: '*',
               text: [
                 {
                   text: 'BR Registration: PV – 00258881',
