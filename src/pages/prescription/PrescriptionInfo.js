@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import {Button, Chip, Grid, Paper} from '@mui/material';
@@ -8,9 +8,11 @@ import PrescriptionsTable
   from '../../components/prescription/PrescriptionsTable';
 import api from '../../components/api/api';
 import useApi from '../../hooks/useAPI';
+import CustomProgress from '../../components/UI/CustomProgress';
 
 const PrescriptionInfo = () => {
   const [prescription, setPrescription] = useState({});
+  const [loading, setLoading] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const apiRequest = useApi();
@@ -19,6 +21,7 @@ const PrescriptionInfo = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await apiRequest({
           method: 'GET',
           url: `/prescriptions/${prescriptionId}`,
@@ -28,6 +31,8 @@ const PrescriptionInfo = () => {
         }
       } catch (err) {
         navigate('/');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -35,7 +40,7 @@ const PrescriptionInfo = () => {
     return () => {
       setPrescription({});
     };
-  }, [prescriptionId]);
+  }, [prescriptionId, navigate]);
 
   const {patient, diagnosis, history, medicines} = prescription;
 
@@ -89,37 +94,41 @@ const PrescriptionInfo = () => {
 
   return (
       <Paper elevation={3} sx={{padding: 2}}>
-        <Grid container spacing={2} justifyContent="flex-start">
-          <Grid item xs={12}>
-            <Grid container spacing={5} justifyContent="space-between"
-                  alignItems="flex-start">
-              <Grid item xs={5}>
-                <PatientInfoCard patient={patient}/>
-              </Grid>
-              <Grid item>
-                <Chip label={`No of Items: ${medicines?.length}`}
-                      color="warning" sx={{fontSize: 20}}>
-                </Chip>
+        {loading && <CustomProgress/>}
+        {!loading && (
+            <Grid container spacing={2} justifyContent="flex-start">
+              <Grid item xs={12}>
+                <Grid container spacing={5} justifyContent="space-between"
+                      alignItems="flex-start">
+                  <Grid item xs={5}>
+                    <PatientInfoCard patient={patient}/>
+                  </Grid>
+                  <Grid item>
+                    <Chip label={`No of Items: ${medicines?.length}`}
+                          color="warning" sx={{fontSize: 20}}>
+                    </Chip>
 
+                  </Grid>
+                </Grid>
               </Grid>
+              <Grid item xs={12}>
+                <PrescriptionsTable medications={medicines}/>
+              </Grid>
+              {!prescription?.processed &&
+                  <Grid item>
+                    <Button variant="contained" size="large"
+                            onClick={handleClickOpen}>Processed</Button>
+                  </Grid>
+              }
+              {prescription?.processed &&
+                  <Grid item>
+                    <Button variant="contained"
+                            sx={{backgroundColor: '#0003b2'}}
+                            onClick={handlePdfOpen}>Show PDF</Button>
+                  </Grid>
+              }
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <PrescriptionsTable medications={medicines}/>
-          </Grid>
-          {!prescription?.processed &&
-              <Grid item>
-                <Button variant="contained" size="large"
-                        onClick={handleClickOpen}>Processed</Button>
-              </Grid>
-          }
-          {prescription?.processed &&
-              <Grid item>
-                <Button variant="contained" sx={{backgroundColor: '#0003b2'}}
-                        onClick={handlePdfOpen}>Show PDF</Button>
-              </Grid>
-          }
-        </Grid>
+        )}
       </Paper>
   );
 };

@@ -7,7 +7,7 @@ const useApi = () => {
     try {
       return await api(config);
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error?.response?.status === 401) {
         localStorage.removeItem('authenticated');
         localStorage.removeItem('city');
         sessionStorage.removeItem('auth');

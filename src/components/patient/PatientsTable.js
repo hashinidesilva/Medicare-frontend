@@ -15,7 +15,6 @@ import useApi from '../../hooks/useAPI';
 
 const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
-  const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [loading, setLoading] = useState(false);
   const apiRequest = useApi();
   const {searchTerm, regNo} = props;
@@ -32,7 +31,7 @@ const PatientsTable = (props) => {
             regNo: regNo === '' ? null : regNo,
           },
         });
-        if (response.status === 200) {
+        if (response?.status === 200) {
           setPatients(response.data.sort((patient1, patient2) =>
               new Date(patient2.updatedTime) - new Date(patient1.updatedTime)));
         }
@@ -48,12 +47,11 @@ const PatientsTable = (props) => {
       setPatients([]);
     };
   }, [searchTerm, regNo]);
-
-  const deletePatientHandler = async () => {
+  const deletePatientHandler = async (patientId) => {
     try {
       const response = await apiRequest({
         method: 'DELETE',
-        url: `/patients/${selectedPatientId}`,
+        url: `/patients/${patientId}`,
       });
       Swal.fire({
         icon: 'success',
@@ -65,8 +63,8 @@ const PatientsTable = (props) => {
         method: 'GET',
         url: '/patients',
       });
-      const data = await patientsResponse.data;
-      setPatients(data);
+      setPatients(patientsResponse.data.sort((patient1, patient2) =>
+          new Date(patient2.updatedTime) - new Date(patient1.updatedTime)));
     } catch (err) {
       console.error('Error Deleting patient:', err);
       Swal.fire({
@@ -157,14 +155,13 @@ const PatientsTable = (props) => {
   ];
 
   const handleClickOpen = (patientId) => {
-    setSelectedPatientId(patientId);
     Swal.fire({
       titleText: 'Are you sure you want to delete the patient?',
       showCancelButton: true,
       confirmButtonText: 'Yes',
     }).then((result) => {
       if (result.isConfirmed) {
-        deletePatientHandler();
+        deletePatientHandler(patientId);
       }
     });
   };

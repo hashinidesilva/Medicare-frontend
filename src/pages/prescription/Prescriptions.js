@@ -63,6 +63,7 @@ const customDateRange = {
 
 const columns = [
   {field: 'prescriptionId', headerName: 'Prescription ID', flex: 1},
+  {field: 'patientId', headerName: 'Patient ID', flex: 1},
   {field: 'patientName', headerName: 'Patient Name', flex: 2},
   {field: 'date', headerName: 'Date Prescribed', flex: 1},
   {field: 'status', headerName: 'Status', flex: 1},
@@ -86,6 +87,7 @@ const columns = [
 const mappedPrescriptions = (prescription) => {
   return {
     id: prescription.id,
+    patientId: prescription.patient.regNo,
     prescriptionId: prescription.id,
     patientName: prescription.patient.name,
     date: format(new Date(prescription.createdTime), 'yyyy-MM-dd'),
@@ -117,8 +119,7 @@ const Prescriptions = () => {
         },
       });
       if (response.status === 200) {
-        setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).
-            map(pres => mappedPrescriptions(pres)));
+        setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).map(pres => mappedPrescriptions(pres)));
       }
     } catch (err) {
       console.error('Error fetching prescriptions:', err);
