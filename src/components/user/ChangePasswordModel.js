@@ -26,7 +26,7 @@ const ChangePasswordModel = ({open, handleClose}) => {
     } else {
       try {
         const response = await api.post(
-            'http://localhost:8080/medicare/v1/change-password',
+            `${process.env.REACT_APP_API_URL}/medicare/v1/change-password`,
             {
               oldPassword: currentPassword,
               newPassword,
