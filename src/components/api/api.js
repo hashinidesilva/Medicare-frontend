@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const apiBaseUrl = window.config.apiBaseUrl;
+
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/medicare/v1`,
+  baseURL: `${apiBaseUrl}/medicare/v1`,
 });
 
 api.interceptors.request.use(config => {
