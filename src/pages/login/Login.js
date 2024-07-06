@@ -21,6 +21,7 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const [password, setPassword] = useState('');
   const [city, setCity] = useState(1);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const apiBaseUrl = window.config.apiBaseUrl;
@@ -31,6 +32,7 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       const response = await axios.post(
           `${apiBaseUrl}/medicare/v1/login`, {
             username,
@@ -51,6 +53,8 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
           error.response ? error.response.data : error.message);
       localStorage.setItem('authenticated', false);
       setErrorMessage('Invalid username or password');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,7 +135,8 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
               </FormControl>
               <Button
                   variant="contained"
-                  disabled={username.trim() === '' || password.trim() === ''}
+                  disabled={username.trim() === '' || password.trim() === '' ||
+                      loading}
                   onClick={handleLogin}
               >
                 Login
