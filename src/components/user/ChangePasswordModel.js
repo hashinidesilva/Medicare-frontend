@@ -18,6 +18,9 @@ const ChangePasswordModel = ({open, handleClose}) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const apiBaseUrl = window.config.apiBaseUrl;
+
   const handleChangePassword = async () => {
     const isPasswordMatched = !(newPassword.trim().length > 0 &&
         confirmPassword.trim().length > 0 && newPassword !== confirmPassword);
@@ -26,7 +29,7 @@ const ChangePasswordModel = ({open, handleClose}) => {
     } else {
       try {
         const response = await api.post(
-            `${process.env.REACT_APP_API_URL}/medicare/v1/change-password`,
+            `${apiBaseUrl}/medicare/v1/change-password`,
             {
               oldPassword: currentPassword,
               newPassword,

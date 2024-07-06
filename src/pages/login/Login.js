@@ -23,7 +23,8 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  console.log('ENV VAR: ' + process.env.REACT_APP_API_URL);
+  const apiBaseUrl = window.config.apiBaseUrl;
+  console.log('ENV VAR: ' + apiBaseUrl);
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
@@ -31,7 +32,7 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/medicare/v1/login`, {
+          `${apiBaseUrl}/medicare/v1/login`, {
             username,
             password,
           });
