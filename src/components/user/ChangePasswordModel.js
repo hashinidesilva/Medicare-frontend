@@ -18,6 +18,7 @@ const ChangePasswordModel = ({open, handleClose}) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const apiBaseUrl = window.config.apiBaseUrl;
 
@@ -28,6 +29,8 @@ const ChangePasswordModel = ({open, handleClose}) => {
       setErrorMessage('Password confirmation doesn\'t match.');
     } else {
       try {
+        setLoading(true);
+        setErrorMessage('');
         const response = await api.post(
             `${apiBaseUrl}/medicare/v1/change-password`,
             {
@@ -62,6 +65,8 @@ const ChangePasswordModel = ({open, handleClose}) => {
         } else {
           setErrorMessage('Error changing password');
         }
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -141,7 +146,7 @@ const ChangePasswordModel = ({open, handleClose}) => {
             <Button variant="contained" color="primary"
                     disabled={currentPassword.trim().length === 0 ||
                         newPassword.trim().length === 0 ||
-                        confirmPassword.trim().length === 0}
+                        confirmPassword.trim().length === 0 || loading}
                     onClick={handleChangePassword} sx={{mt: 2}}>
               Change Password
             </Button>
