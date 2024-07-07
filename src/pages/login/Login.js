@@ -33,6 +33,7 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const handleLogin = async () => {
     try {
       setLoading(true);
+      setErrorMessage('');
       const response = await axios.post(
           `${apiBaseUrl}/medicare/v1/login`, {
             username,
