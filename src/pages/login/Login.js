@@ -38,9 +38,6 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
           `${apiBaseUrl}/medicare/v1/login`, {
             username,
             password,
-          },
-          {
-            withCredentials: true,
           });
 
       if (response.status === 200) {
