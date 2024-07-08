@@ -16,6 +16,8 @@ const PdfMakerComponent = () => {
   const params = useParams();
   const {prescriptionId} = params;
 
+  const cityId = localStorage.getItem('city');
+
   useEffect(() => {
     fetch('/bklogo.jpeg').then(response => response.blob()).then(blob => {
       const reader = new FileReader();
@@ -102,32 +104,36 @@ const PdfMakerComponent = () => {
         },
         {
           columns: [
-            {
-              text: [
+            parseInt(cityId) === 1 ?
                 {
-                  text: 'BR Registration: PV – 00258881',
-                  bold: true,
-                  fontSize: 11,
-                },
-              ],
-            },
-            {
-              width: '*',
-              text: [
+                  text: [
+                    {
+                      text: 'BR Registration: PV – 00258881',
+                      bold: true,
+                      fontSize: 11,
+                    },
+                  ],
+                } : {},
+            parseInt(cityId) === 1 ?
                 {
-                  text: 'MOH Registration: PHSRC/FGP/655',
-                  alignment: 'right',
-                  bold: true,
-                  fontSize: 11,
-                },
-              ],
-            }],
+                  width: '*',
+                  text: [
+                    {
+                      text: 'MOH Registration: PHSRC/FGP/655',
+                      alignment: 'right',
+                      bold: true,
+                      fontSize: 11,
+                    },
+                  ],
+                } : {}],
         },
         {
-          text: 'BK HEALTH CARE (PVT) LTD, SPRINGVALLEY ROAD, NAULLA, DEMODERA, SRI LANKA. Tel: +94 779569965',
+          text: parseInt(cityId) === 1
+              ? 'BK HEALTH CARE (PVT) LTD, SPRINGVALLEY ROAD, NAULLA, DEMODERA, SRI LANKA. Tel: +94 779569965'
+              : 'BK HEALTH CARE (PVT) LTD, NO. 644, GALLE ROAD, MATARA, SRI LANKA. Tel: +94 771733166,+94 412050615',
           bold: true,
           margin: [0, 10, 0, 0],
-          fontSize: 10.73,
+          fontSize: parseInt(cityId) === 1 ? 10.73 : 10.37,
         },
         {
           canvas: [
