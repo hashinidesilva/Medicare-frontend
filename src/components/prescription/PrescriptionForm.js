@@ -135,7 +135,8 @@ const PrescriptionForm = React.memo((props) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
         if (isPillOrCapsule(medicineType)) {
-          const quantity = parseInt(newValue) * row.frequency * row.duration;
+          const quantity = Math.ceil(
+              parseFloat(newValue) * row.frequency * row.duration);
           return {...row, dose: newValue, quantity: quantity};
         }
         return {...row, dose: newValue};
@@ -149,7 +150,8 @@ const PrescriptionForm = React.memo((props) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
         if (isPillOrCapsule(medicineType)) {
-          const quantity = parseInt(row.dose) * newValue * row.duration;
+          const quantity = Math.ceil(
+              parseFloat(row.dose) * newValue * row.duration);
           return {...row, frequency: newValue, quantity: quantity};
         }
         return {...row, frequency: newValue};
@@ -163,7 +165,8 @@ const PrescriptionForm = React.memo((props) => {
     setPrescriptions((prevState) => prevState.map((row, rowId) => {
       if (rowId === index) {
         if (isPillOrCapsule(medicineType)) {
-          const quantity = parseInt(row.dose) * row.frequency * newValue;
+          const quantity = Math.ceil(
+              parseFloat(row.dose) * row.frequency * newValue);
           return {...row, duration: newValue, quantity: quantity};
         }
         return {...row, duration: newValue};

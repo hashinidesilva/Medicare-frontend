@@ -1,6 +1,6 @@
 import {DataGrid} from '@mui/x-data-grid';
 
-const Table = ({rows, columns, pageSize = 8}) => {
+const Table = ({rows, columns, pageSize = 8, hideFooter = false}) => {
   const styles = {
     color: 'rgba(0,0,0,.85)',
     fontFamily: [
@@ -61,6 +61,7 @@ const Table = ({rows, columns, pageSize = 8}) => {
             const {allergies} = params.row;
             return (allergies && allergies !== 'None') ? 'allergy' : '';
           }}
+          hideFooter={hideFooter}
           sx={styles}
       />
   );

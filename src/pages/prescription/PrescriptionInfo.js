@@ -112,7 +112,8 @@ const PrescriptionInfo = () => {
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <PrescriptionsTable medications={medicines}/>
+                <PrescriptionsTable medications={medicines} showPrice={true}
+                                    hideFooter={true}/>
               </Grid>
               {!prescription?.processed &&
                   <Grid item>
