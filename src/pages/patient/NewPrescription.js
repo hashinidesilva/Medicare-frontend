@@ -50,7 +50,7 @@ const NewPrescription = () => {
       medicines: prescription.medicines.map(medicine => {
         return {
           additionalInfo: medicine.additionalInfo,
-          dose: medicine.additionalInfo,
+          dose: medicine.dose,
           duration: medicine.duration,
           frequency: medicine.frequency,
           frequencyText: medicine.frequencyText,
