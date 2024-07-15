@@ -112,14 +112,21 @@ const PrescriptionInfo = () => {
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <PrescriptionsTable medications={medicines} showPrice={true}
-                                    hideFooter={true}/>
+                <PrescriptionsTable medications={medicines} hideFooter={true}/>
               </Grid>
               {!prescription?.processed &&
-                  <Grid item>
-                    <Button variant="contained" size="large"
-                            onClick={handleClickOpen}>Processed</Button>
-                  </Grid>
+                  <>
+                    <Grid item>
+                      <Button variant="contained" size="large"
+                              onClick={handleClickOpen}>Processed</Button>
+                    </Grid>
+                    <Grid item>
+                      <Button variant="contained"
+                              size="large"
+                              sx={{backgroundColor: '#b25600'}}
+                              onClick={() => navigate('edit')}>Edit</Button>
+                    </Grid>
+                  </>
               }
               {prescription?.processed &&
                   <Grid item>

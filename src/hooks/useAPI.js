@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 
 const useApi = () => {
   const navigate = useNavigate();
-  const request = async (config) => {
+  return async (config) => {
     try {
       return await api(config);
     } catch (error) {
@@ -18,8 +18,6 @@ const useApi = () => {
       }
     }
   };
-
-  return request;
 };
 
 export default useApi;

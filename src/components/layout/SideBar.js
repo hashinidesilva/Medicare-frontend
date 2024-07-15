@@ -7,6 +7,7 @@ import PersonOutlineOutlinedIcon
 import VaccinesOutlinedIcon from '@mui/icons-material/VaccinesOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 
 const SideBar = () => {
   const [selected, setSelected] = useState(null);
@@ -22,6 +23,8 @@ const SideBar = () => {
       setSelected(2);
     } else if (location.pathname.includes('/prescriptions')) {
       setSelected(3);
+    } else if (location.pathname.includes('/analytics')) {
+      setSelected(4);
     }
   }, [location.pathname]);
 
@@ -87,6 +90,13 @@ const SideBar = () => {
                       onClick={() => handleButtonClick(3, '/prescriptions')}
                       sx={buttonStyles(3)} fullWidth>
                 Prescriptions
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button size="medium" startIcon={<AnalyticsOutlinedIcon/>}
+                      onClick={() => handleButtonClick(4, '/analytics')}
+                      sx={buttonStyles(4)} fullWidth>
+                Analytics
               </Button>
             </Grid>
           </Grid>

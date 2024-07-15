@@ -1,5 +1,5 @@
-import LowInventoryAlerts from './dashboard/LowInventoryAlerts';
 import {Grid} from '@mui/material';
+import LowInventoryAlerts from './LowInventoryAlerts';
 
 const DashBoard = () => {
   return (

@@ -2,7 +2,6 @@ import {useState} from 'react';
 import {Navigate, Route, Routes} from 'react-router-dom';
 
 import Layout from './components/layout/Layout';
-import NewPrescription from './pages/patient/NewPrescription';
 import Patients from './pages/patient/Patients';
 import NewPatient from './pages/patient/NewPatient';
 import EditPatient from './pages/patient/EditPatient';
@@ -14,9 +13,12 @@ import Medicines from './pages/inventory/Medicines';
 import LowInventory from './pages/inventory/LowInventory';
 import PrescriptionInfo from './pages/prescription/PrescriptionInfo';
 import Prescriptions from './pages/prescription/Prescriptions';
-import DashBoard from './pages/DashBoard';
+import DashBoard from './pages/dashboard/DashBoard';
 import PdfMakerComponent from './pages/prescription/PdfMakerComponent';
 import Login from './pages/login/Login';
+import NewPrescription from './pages/patient/NewPrescription';
+import EditPrescription from './pages/prescription/EditPrescription';
+import Analytics from './pages/analytics/Analytics';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -50,9 +52,6 @@ function App() {
                 <Route path=":patientId/prescriptions/:prescriptionId"
                        element={
                          <Layout><PrescriptionHistory/></Layout>}/>
-                <Route
-                    path=":patientId/prescriptions/:prescriptionId/edit"
-                    element={<Layout><NewPrescription/></Layout>}/>
               </Route>
               <Route path="/medicines">
                 <Route index element={<Layout><Medicines/></Layout>}/>
@@ -68,10 +67,13 @@ function App() {
                        element={<Layout><Prescriptions/></Layout>}/>
                 <Route path=":prescriptionId"
                        element={<Layout><PrescriptionInfo/></Layout>}/>
+                <Route path=":prescriptionId/edit"
+                       element={<Layout><EditPrescription/></Layout>}/>
                 <Route path=":prescriptionId/pdf"
                        element={
                          <Layout><PdfMakerComponent/></Layout>}/>
               </Route>
+              <Route path="/analytics" element={<Layout><Analytics/></Layout>}/>
               <Route path="*" element={<Navigate to="/home"/>}/>
             </>
         )}

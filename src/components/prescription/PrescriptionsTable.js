@@ -1,4 +1,5 @@
 import Table from '../UI/Table';
+import {calculateTotalPrice} from '../../util/MedicineUtil';
 
 const columns = [
   {
@@ -12,21 +13,12 @@ const columns = [
           {params.value}
         </span>),
   },
-  {field: 'frequencyText', headerName: 'Frequency', flex: 0.75},
+  {field: 'frequencyText', headerName: 'Frequency', flex: 1},
   {field: 'dose', headerName: 'Dose', flex: 0.75},
   {field: 'frequency', headerName: 'Frequency', flex: 0.75},
   {field: 'duration', headerName: 'Duration', flex: 0.75},
   {field: 'quantity', headerName: 'Quantity', flex: 1},
-  {field: 'additionalInfo', headerName: 'Additional Info', flex: 2},
-];
-
-const calculateTotalPrice = (medicines) => {
-  return medicines.reduce(
-      (total, medicine) => total + (medicine?.price || 0), 0);
-};
-
-const columnsWithPrice = [
-  ...columns,
+  {field: 'additionalInfo', headerName: 'Additional Info', flex: 1.5},
   {
     field: 'price', headerName: 'Price (Rs)', flex: 1,
     renderCell: (params) => (
@@ -44,20 +36,22 @@ const columnsWithPrice = [
 
 const PrescriptionsTable = ({
   medications = [],
-  showPrice = false,
   hideFooter = false,
 }) => {
   const medicines = medications.map((medication, index) => {
     return {
       id: index,
-      name: medication.medicineName ?? medication?.medicine?.name,
+      name: medication?.medicine?.name,
       dose: medication.dose,
       frequency: medication.frequency,
       frequencyText: medication.frequencyText,
       duration: medication.duration,
       quantity: medication.quantity,
       additionalInfo: medication.additionalInfo,
-      price: medication?.medicine?.unitPrice * medication.quantity,
+      price: medication.price > 0
+          ? medication.price
+          : medication.medicine?.unitPrice *
+          medication.quantity,
     };
   });
 
@@ -75,8 +69,8 @@ const PrescriptionsTable = ({
     price: totalPrice,
   };
   return (
-      <Table columns={showPrice ? columnsWithPrice : columns}
-             rows={showPrice ? [...medicines, totalRow] : medicines}
+      <Table columns={columns}
+             rows={[...medicines, totalRow]}
              hideFooter={hideFooter}/>
   );
 };

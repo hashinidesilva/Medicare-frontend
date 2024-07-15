@@ -1,44 +1,52 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
-import CustomProgress from '../../components/UI/CustomProgress';
-import PrescriptionForm from '../../components/prescription/PrescriptionForm';
 import api from '../../components/api/api';
+import useApi from '../../hooks/useAPI';
+import PrescriptionForm from '../../components/prescription/PrescriptionForm';
+import CustomProgress from '../../components/UI/CustomProgress';
 import {calculateTotalPrice} from '../../util/MedicineUtil';
 
-const NewPrescription = () => {
+const EditPrescription = () => {
   const [error, setError] = useState('');
+  const [prescription, setPrescription] = useState({});
   const [loading, setLoading] = useState(false);
   const [availableMedicines, setAvailableMedicines] = useState([]);
-  const [patient, setPatient] = useState({});
   const params = useParams();
   const navigate = useNavigate();
+  const apiRequest = useApi();
 
-  const {patientId} = params;
+  const {prescriptionId} = params;
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/patients/${patientId}`);
-        const data = response.data;
-        setPatient({
-          id: data.id,
-          regNo: data.regNo,
-          name: data.name,
-          age: data.age,
-          gender: data.gender,
-          allergies: data.allergies,
+        const response = await apiRequest({
+          method: 'GET',
+          url: `/prescriptions/${prescriptionId}`,
         });
+        if (response.status === 200) {
+          setPrescription(response.data);
+        }
       } catch (err) {
         navigate('/');
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchData();
-  }, [patientId]);
+    return () => {
+      setPrescription({});
+    };
+  }, [prescriptionId, navigate]);
+
+  useEffect(() => {
+    if (prescription?.processed) {
+      navigate('/');
+    }
+  }, [prescription?.processed, navigate]);
 
   useEffect(async () => {
     try {
@@ -62,13 +70,13 @@ const NewPrescription = () => {
     }
   }, []);
 
-  const prescriptionSubmitHandler = async (prescription) => {
+  const updatePrescriptionSubmitHandler = async (updatedPrescription) => {
     const formattedPrescription = {
-      patientId: prescription.patient.id,
-      diagnosis: prescription.diagnosis,
-      history: prescription.history,
-      totalPrice: calculateTotalPrice(prescription.medicines),
-      medicines: prescription.medicines?.map(medicine => {
+      diagnosis: updatedPrescription.diagnosis,
+      history: updatedPrescription.history,
+      processed: prescription.processed,
+      totalPrice: calculateTotalPrice(updatedPrescription.medicines),
+      medicines: updatedPrescription.medicines?.map(medicine => {
         return {
           additionalInfo: medicine.additionalInfo,
           dose: medicine.dose,
@@ -81,8 +89,9 @@ const NewPrescription = () => {
         };
       }),
     };
+
     try {
-      const response = await api.post('/prescriptions',
+      const response = await api.put(`/prescriptions/${prescriptionId}`,
           JSON.stringify(formattedPrescription), {
             headers: {
               'Content-Type': 'application/json',
@@ -91,22 +100,24 @@ const NewPrescription = () => {
       if (response.status !== 200) {
         throw new Error(`HTTP status ${response.status}: ${response.data}`);
       }
-      navigate('/patients');
+      navigate(-1);
     } catch (error) {
-      setError('Failed to submit prescription: ' + error.message);
+      setError('Failed to update prescription: ' + error.message);
     }
   };
 
   return (
       <>
         {loading && <CustomProgress/>}
-        {!loading && <PrescriptionForm patient={patient}
-                                       onSubmit={prescriptionSubmitHandler}
+        {!loading && <PrescriptionForm patient={prescription?.patient}
+                                       onSubmit={updatePrescriptionSubmitHandler}
                                        error={error} setError={setError}
+                                       initialPrescription={prescription}
                                        availableMedicines={availableMedicines}
-                                       onCancel={() => navigate('/patients')}/>}
+                                       onCancel={() => navigate(-1)}/>
+        }
       </>
   );
 };
 
-export default NewPrescription;
+export default EditPrescription;

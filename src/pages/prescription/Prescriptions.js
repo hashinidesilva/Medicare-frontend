@@ -119,7 +119,8 @@ const Prescriptions = () => {
         },
       });
       if (response.status === 200) {
-        setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).map(pres => mappedPrescriptions(pres)));
+        setPrescriptions(response.data.sort((p1, p2) => p1.id - p2.id).
+            map(pres => mappedPrescriptions(pres)));
       }
     } catch (err) {
       console.error('Error fetching prescriptions:', err);
@@ -194,8 +195,7 @@ const Prescriptions = () => {
         <Stack direction={'row'} justifyContent="space-between"
                alignItems="center">
           <Grid container justifyContent="flex-start" alignItems="flex-end"
-                sx={{mb: 3}} direction={'row'}
-                spacing={3}>
+                sx={{mb: 3}} direction={'row'} spacing={3}>
             <Grid item>
               <TextField
                   id="search-prescriptions"
