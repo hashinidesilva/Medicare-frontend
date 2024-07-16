@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
-import {Button, Chip, Grid, Paper} from '@mui/material';
+import {Box, Button, Chip, Grid, Paper, Typography} from '@mui/material';
 import Swal from 'sweetalert2';
 import PatientInfoCard from '../../components/patient/PatientInfoCard';
 import PrescriptionsTable
@@ -42,14 +42,17 @@ const PrescriptionInfo = () => {
     };
   }, [prescriptionId, navigate]);
 
-  const {patient, diagnosis, history, medicines} = prescription;
+  const {
+    patient,
+    medicines,
+    consultationInfo,
+    consultationFee,
+    investigationInfo,
+    investigationFee,
+  } = prescription;
 
   const prescriptionUpdateHandler = async () => {
     const updatedPrescription = {
-      id: prescriptionId,
-      patientId: patient.id,
-      diagnosis: diagnosis,
-      history: history,
       processed: true,
     };
     try {
@@ -96,45 +99,75 @@ const PrescriptionInfo = () => {
       <Paper elevation={3} sx={{padding: 2}}>
         {loading && <CustomProgress/>}
         {!loading && (
-            <Grid container spacing={2} justifyContent="flex-start">
-              <Grid item xs={12}>
-                <Grid container spacing={5} justifyContent="space-between"
-                      alignItems="flex-start">
-                  <Grid item xs={5}>
-                    <PatientInfoCard patient={patient}/>
+            <Grid container spacing={2} justifyContent="space-between">
+              <Grid item xs={4}>
+                <PatientInfoCard patient={patient}/>
+              </Grid>
+              {consultationInfo &&
+                  <Grid item xs={4}>
+                    <Box sx={{
+                      border: 1,
+                      borderRadius: 1,
+                      padding: 1,
+                      borderColor: 'grey.500',
+                      minHeight: '21vh',
+                    }}>
+                      <Typography variant="subtitle2"
+                                  color="#808080">Consultation</Typography>
+                      <Typography>{consultationInfo}</Typography>
+                    </Box>
                   </Grid>
-                  <Grid item>
-                    <Chip label={`No of Items: ${medicines?.length}`}
-                          color="warning" sx={{fontSize: 20}}>
-                    </Chip>
-
+              }
+              {investigationInfo &&
+                  <Grid item xs={4}>
+                    <Box sx={{
+                      border: 1,
+                      borderRadius: 1,
+                      padding: 1,
+                      borderColor: 'grey.500',
+                      minHeight: '21vh',
+                    }}>
+                      <Typography variant="subtitle2"
+                                  color="#808080">Investigation</Typography>
+                      <Typography>{investigationInfo}</Typography>
+                    </Box>
                   </Grid>
-                </Grid>
+              }
+              <Grid item xs={1.8}>
+                <Chip label={`No of Medicines: ${medicines?.length}`}
+                      color="secondary" sx={{fontSize: 15}}>
+                </Chip>
               </Grid>
               <Grid item xs={12}>
-                <PrescriptionsTable medications={medicines} hideFooter={true}/>
+                <PrescriptionsTable medications={medicines}
+                                    consultationFee={consultationFee}
+                                    investigationFee={investigationFee}
+                                    hideFooter={true}/>
               </Grid>
-              {!prescription?.processed &&
-                  <>
-                    <Grid item>
-                      <Button variant="contained" size="large"
-                              onClick={handleClickOpen}>Processed</Button>
+              <Grid item xs={12}>
+                {!prescription?.processed &&
+                    <Grid container spacing={2} justifyContent="flex-start">
+                      <Grid item>
+                        <Button variant="contained"
+                                size={'small'}
+                                onClick={handleClickOpen}>Processed</Button>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained"
+                                size={'small'}
+                                sx={{backgroundColor: '#b25600'}}
+                                onClick={() => navigate('edit')}>Edit</Button>
+                      </Grid>
                     </Grid>
+                }
+                {prescription?.processed &&
                     <Grid item>
                       <Button variant="contained"
-                              size="large"
-                              sx={{backgroundColor: '#b25600'}}
-                              onClick={() => navigate('edit')}>Edit</Button>
+                              size={'small'}
+                              onClick={handlePdfOpen}>Show PDF</Button>
                     </Grid>
-                  </>
-              }
-              {prescription?.processed &&
-                  <Grid item>
-                    <Button variant="contained"
-                            sx={{backgroundColor: '#0003b2'}}
-                            onClick={handlePdfOpen}>Show PDF</Button>
-                  </Grid>
-              }
+                }
+              </Grid>
             </Grid>
         )}
       </Paper>

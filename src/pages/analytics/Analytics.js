@@ -116,15 +116,27 @@ const Analytics = () => {
 
   return (
       <>
-        <Typography fontSize={30} fontWeight={550}
-                    sx={{mb: 4}}>Analytics</Typography>
+        <Typography fontSize={25} fontWeight={550}
+                    sx={{mb: 2}}>Analytics</Typography>
         <Grid container justifyContent="flex-start" alignItems="flex-end"
               sx={{mb: 3}} direction={'row'} spacing={3}>
           <Grid item>
             <Select
                 value={selectedDateRange ?? ''}
                 onChange={handleDateRangeSelect}
-                sx={{minWidth: 160}}
+                sx={{
+                  minWidth: 160,
+                  height: '45px',
+                  '.MuiSelect-select': {
+                    height: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  },
+                  '.MuiOutlinedInput-root': {
+                    height: '30px',
+                    padding: '0 14px',
+                  },
+                }}
             >
               {dateRangeOptions.map((range, index) => (
                   <MenuItem key={index} value={range}>
@@ -144,15 +156,43 @@ const Analytics = () => {
                     value={startDate}
                     onChange={handleStartDateChange}
                     maxDate={endDate || undefined}
-                    slotProps={{textField: {variant: 'outlined'}}}
                     sx={{paddingRight: 1}}
+                    slotProps={{
+                      textField: {
+                        variant: 'outlined',
+                        sx: {
+                          height: '45px',
+                          '& .MuiInputBase-root': {
+                            height: '45px',
+                          },
+                          '& .MuiInputBase-input': {
+                            height: '30px',
+                            padding: '5px 10px',
+                          },
+                        },
+                      },
+                    }}
                 />
                 <DatePicker
                     label="End Date"
                     value={endDate}
                     onChange={handleEndDateChange}
                     minDate={startDate || undefined}
-                    slotProps={{textField: {variant: 'outlined'}}}
+                    slotProps={{
+                      textField: {
+                        variant: 'outlined',
+                        sx: {
+                          height: '45px',
+                          '& .MuiInputBase-root': {
+                            height: '45px',
+                          },
+                          '& .MuiInputBase-input': {
+                            height: 'px',
+                            padding: '5px 10px',
+                          },
+                        },
+                      },
+                    }}
                 />
               </DemoContainer>
             </LocalizationProvider>

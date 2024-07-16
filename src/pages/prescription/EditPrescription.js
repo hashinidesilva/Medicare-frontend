@@ -74,9 +74,15 @@ const EditPrescription = () => {
     const formattedPrescription = {
       diagnosis: updatedPrescription.diagnosis,
       history: updatedPrescription.history,
-      processed: prescription.processed,
-      totalPrice: calculateTotalPrice(updatedPrescription.medicines),
-      medicines: updatedPrescription.medicines?.map(medicine => {
+      totalPrice: calculateTotalPrice(updatedPrescription.medicines,
+          updatedPrescription.consultationFee,
+          updatedPrescription.investigationFee),
+      consultationInfo: updatedPrescription.consultationInfo,
+      consultationFee: parseFloat(updatedPrescription.consultationFee) || 0,
+      investigationInfo: updatedPrescription.investigationInfo,
+      investigationFee: parseFloat(updatedPrescription.investigationFee) || 0,
+      medicines: updatedPrescription.medicines?.filter(
+          medication => medication.medicine.name !== '').map(medicine => {
         return {
           additionalInfo: medicine.additionalInfo,
           dose: medicine.dose,

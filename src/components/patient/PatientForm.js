@@ -249,7 +249,7 @@ const PatientForm = (props) => {
                     variant="contained"
                     type="submit"
                     disabled={!formIsValid || loading}
-                    sx={{backgroundColor: '#0003b2'}}
+                    size={'small'}
                 >
                   Save
                 </Button>
@@ -257,6 +257,7 @@ const PatientForm = (props) => {
                     variant="contained"
                     onClick={() => navigate(-1)}
                     sx={{backgroundColor: '#b25600'}}
+                    size={'small'}
                 >
                   Cancel
                 </Button>

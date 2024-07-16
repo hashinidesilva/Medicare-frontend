@@ -82,7 +82,13 @@ const getPrescriptions = (prescription, index) => {
 const PrescriptionMedicineForm = React.memo((props) => {
   const [prescriptions, setPrescriptions] = useState([emptyRow]);
   const [availableMedicines, setAvailableMedicines] = useState([]);
-  const {medicines, onShowSummary, allMedicines, onCancel} = props;
+  const {
+    medicines,
+    onShowSummary,
+    allMedicines,
+    onCancel,
+    enableNextButton = false,
+  } = props;
 
   useEffect(() => {
     if (medicines && medicines.length > 0) {
@@ -220,7 +226,12 @@ const PrescriptionMedicineForm = React.memo((props) => {
   return (
       <Box>
         <TableContainer>
-          <Table sx={{minWidth: 650, border: 1, borderColor: 'grey.400'}}>
+          <Table sx={{
+            minWidth: 650,
+            border: 1,
+            borderColor: 'grey.400',
+            '& .MuiTableCell-root': {padding: '6px', paddingX: '8px'},
+          }}>
             <TableHead>
               <TableRow>
                 {columns.map(column => (
@@ -242,7 +253,6 @@ const PrescriptionMedicineForm = React.memo((props) => {
                           sx={{
                             '&:last-child td, &:last-child th': {
                               border: 0,
-                              paddingY: 1,
                             },
                           }}
                       >
@@ -314,7 +324,6 @@ const PrescriptionMedicineForm = React.memo((props) => {
                         <TableCell width="170px" sx={{paddingRight: 0}}>
                           <TextField
                               multiline
-                              rows={2}
                               size="small"
                               value={prescription.additionalInfo}
                               onChange={event => additionalInfoChangeHandler(
@@ -332,7 +341,7 @@ const PrescriptionMedicineForm = React.memo((props) => {
                               setPrescriptions((prevState) => prevState.filter(
                                   pres => pres.key !== prescription.key));
                             }}>
-                              <DeleteIcon color="error"/>
+                              <DeleteIcon color="error" sx={{fontSize: 22}}/>
                             </IconButton>
                           </Tooltip>
                         </TableCell>
@@ -348,17 +357,18 @@ const PrescriptionMedicineForm = React.memo((props) => {
               onClick={() => setPrescriptions((prevState) => [
                 ...prevState,
                 {...emptyRow, key: prevState.length}])}
+              size={'small'}
           >
-            Add row
+            Add Medicine
           </Button>
           <Button
               variant="contained"
-              sx={{backgroundColor: '#0003b2'}}
               onClick={handleClick}
-              disabled={prescriptions.length === 0 ||
+              disabled={(!enableNextButton) && (prescriptions.length === 0 ||
                   prescriptions.find(
                       prescription => prescription.medicine.name === '') !==
-                  undefined}
+                  undefined)}
+              size={'small'}
           >
             Next
           </Button>
@@ -375,6 +385,7 @@ const PrescriptionMedicineForm = React.memo((props) => {
                   elevation: 0,
                 },
               }}
+              size={'small'}
               onClick={onCancel}
           >
             Cancel

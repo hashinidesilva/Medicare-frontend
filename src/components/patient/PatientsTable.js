@@ -78,8 +78,8 @@ const PatientsTable = (props) => {
   const columns = [
     {field: 'regNo', headerName: 'Patient ID', flex: 0.5},
     {field: 'name', headerName: 'Name', flex: 1},
-    {field: 'age', headerName: 'Age', flex: 0.2},
-    {field: 'gender', headerName: 'Gender', flex: 0.3},
+    {field: 'age', headerName: 'Age', flex: 0.3},
+    {field: 'gender', headerName: 'Gender', flex: 0.4},
     {field: 'nic', headerName: 'NIC', flex: 0.45},
     {field: 'address', headerName: 'Address', flex: 0.75},
     {field: 'tpNumber', headerName: 'TP Number', flex: 0.5},
@@ -105,12 +105,12 @@ const PatientsTable = (props) => {
     {
       field: 'actions',
       type: 'actions',
-      flex: 0.75,
+      flex: 0.6,
       getActions: (params) => [
         <GridActionsCellItem
             icon={
               <Tooltip title="Add prescription">
-                <MedicationOutlinedIcon color={'primary'} sx={{fontSize: 30}}/>
+                <MedicationOutlinedIcon color={'primary'} sx={{fontSize: 26}}/>
               </Tooltip>
             }
             label="Add prescription"
@@ -121,7 +121,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
             icon={
               <Tooltip title={'Edit'}>
-                <EditOutlinedIcon sx={{color: '#b25600', fontSize: 30}}/>
+                <EditOutlinedIcon sx={{color: '#b25600', fontSize: 26}}/>
               </Tooltip>
             }
             label="Edit"
@@ -132,7 +132,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
             icon={
               <Tooltip title="Show history">
-                <HistoryRoundedIcon sx={{color: '#8a17e2', fontSize: 30}}/>
+                <HistoryRoundedIcon sx={{color: '#8a17e2', fontSize: 26}}/>
               </Tooltip>
             }
             label="Show history"
@@ -143,7 +143,7 @@ const PatientsTable = (props) => {
         <GridActionsCellItem
             icon={
               <Tooltip title="Delete">
-                <DeleteForeverOutlinedIcon color="error" sx={{fontSize: 30}}/>
+                <DeleteForeverOutlinedIcon color="error" sx={{fontSize: 26}}/>
               </Tooltip>
             }
             label="Delete"

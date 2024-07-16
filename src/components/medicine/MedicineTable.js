@@ -56,7 +56,7 @@ const MedicineTable = (props) => {
         <GridActionsCellItem
             icon={
               <Tooltip title={'Edit'}>
-                <EditOutlinedIcon fontSize="large" sx={{color: '#b25600'}}/>
+                <EditOutlinedIcon fontSize="medium" sx={{color: '#b25600'}}/>
               </Tooltip>
             }
             component={Link}

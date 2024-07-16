@@ -1,6 +1,6 @@
 import {DataGrid} from '@mui/x-data-grid';
 
-const Table = ({rows, columns, pageSize = 8, hideFooter = false}) => {
+const Table = ({rows, columns, pageSize = 10, hideFooter = false}) => {
   const styles = {
     color: 'rgba(0,0,0,.85)',
     fontFamily: [
@@ -44,10 +44,15 @@ const Table = ({rows, columns, pageSize = 8, hideFooter = false}) => {
     },
   };
 
+  const updatedColumns = columns.map((column) => ({
+    ...column,
+    sortable: false,
+  }));
+
   return (
       <DataGrid
           rows={rows}
-          columns={columns}
+          columns={updatedColumns}
           initialState={!hideFooter && {
             pagination: {
               paginationModel: {
@@ -63,6 +68,7 @@ const Table = ({rows, columns, pageSize = 8, hideFooter = false}) => {
           }}
           hideFooter={hideFooter}
           sx={styles}
+          rowHeight={40}
       />
   );
 

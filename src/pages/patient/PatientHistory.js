@@ -21,6 +21,7 @@ const columns = [
           <Button
               component={Link}
               to={`${params.id}`}
+              size={'small'}
           >
             More info
           </Button>
@@ -44,14 +45,15 @@ const PatientHistory = () => {
         const response = await api.get(`/patients/${patientId}`);
         const data = await response.data;
         setPatient(data);
-        setPrescriptions(data?.prescriptions.map(prescription => {
-          return {
-            id: prescription.id,
-            date: format(new Date(prescription.createdTime), 'yyyy-MM-dd'),
-            diagnosis: prescription.diagnosis,
-            history: prescription.history,
-          };
-        }));
+        setPrescriptions(data?.prescriptions?.sort((p1, p2) => p2.id - p1.id).
+            map(prescription => {
+              return {
+                id: prescription.id,
+                date: format(new Date(prescription.createdTime), 'yyyy-MM-dd'),
+                diagnosis: prescription.diagnosis,
+                history: prescription.history,
+              };
+            }));
       } catch (err) {
         navigate('/');
       } finally {

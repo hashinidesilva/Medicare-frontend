@@ -67,8 +67,14 @@ const NewPrescription = () => {
       patientId: prescription.patient.id,
       diagnosis: prescription.diagnosis,
       history: prescription.history,
-      totalPrice: calculateTotalPrice(prescription.medicines),
-      medicines: prescription.medicines?.map(medicine => {
+      totalPrice: calculateTotalPrice(prescription.medicines,
+          prescription.consultationFee, prescription.investigationFee),
+      consultationInfo: prescription.consultationInfo,
+      consultationFee: parseFloat(prescription.consultationFee) || 0,
+      investigationInfo: prescription.investigationInfo,
+      investigationFee: parseFloat(prescription.investigationFee) || 0,
+      medicines: prescription.medicines?.filter(
+          medication => medication.medicine.name !== '').map(medicine => {
         return {
           additionalInfo: medicine.additionalInfo,
           dose: medicine.dose,

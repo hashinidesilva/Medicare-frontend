@@ -19,8 +19,8 @@ const Medicines = () => {
 
   return (
       <>
-        <Typography fontSize={30} fontWeight={550}
-                    sx={{mb: 4}}>Inventory< /Typography>
+        <Typography fontSize={25} fontWeight={550}
+                    sx={{mb: 2}}>Inventory< /Typography>
         <Grid container justifyContent="space-between" alignItems={'center'}
               sx={{mb: 3}} direction={'row'} spacing={2}>
           <Grid item>
@@ -38,13 +38,18 @@ const Medicines = () => {
                       </InputAdornment>
                   ),
                 }}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    height: '45px', // Adjust the input height here
+                  },
+                }}
             />
           </Grid>
           <Grid item>
             <Stack direction={'row'} justifyContent={'flex-end'}
                    alignItems={'center'} spacing={3}>
               <Button variant="contained" sx={{backgroundColor: '#b25600'}}
-                      component={Link} to="low-inventory">
+                      component={Link} to="low-inventory" size={'small'}>
                 View Low Inventory
               </Button>
               <Button
@@ -53,6 +58,7 @@ const Medicines = () => {
                   color="primary"
                   component={Link}
                   to="create"
+                  size={'small'}
               >
                 Add Medicine
               </Button>

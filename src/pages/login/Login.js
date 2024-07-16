@@ -19,7 +19,7 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [city, setCity] = useState(1);
+  const [city, setCity] = useState(2);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
