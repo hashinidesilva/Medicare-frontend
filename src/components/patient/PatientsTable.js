@@ -13,6 +13,22 @@ import Table from '../UI/Table';
 import CustomProgress from '../UI/CustomProgress';
 import useApi from '../../hooks/useAPI';
 
+const formatPatients = (patients) => {
+  return patients.map(patient => {
+    let ageString = '';
+    if (patient.age > 0) {
+      ageString += `${patient.age} Y `;
+    }
+    if (patient.ageMonths > 0) {
+      ageString += `${patient.ageMonths} M`;
+    }
+    return {
+      ...patient,
+      age: ageString.trim(),
+    };
+  });
+};
+
 const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +48,7 @@ const PatientsTable = (props) => {
           },
         });
         if (response?.status === 200) {
-          setPatients(response.data.sort((patient1, patient2) =>
+          setPatients(formatPatients(response.data).sort((patient1, patient2) =>
               new Date(patient2.updatedTime) - new Date(patient1.updatedTime)));
         }
       } catch (err) {
@@ -78,7 +94,7 @@ const PatientsTable = (props) => {
   const columns = [
     {field: 'regNo', headerName: 'Patient ID', flex: 0.5},
     {field: 'name', headerName: 'Name', flex: 1},
-    {field: 'age', headerName: 'Age', flex: 0.3},
+    {field: 'age', headerName: 'Age', flex: 0.4},
     {field: 'gender', headerName: 'Gender', flex: 0.4},
     {field: 'nic', headerName: 'NIC', flex: 0.45},
     {field: 'address', headerName: 'Address', flex: 0.75},

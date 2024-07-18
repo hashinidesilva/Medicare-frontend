@@ -23,7 +23,7 @@ const emptyRow = {
   frequency: 0,
   frequencyText: '',
   duration: 0,
-  quantity: 0,
+  quantity: 0.0,
   additionalInfo: '',
   price: 0.0,
   medicine: {

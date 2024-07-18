@@ -48,7 +48,15 @@ const PatientForm = (props) => {
     hasError: ageHasError,
     valueChangeHandler: ageChangeHandler,
     inputBlurHandler: ageBlurHandler,
-  } = useInput(value => value > 0, 0);
+  } = useInput(value => value >= 0, 0);
+
+  const {
+    value: ageMonths,
+    isValid: ageMonthsIsValid,
+    hasError: ageMonthsHasError,
+    valueChangeHandler: ageMonthsChangeHandler,
+    inputBlurHandler: ageMonthsBlurHandler,
+  } = useInput(value => value >= 0 && value < 12, 0);
 
   const {
     value: gender,
@@ -88,6 +96,7 @@ const PatientForm = (props) => {
     if (patient) {
       nameChangeHandler(patient.name);
       ageChangeHandler(patient.age);
+      ageMonthsChangeHandler(patient.ageMonths);
       genderChangeHandler(patient.gender);
       nicChangeHandler(patient.nic ?? '');
       addressChangeHandler(patient.address ?? '');
@@ -97,7 +106,8 @@ const PatientForm = (props) => {
     }
   }, [patient]);
 
-  const formIsValid = nameIsValid && ageIsValid && genderIsValid;
+  const formIsValid = nameIsValid && (ageIsValid || ageMonthsIsValid) &&
+      genderIsValid && !ageHasError && !ageMonthsHasError;
 
   const handleAllergyCheck = (event) => {
     const value = event.target.checked;
@@ -112,7 +122,16 @@ const PatientForm = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    const newPatient = {name, age, gender, nic, tpNumber, address, allergies};
+    const newPatient = {
+      name,
+      age: age || 0,
+      ageMonths: ageMonths || 0,
+      gender,
+      nic,
+      tpNumber,
+      address,
+      allergies,
+    };
     props.onAddPatient(newPatient);
   };
 
@@ -146,18 +165,34 @@ const PatientForm = (props) => {
                   helperText={nameHasError && 'Name must not be empty'}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <TextField
                   error={ageHasError}
                   fullWidth
                   required
                   id="age"
-                  label="Age"
+                  label="Age (years)"
                   type="number"
                   value={age}
                   onChange={(event) => ageChangeHandler(event.target.value)}
                   onBlur={ageBlurHandler}
-                  helperText={ageHasError && 'Age must be > 0'}
+                  helperText={ageHasError && 'Years must be >= 0'}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                  error={ageMonthsHasError}
+                  fullWidth
+                  required
+                  id="ageMonths"
+                  label="Age (months)"
+                  type="number"
+                  value={ageMonths}
+                  onChange={(event) => ageMonthsChangeHandler(
+                      event.target.value)}
+                  onBlur={ageMonthsBlurHandler}
+                  helperText={ageMonthsHasError &&
+                      'Months must be > 0 and < 12'}
               />
             </Grid>
             <Grid item xs={6}>
