@@ -27,6 +27,7 @@ const NewPrescription = () => {
           regNo: data.regNo,
           name: data.name,
           age: data.age,
+          ageMonths: data.ageMonths,
           gender: data.gender,
           allergies: data.allergies,
         });

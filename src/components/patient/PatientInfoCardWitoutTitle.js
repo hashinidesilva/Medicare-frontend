@@ -1,4 +1,5 @@
 import {Card, Typography} from '@mui/material';
+import {getFullAge} from '../../util/MedicineUtil';
 
 const PatientInfoCardWithoutTitles = ({patient = {}}) => {
   return (
@@ -6,7 +7,7 @@ const PatientInfoCardWithoutTitles = ({patient = {}}) => {
             sx={{backgroundColor: '#bfdef8', padding: '5px', paddingX: '10px'}}>
         <Typography>{patient.name}</Typography>
         <Typography>{patient.regNo}</Typography>
-        <Typography>{`${patient.age} years`}</Typography>
+        <Typography>{getFullAge(patient.age, patient.ageMonths)}</Typography>
       </Card>
   );
 };

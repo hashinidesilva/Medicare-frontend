@@ -12,19 +12,13 @@ import Swal from 'sweetalert2';
 import Table from '../UI/Table';
 import CustomProgress from '../UI/CustomProgress';
 import useApi from '../../hooks/useAPI';
+import {getAge} from '../../util/MedicineUtil';
 
 const formatPatients = (patients) => {
   return patients.map(patient => {
-    let ageString = '';
-    if (patient.age > 0) {
-      ageString += `${patient.age} Y `;
-    }
-    if (patient.ageMonths > 0) {
-      ageString += `${patient.ageMonths} M`;
-    }
     return {
       ...patient,
-      age: ageString.trim(),
+      age: getAge(patient.age, patient.ageMonths),
     };
   });
 };

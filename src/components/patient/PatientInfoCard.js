@@ -1,4 +1,5 @@
 import {Card, CardContent, Divider, Stack, Typography} from '@mui/material';
+import {getAge} from '../../util/MedicineUtil';
 
 const PatientInfoCard = ({patient = {}}) => {
   return (
@@ -29,7 +30,8 @@ const PatientInfoCard = ({patient = {}}) => {
           <Stack direction="row" alignItems="center"
                  justifyContent="space-between">
             <Typography variant={'subtitle2'}>Age</Typography>
-            <Typography variant={'subtitle2'}>{patient.age}</Typography>
+            <Typography variant={'subtitle2'}>{getAge(patient.age,
+                patient.ageMonths)}</Typography>
           </Stack>
           <Stack direction="row" alignItems="center"
                  justifyContent="space-between">
