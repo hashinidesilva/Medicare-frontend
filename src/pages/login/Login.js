@@ -25,7 +25,6 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const navigate = useNavigate();
 
   const apiBaseUrl = window.config.apiBaseUrl;
-  console.log('ENV VAR: ' + apiBaseUrl);
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
