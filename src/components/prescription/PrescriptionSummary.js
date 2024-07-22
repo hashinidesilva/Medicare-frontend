@@ -8,6 +8,7 @@ const PrescriptionSummary = ({
   onConfirm,
   onEdit,
   error,
+  loading = false,
 }) => {
   const {
     patient,
@@ -121,6 +122,7 @@ const PrescriptionSummary = ({
                           onClick={onEdit}>Edit</Button>
                   <Button variant="contained"
                           size={'small'}
+                          disabled={loading}
                           onClick={handleConfirm}>Confirm</Button>
                 </Stack>
               </Grid>

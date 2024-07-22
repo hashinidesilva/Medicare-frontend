@@ -12,6 +12,8 @@ import CustomProgress from '../../components/UI/CustomProgress';
 const PrescriptionInfo = () => {
   const [prescription, setPrescription] = useState({});
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const {prescriptionId} = params;
@@ -54,6 +56,7 @@ const PrescriptionInfo = () => {
       processed: true,
     };
     try {
+      setUpdateLoading(true);
       const response = await axios.put(`/prescriptions/${prescriptionId}`,
           JSON.stringify(updatedPrescription), {
             headers: {
@@ -69,6 +72,7 @@ const PrescriptionInfo = () => {
         navigate(`/prescriptions/${prescriptionId}/pdf`);
       });
     } catch (error) {
+      setUpdateLoading(false);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -95,6 +99,7 @@ const PrescriptionInfo = () => {
 
   const deletePrescriptionHandler = async (prescriptionId) => {
     try {
+      setDeleteLoading(true);
       const response = await axios({
         method: 'DELETE',
         url: `/prescriptions/${prescriptionId}`,
@@ -108,6 +113,7 @@ const PrescriptionInfo = () => {
       navigate('/prescriptions');
     } catch (err) {
       console.error('Error Deleting prescription:', err);
+      setDeleteLoading(false);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -183,6 +189,7 @@ const PrescriptionInfo = () => {
                       <Grid item>
                         <Button variant="contained"
                                 size={'small'}
+                                disabled={updateLoading}
                                 onClick={handleClickOpen}>Processed</Button>
                       </Grid>
                       <Grid item>
@@ -195,6 +202,7 @@ const PrescriptionInfo = () => {
                         <Button variant="contained"
                                 size={'small'}
                                 color={'error'}
+                                disabled={deleteLoading}
                                 onClick={handleDelete.bind(null,
                                     prescriptionId)}>Delete</Button>
                       </Grid>
@@ -211,6 +219,7 @@ const PrescriptionInfo = () => {
                         <Button variant="contained"
                                 size={'small'}
                                 color={'error'}
+                                disabled={deleteLoading}
                                 onClick={handleDelete.bind(null,
                                     prescriptionId)}>Delete</Button>
                       </Grid>

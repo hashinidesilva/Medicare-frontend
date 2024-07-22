@@ -50,7 +50,7 @@ const medicineTypeList = [
 
 const MedicineForm = (props) => {
   const navigate = useNavigate();
-  const {medicine, error} = props;
+  const {medicine, error, loading} = props;
 
   const {
     value: name,
@@ -221,7 +221,7 @@ const MedicineForm = (props) => {
                 <Button
                     variant="contained"
                     type="submit"
-                    disabled={!formIsValid}
+                    disabled={!formIsValid || loading}
                     size={'small'}
                 >
                   Save

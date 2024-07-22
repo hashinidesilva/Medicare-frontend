@@ -10,6 +10,7 @@ const NewPrescription = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [medicineLoading, setMedicineLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const [availableMedicines, setAvailableMedicines] = useState([]);
   const [patient, setPatient] = useState({});
   const params = useParams();
@@ -90,6 +91,7 @@ const NewPrescription = () => {
       }),
     };
     try {
+      setSaveLoading(true);
       const response = await axios.post('/prescriptions',
           JSON.stringify(formattedPrescription), {
             headers: {
@@ -102,6 +104,7 @@ const NewPrescription = () => {
       navigate('/patients');
     } catch (error) {
       setError('Failed to submit prescription: ' + error.message);
+      setSaveLoading(false);
     }
   };
 
@@ -114,6 +117,7 @@ const NewPrescription = () => {
                               error={error}
                               setError={setError}
                               availableMedicines={availableMedicines}
+                              loading={saveLoading}
                               onCancel={() => navigate(
                                   '/patients')}/>}
       </>

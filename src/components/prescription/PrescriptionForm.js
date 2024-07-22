@@ -15,6 +15,7 @@ const PrescriptionForm = ({
   initialPrescription,
   onCancel,
   availableMedicines = [],
+  loading,
 }) => {
   const [medicines, setMedicines] = useState([]);
   const [showSummary, setShowSummary] = useState(false);
@@ -170,6 +171,7 @@ const PrescriptionForm = ({
                   investigationInfo,
                   investigationFee,
                 }}
+                loading={loading}
                 showEditOption={true}
                 onConfirm={prescriptionSubmitHandler}
                 onEdit={handleEdit}

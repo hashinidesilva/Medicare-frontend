@@ -19,6 +19,7 @@ const EditPatient = () => {
   const [patient, setPatient] = useState(initialState);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const {patientId} = params;
@@ -45,6 +46,7 @@ const EditPatient = () => {
 
   const submitHandler = async (patient) => {
     try {
+      setUpdateLoading(true);
       const response = await axios.put(`/patients/${patientId}`,
           JSON.stringify(patient), {
             headers: {
@@ -58,6 +60,7 @@ const EditPatient = () => {
       navigate(-1);
     } catch (error) {
       setError('Failed to edit patient: ' + error.message);
+      setUpdateLoading(false);
     }
   };
 
@@ -67,7 +70,7 @@ const EditPatient = () => {
           {loading && <CustomProgress/>}
           {!loading &&
               <PatientForm onAddPatient={submitHandler} patient={patient}
-                           error={error}/>
+                           error={error} loading={updateLoading}/>
           }
         </Paper>
       </Box>

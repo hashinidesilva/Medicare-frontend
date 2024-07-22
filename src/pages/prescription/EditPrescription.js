@@ -10,6 +10,7 @@ const EditPrescription = () => {
   const [error, setError] = useState('');
   const [prescription, setPrescription] = useState({});
   const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const [availableMedicines, setAvailableMedicines] = useState([]);
   const params = useParams();
   const navigate = useNavigate();
@@ -95,6 +96,7 @@ const EditPrescription = () => {
     };
 
     try {
+      setUpdateLoading(true);
       const response = await axios.put(`/prescriptions/${prescriptionId}`,
           JSON.stringify(formattedPrescription), {
             headers: {
@@ -107,6 +109,7 @@ const EditPrescription = () => {
       navigate(-1);
     } catch (error) {
       setError('Failed to update prescription: ' + error.message);
+      setUpdateLoading(false);
     }
   };
 
@@ -118,6 +121,7 @@ const EditPrescription = () => {
                                        error={error} setError={setError}
                                        initialPrescription={prescription}
                                        availableMedicines={availableMedicines}
+                                       loading={updateLoading}
                                        onCancel={() => navigate(-1)}/>
         }
       </>
