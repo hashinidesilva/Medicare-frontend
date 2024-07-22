@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import axios from 'axios';
@@ -23,18 +23,24 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const isMounted = useRef(true);
 
-  const apiBaseUrl = window.config.apiBaseUrl;
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const handleLogin = async () => {
     try {
       setLoading(true);
       setErrorMessage('');
       const response = await axios.post(
-          `${apiBaseUrl}/medicare/v1/login`, {
+          `/login`, {
             username,
             password,
           });
@@ -46,15 +52,21 @@ const Login = ({handleAuthentication, handleTownSelection}) => {
         localStorage.setItem('authenticated', true);
         sessionStorage.setItem('auth', JSON.stringify({username, password}));
         console.log('Login successful', response.data);
-        navigate('/');
+        if (isMounted.current) {
+          navigate('/');
+        }
       }
     } catch (error) {
       console.log('Login failed',
           error.response ? error.response.data : error.message);
       localStorage.setItem('authenticated', false);
-      setErrorMessage('Invalid username or password');
+      if (isMounted.current) {
+        setErrorMessage('Invalid username or password');
+      }
     } finally {
-      setLoading(false);
+      if (isMounted.current) {
+        setLoading(false);
+      }
     }
   };
 

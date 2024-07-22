@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import axios from 'axios';
 import {Box, Paper} from '@mui/material';
 import MedicineForm from '../../components/medicine/MedicineForm';
-import api from '../../components/api/api';
 
 const NewMedicine = () => {
   const [error, setError] = useState('');
@@ -11,11 +11,13 @@ const NewMedicine = () => {
 
   const submitHandler = async (medicine) => {
     try {
-      const response = await api.post('/medicines', JSON.stringify(medicine), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post('/medicines',
+          JSON.stringify(medicine),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
       if (response.status !== 200) {
         throw new Error(`HTTP status ${response.status}: ${response.data}`);
       }

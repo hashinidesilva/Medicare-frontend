@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 
 import {format} from 'date-fns';
 import dayjs from 'dayjs';
+import axios from 'axios';
 import {
   Button, CircularProgress,
   FormControlLabel,
@@ -21,7 +22,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import Table from '../../components/UI/Table';
 import CustomProgress from '../../components/UI/CustomProgress';
-import useApi from '../../hooks/useAPI';
 
 const dateRanges = [
   {
@@ -104,12 +104,11 @@ const Prescriptions = () => {
       dateRanges[0].label);
   const [startDate, setStartDate] = useState(dayjs().startOf('day'));
   const [endDate, setEndDate] = useState(dayjs().endOf('day'));
-  const apiRequest = useApi();
 
   const fetchPrescriptions = async () => {
     setLoading(true);
     try {
-      const response = await apiRequest({
+      const response = await axios({
         method: 'GET',
         url: '/prescriptions',
         params: {

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import dayjs from 'dayjs';
+import axios from 'axios';
 import {Grid, MenuItem, Select, Typography} from '@mui/material';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DemoContainer} from '@mui/x-date-pickers/internals/demo';
@@ -11,7 +12,6 @@ import {
   PersonAddOutlined,
 } from '@mui/icons-material';
 import AnalyticInfo from './AnalyticInfo';
-import useApi from '../../hooks/useAPI';
 
 const dateRanges = [
   {
@@ -58,12 +58,11 @@ const Analytics = () => {
   const [endDate, setEndDate] = useState(dayjs().endOf('day'));
   const [loading, setLoading] = useState(false);
   const [analytics, setAnalytics] = useState({});
-  const apiRequest = useApi();
 
   const fetchAnalytics = async () => {
     setLoading(true);
     try {
-      const response = await apiRequest({
+      const response = await axios({
         method: 'GET',
         url: '/analytics',
         params: {

@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import axios from 'axios';
 import {Box, Paper} from '@mui/material';
 import PatientForm from '../../components/patient/PatientForm';
-import api from '../../components/api/api';
 import Swal from 'sweetalert2';
 
 const NewPatient = () => {
@@ -14,7 +14,7 @@ const NewPatient = () => {
   const submitHandler = async (patient) => {
     try {
       setLoading(true);
-      const response = await api.post('/patients',
+      const response = await axios.post('/patients',
           JSON.stringify(patient), {
             headers: {
               'Content-Type': 'application/json',

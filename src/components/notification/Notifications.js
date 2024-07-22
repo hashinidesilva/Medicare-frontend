@@ -1,10 +1,10 @@
 import {Fragment, useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import axios from 'axios';
 import {Badge, IconButton, Menu, MenuItem} from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PrescriptionContext from '../../store/prescription-context';
-import api from '../api/api';
 
 const Notifications = () => {
   const [anchorEl, setAnchorEl] = useState();
@@ -16,7 +16,7 @@ const Notifications = () => {
   const size = prescriptions.length;
 
   useEffect(async () => {
-    const response = await api.get('/prescriptions',
+    const response = await axios.get('/prescriptions',
         {
           params: {processed: false},
         });

@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
+import axios from 'axios';
 import {Box, Paper} from '@mui/material';
 import PatientForm from '../../components/patient/PatientForm';
-import api from '../../components/api/api';
 import CustomProgress from '../../components/UI/CustomProgress';
-import useApi from '../../hooks/useAPI';
 
 const initialState = {
   name: '',
@@ -22,14 +21,13 @@ const EditPatient = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
-  const apiRequest = useApi();
   const {patientId} = params;
 
   useEffect(() => {
     const fetchPatient = async () => {
       setLoading(true);
       try {
-        const response = await apiRequest({
+        const response = await axios({
           method: 'GET',
           url: `/patients/${patientId}`,
         });
@@ -47,7 +45,7 @@ const EditPatient = () => {
 
   const submitHandler = async (patient) => {
     try {
-      const response = await api.put(`/patients/${patientId}`,
+      const response = await axios.put(`/patients/${patientId}`,
           JSON.stringify(patient), {
             headers: {
               'Content-Type': 'application/json',

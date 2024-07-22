@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
+import axios from 'axios';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import MedicationOutlinedIcon from '@mui/icons-material/MedicationOutlined';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
@@ -11,7 +12,6 @@ import {Box, Tooltip} from '@mui/material';
 import Swal from 'sweetalert2';
 import Table from '../UI/Table';
 import CustomProgress from '../UI/CustomProgress';
-import useApi from '../../hooks/useAPI';
 import {getAge} from '../../util/MedicineUtil';
 
 const formatPatients = (patients) => {
@@ -26,14 +26,13 @@ const formatPatients = (patients) => {
 const PatientsTable = (props) => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(false);
-  const apiRequest = useApi();
   const {searchTerm, regNo} = props;
 
   useEffect(() => {
     const fetchPatients = async () => {
       setLoading(true);
       try {
-        const response = await apiRequest({
+        const response = await axios({
           method: 'GET',
           url: '/patients',
           params: {
@@ -59,7 +58,7 @@ const PatientsTable = (props) => {
   }, [searchTerm, regNo]);
   const deletePatientHandler = async (patientId) => {
     try {
-      const response = await apiRequest({
+      const response = await axios({
         method: 'DELETE',
         url: `/patients/${patientId}`,
       });
@@ -69,7 +68,7 @@ const PatientsTable = (props) => {
         timer: 3000,
       });
       await response.data;
-      const patientsResponse = await apiRequest({
+      const patientsResponse = await axios({
         method: 'GET',
         url: '/patients',
       });

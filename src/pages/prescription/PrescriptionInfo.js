@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
+import axios from 'axios';
 import {Box, Button, Chip, Grid, Paper, Typography} from '@mui/material';
 import Swal from 'sweetalert2';
 import PatientInfoCard from '../../components/patient/PatientInfoCard';
 import PrescriptionsTable
   from '../../components/prescription/PrescriptionsTable';
-import api from '../../components/api/api';
-import useApi from '../../hooks/useAPI';
 import CustomProgress from '../../components/UI/CustomProgress';
 
 const PrescriptionInfo = () => {
@@ -15,14 +14,13 @@ const PrescriptionInfo = () => {
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
-  const apiRequest = useApi();
   const {prescriptionId} = params;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiRequest({
+        const response = await axios({
           method: 'GET',
           url: `/prescriptions/${prescriptionId}`,
         });
@@ -56,7 +54,7 @@ const PrescriptionInfo = () => {
       processed: true,
     };
     try {
-      const response = await api.put(`/prescriptions/${prescriptionId}`,
+      const response = await axios.put(`/prescriptions/${prescriptionId}`,
           JSON.stringify(updatedPrescription), {
             headers: {
               'Content-Type': 'application/json',
@@ -97,7 +95,7 @@ const PrescriptionInfo = () => {
 
   const deletePrescriptionHandler = async (prescriptionId) => {
     try {
-      const response = await apiRequest({
+      const response = await axios({
         method: 'DELETE',
         url: `/prescriptions/${prescriptionId}`,
       });

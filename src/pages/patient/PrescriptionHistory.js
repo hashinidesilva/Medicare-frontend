@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
+import axios from 'axios';
 import PrescriptionSummary
   from '../../components/prescription/PrescriptionSummary';
-import api from '../../components/api/api';
 import CustomProgress from '../../components/UI/CustomProgress';
 
 const PrescriptionHistory = () => {
@@ -17,7 +17,7 @@ const PrescriptionHistory = () => {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await api.get(`/prescriptions/${prescriptionId}`);
+        const response = await axios.get(`/prescriptions/${prescriptionId}`);
         const data = await response.data;
         setPrescription(data);
       } catch (err) {

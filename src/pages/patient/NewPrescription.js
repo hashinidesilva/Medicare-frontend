@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
+import axios from 'axios';
 import CustomProgress from '../../components/UI/CustomProgress';
 import PrescriptionForm from '../../components/prescription/PrescriptionForm';
-import api from '../../components/api/api';
 import {calculateTotalPrice} from '../../util/MedicineUtil';
 
 const NewPrescription = () => {
@@ -21,7 +21,7 @@ const NewPrescription = () => {
     async function fetchData() {
       try {
         setLoading(true);
-        const response = await api.get(`/patients/${patientId}`);
+        const response = await axios.get(`/patients/${patientId}`);
         const data = response.data;
         setPatient({
           id: data.id,
@@ -45,7 +45,7 @@ const NewPrescription = () => {
   useEffect(async () => {
     try {
       setMedicineLoading(true);
-      const response = await api.get('/medicines');
+      const response = await axios.get('/medicines');
       const data = await response.data;
       const options = data.map(medicine => {
         return {
@@ -90,7 +90,7 @@ const NewPrescription = () => {
       }),
     };
     try {
-      const response = await api.post('/prescriptions',
+      const response = await axios.post('/prescriptions',
           JSON.stringify(formattedPrescription), {
             headers: {
               'Content-Type': 'application/json',

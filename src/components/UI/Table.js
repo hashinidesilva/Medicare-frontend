@@ -53,7 +53,7 @@ const Table = ({rows, columns, pageSize = 10, hideFooter = false}) => {
       <DataGrid
           rows={rows}
           columns={updatedColumns}
-          initialState={!hideFooter && {
+          initialState={hideFooter ? {} : {
             pagination: {
               paginationModel: {
                 pageSize: pageSize,

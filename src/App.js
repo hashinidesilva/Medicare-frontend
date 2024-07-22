@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Navigate, Route, Routes} from 'react-router-dom';
 
 import Layout from './components/layout/Layout';
@@ -19,8 +19,18 @@ import Login from './pages/login/Login';
 import NewPrescription from './pages/patient/NewPrescription';
 import EditPrescription from './pages/prescription/EditPrescription';
 import Analytics from './pages/analytics/Analytics';
+import {checkHealth} from './services/healthService';
 
 function App() {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkHealth();
+    }, 150000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
   const [isAuthenticated, setIsAuthenticated] = useState(
       localStorage.getItem('authenticated') || false);
   const [selectedTownId, setSelectedTownId] = useState(

@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 
 import {format} from 'date-fns';
+import axios from 'axios';
 import {Button, Grid, Paper} from '@mui/material';
 import PatientInfoCard from '../../components/patient/PatientInfoCard';
 import Table from '../../components/UI/Table';
-import api from '../../components/api/api';
 import CustomProgress from '../../components/UI/CustomProgress';
 
 const columns = [
@@ -42,7 +42,7 @@ const PatientHistory = () => {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await api.get(`/patients/${patientId}`);
+        const response = await axios.get(`/patients/${patientId}`);
         const data = await response.data;
         setPatient(data);
         setPrescriptions(data?.prescriptions?.sort((p1, p2) => p2.id - p1.id).

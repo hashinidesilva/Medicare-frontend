@@ -10,7 +10,7 @@ import {
   FormControlLabel, Stack,
 } from '@mui/material';
 import Swal from 'sweetalert2';
-import api from '../api/api';
+import axios from 'axios';
 
 const ChangePasswordModel = ({open, handleClose}) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -19,8 +19,6 @@ const ChangePasswordModel = ({open, handleClose}) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const apiBaseUrl = window.config.apiBaseUrl;
 
   const handleChangePassword = async () => {
     const isPasswordMatched = !(newPassword.trim().length > 0 &&
@@ -31,8 +29,7 @@ const ChangePasswordModel = ({open, handleClose}) => {
       try {
         setLoading(true);
         setErrorMessage('');
-        const response = await api.post(
-            `${apiBaseUrl}/medicare/v1/change-password`,
+        const response = await axios.post(`/change-password`,
             {
               oldPassword: currentPassword,
               newPassword,

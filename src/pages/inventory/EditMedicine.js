@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
+import axios from 'axios';
 import {Box, Paper} from '@mui/material';
 import MedicineForm from '../../components/medicine/MedicineForm';
-import api from '../../components/api/api';
 import CustomProgress from '../../components/UI/CustomProgress';
 
 const EditMedicine = () => {
@@ -16,7 +16,7 @@ const EditMedicine = () => {
   useEffect(async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/medicines/${medicineId}`);
+      const response = await axios.get(`/medicines/${medicineId}`);
       const data = await response.data;
       setMedicine(data);
     } catch (err) {
@@ -27,7 +27,7 @@ const EditMedicine = () => {
   }, [medicineId]);
 
   const submitHandler = async (medicine) => {
-    await api.put(`/medicines/${medicineId}`, JSON.stringify(medicine),
+    await axios.put(`/medicines/${medicineId}`, JSON.stringify(medicine),
         {
           headers: {
             'Content-Type': 'application/json',

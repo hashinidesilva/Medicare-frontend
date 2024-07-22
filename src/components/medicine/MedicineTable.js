@@ -1,24 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
+import axios from 'axios';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import {GridActionsCellItem} from '@mui/x-data-grid';
 import {Tooltip} from '@mui/material';
 import Table from '../UI/Table';
 import CustomProgress from '../UI/CustomProgress';
-import useApi from '../../hooks/useAPI';
 
 const MedicineTable = (props) => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(false);
-  const apiRequest = useApi();
   const {searchText, showLowInventory} = props;
 
   useEffect(() => {
     const fetchMedicines = async () => {
       setLoading(true);
       try {
-        const response = await apiRequest({
+        const response = await axios({
           method: 'GET',
           url: '/medicines',
           params: {

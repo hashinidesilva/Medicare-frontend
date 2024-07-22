@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
+import axios from 'axios';
 import {
   Box,
   Button,
@@ -13,17 +14,15 @@ import {
 } from '@mui/material';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import CustomProgress from '../../components/UI/CustomProgress';
-import useApi from '../../hooks/useAPI';
 
 function LowInventoryAlerts() {
   const [lowInventoryItems, setLowInventoryItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const apiRequest = useApi();
 
   const fetchMedicines = async () => {
     setLoading(true);
     try {
-      const response = await apiRequest({
+      const response = await axios({
         method: 'GET',
         url: '/medicines', params: {lowInventory: true},
       });

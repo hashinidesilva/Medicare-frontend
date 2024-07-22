@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
-import api from '../../components/api/api';
-import useApi from '../../hooks/useAPI';
+import axios from 'axios';
 import PrescriptionForm from '../../components/prescription/PrescriptionForm';
 import CustomProgress from '../../components/UI/CustomProgress';
 import {calculateTotalPrice} from '../../util/MedicineUtil';
@@ -14,7 +13,6 @@ const EditPrescription = () => {
   const [availableMedicines, setAvailableMedicines] = useState([]);
   const params = useParams();
   const navigate = useNavigate();
-  const apiRequest = useApi();
 
   const {prescriptionId} = params;
 
@@ -22,7 +20,7 @@ const EditPrescription = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiRequest({
+        const response = await axios({
           method: 'GET',
           url: `/prescriptions/${prescriptionId}`,
         });
@@ -51,7 +49,7 @@ const EditPrescription = () => {
   useEffect(async () => {
     try {
       setLoading(true);
-      const response = await api.get('/medicines');
+      const response = await axios.get('/medicines');
       const data = await response.data;
       const options = data.map(medicine => {
         return {
@@ -97,7 +95,7 @@ const EditPrescription = () => {
     };
 
     try {
-      const response = await api.put(`/prescriptions/${prescriptionId}`,
+      const response = await axios.put(`/prescriptions/${prescriptionId}`,
           JSON.stringify(formattedPrescription), {
             headers: {
               'Content-Type': 'application/json',

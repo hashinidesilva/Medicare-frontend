@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
+import axios from 'axios';
 import pdfMake from 'pdfmake/build/pdfmake';
 import vfsFonts from 'pdfmake/build/vfs_fonts';
 import {format} from 'date-fns';
-import api from '../../components/api/api';
 
 const PdfMakerComponent = () => {
   const {vfs} = vfsFonts.pdfMake;
@@ -31,7 +31,7 @@ const PdfMakerComponent = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await api.get(`/prescriptions/${prescriptionId}`);
+        const response = await axios.get(`/prescriptions/${prescriptionId}`);
         const data = await response.data;
         setPrescription(data);
       } catch (err) {
