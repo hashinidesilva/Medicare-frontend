@@ -9,6 +9,7 @@ import {calculateTotalPrice} from '../../util/MedicineUtil';
 const NewPrescription = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [medicineLoading, setMedicineLoading] = useState(false);
   const [availableMedicines, setAvailableMedicines] = useState([]);
   const [patient, setPatient] = useState({});
   const params = useParams();
@@ -43,7 +44,7 @@ const NewPrescription = () => {
 
   useEffect(async () => {
     try {
-      setLoading(true);
+      setMedicineLoading(true);
       const response = await api.get('/medicines');
       const data = await response.data;
       const options = data.map(medicine => {
@@ -59,7 +60,7 @@ const NewPrescription = () => {
     } catch (error) {
       setError('Failed to load medicines: ' + error.message);
     } finally {
-      setLoading(false);
+      setMedicineLoading(false);
     }
   }, []);
 
@@ -106,12 +107,15 @@ const NewPrescription = () => {
 
   return (
       <>
-        {loading && <CustomProgress/>}
-        {!loading && <PrescriptionForm patient={patient}
-                                       onSubmit={prescriptionSubmitHandler}
-                                       error={error} setError={setError}
-                                       availableMedicines={availableMedicines}
-                                       onCancel={() => navigate('/patients')}/>}
+        {(loading || medicineLoading) && <CustomProgress/>}
+        {!loading && !medicineLoading &&
+            <PrescriptionForm patient={patient}
+                              onSubmit={prescriptionSubmitHandler}
+                              error={error}
+                              setError={setError}
+                              availableMedicines={availableMedicines}
+                              onCancel={() => navigate(
+                                  '/patients')}/>}
       </>
   );
 };

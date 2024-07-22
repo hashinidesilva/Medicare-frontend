@@ -95,6 +95,41 @@ const PrescriptionInfo = () => {
     navigate(`/prescriptions/${prescriptionId}/pdf`);
   };
 
+  const deletePrescriptionHandler = async (prescriptionId) => {
+    try {
+      const response = await apiRequest({
+        method: 'DELETE',
+        url: `/prescriptions/${prescriptionId}`,
+      });
+      Swal.fire({
+        icon: 'success',
+        title: 'Prescription Deleted',
+        timer: 3000,
+      });
+      await response.data;
+      navigate('/prescriptions');
+    } catch (err) {
+      console.error('Error Deleting prescription:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error Deleting prescription',
+      });
+    }
+  };
+
+  const handleDelete = (prescriptionId) => {
+    Swal.fire({
+      titleText: 'Are you sure you want to delete the prescription?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePrescriptionHandler(prescriptionId);
+      }
+    });
+  };
+
   return (
       <Paper elevation={3} sx={{padding: 2}}>
         {loading && <CustomProgress/>}
@@ -158,13 +193,29 @@ const PrescriptionInfo = () => {
                                 sx={{backgroundColor: '#b25600'}}
                                 onClick={() => navigate('edit')}>Edit</Button>
                       </Grid>
+                      <Grid item>
+                        <Button variant="contained"
+                                size={'small'}
+                                color={'error'}
+                                onClick={handleDelete.bind(null,
+                                    prescriptionId)}>Delete</Button>
+                      </Grid>
                     </Grid>
                 }
                 {prescription?.processed &&
-                    <Grid item>
-                      <Button variant="contained"
-                              size={'small'}
-                              onClick={handlePdfOpen}>Show PDF</Button>
+                    <Grid container spacing={2} justifyContent="flex-start">
+                      <Grid item>
+                        <Button variant="contained"
+                                size={'small'}
+                                onClick={handlePdfOpen}>Show PDF</Button>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained"
+                                size={'small'}
+                                color={'error'}
+                                onClick={handleDelete.bind(null,
+                                    prescriptionId)}>Delete</Button>
+                      </Grid>
                     </Grid>
                 }
               </Grid>

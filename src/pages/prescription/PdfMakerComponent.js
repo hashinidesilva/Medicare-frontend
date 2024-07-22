@@ -60,7 +60,15 @@ const PdfMakerComponent = () => {
 
   const generatePdf = () => {
     const {patient, diagnosis, history, medicines, createdTime} = prescription;
-    const medicineList = medicines?.map(item => item.medicine.name);
+    const medicineList = medicines?.map(item => [
+      {text: item.medicine.name, margin: [0, 5, 0, 5], noWrap: false},
+      {text: item.frequencyText, margin: [0, 5, 0, 5], noWrap: false},
+      {
+        text: `${item.duration} ${item.duration === 1 ? 'day' : 'days'}`,
+        margin: [0, 5, 0, 5],
+        noWrap: false,
+      },
+    ]);
 
     const docDefinition = {
       content: [
@@ -194,10 +202,17 @@ const PdfMakerComponent = () => {
               }],
               [
                 {text: 'Prescription : ', bold: true, margin: [0, 5, 0, 5]}, {
-                stack: medicineList.map(medicine => ({
-                  text: medicine,
-                  margin: [0, 0, 0, 6],  // Adding vertical spacing
-                })),
+                table: {
+                  widths: ['*', 'auto', 'auto'],  // Flexible widths for columns
+                  body: [
+                    [
+                      {text: 'Medicine', bold: true},
+                      {text: 'Frequency', bold: true},
+                      {text: 'Duration', bold: true}],
+                    ...medicineList,
+                  ],
+                },
+                layout: 'noBorders',
                 margin: [5, 5, 0, 5],
               }],
             ],
