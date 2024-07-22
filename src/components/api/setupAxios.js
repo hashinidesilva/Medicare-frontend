@@ -1,12 +1,10 @@
 import axios from 'axios';
 
-if (!window.config || !window.config.apiBaseUrl) {
-  throw new Error(
-      'API base URL is not defined',
-  );
-}
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-axios.defaults.baseURL = `${window.config.apiBaseUrl}/medicare/v1`;
+console.log('API BASE URL: ' + apiBaseUrl);
+
+axios.defaults.baseURL = `${apiBaseUrl}/medicare/v1`;
 axios.interceptors.request.use(config => {
   const auth = JSON.parse(sessionStorage.getItem('auth'));
   if (auth) {
