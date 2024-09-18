@@ -86,7 +86,7 @@ const PdfMakerComponent = () => {
               width: '*',
               stack: [
                 {
-                  text: 'Dr. G.H.J De Silva',
+                  text: 'Dr. G H Jayantha De Silva',
                   alignment: 'right',
                   bold: true,
                   fontSize: 11,
@@ -97,10 +97,17 @@ const PdfMakerComponent = () => {
                   alignment: 'right',
                   bold: true,
                   fontSize: 11,
-                  margin: [0, 0, 0, 5], // Adjust margin to add space below this line
+                  margin: [0, 0, 0, 5],
                 },
                 {
-                  text: 'SLMC Reg No: 35436',
+                  text: 'FCAM (India)',
+                  alignment: 'right',
+                  bold: true,
+                  fontSize: 11,
+                  margin: [0, 0, 0, 5],
+                },
+                {
+                  text: 'SLMC Reg 35436',
                   alignment: 'right',
                   bold: true,
                   fontSize: 11,
